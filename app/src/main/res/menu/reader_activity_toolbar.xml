@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/search_token"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/zoom_out"
+        android:icon="@android:drawable/btn_minus"
+        android:title="shrink text"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/zoom_in"
+        android:icon="@android:drawable/btn_plus"
+        android:title="enlarge text"
+        app:showAsAction="always" />
+
+
+
+
+
+
+
+
+
+</menu>
