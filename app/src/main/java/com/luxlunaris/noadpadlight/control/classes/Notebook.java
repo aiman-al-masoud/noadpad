@@ -1,5 +1,6 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
+import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
 import com.luxlunaris.noadpadlight.model.classes.SinglePage;
@@ -35,12 +36,13 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * List of pages loaded in memory
 	 */
-	ArrayList<Page> pagesList;
+	volatile ArrayList<Page> pagesList;
 
 	/**
 	 * Current page index
 	 */
 	int currentPage;
+
 
 
 	private Notebook() {
@@ -76,7 +78,7 @@ public class Notebook implements Pageable, PageListener {
 		SinglePage page = new SinglePage(PAGES_DIR+File.separator+name);
 		if(!page.exists()) {
 			page.create();
-			pagesList.add(page);
+			addPage(page);
 		}
 		return (Page)page;
 	}
@@ -96,18 +98,21 @@ public class Notebook implements Pageable, PageListener {
 
 	@Override
 	public Page[] getNext(int amount) {
-		List<Page> result = pagesList.subList(Math.max(currentPage, 0), Math.min(currentPage+amount, pagesList.size()));
-		currentPage += result.size()==0? 0 :  amount;
-		return result.toArray(new Page[0]);
+
+		amount = Math.min(amount, pagesList.size());
+
+		try{
+			List<Page> result  = pagesList.subList(currentPage, currentPage+amount);
+			currentPage+=amount;
+			return result.toArray(new Page[0]);
+		}catch (Exception e){
+
+		}
+
+		return new Page[0];
 	}
 
-	@Override
-	public Page[] getPrevious(int amount) {
-		List<Page> result = pagesList.subList(Math.max(currentPage-amount, 0),  Math.max(0, Math.min(currentPage, pagesList.size()-1))  );
-		currentPage-= result.size()==0? 0 :  amount;
-		return result.toArray(new Page[0]);
-	}
-	
+
 	
 	/**
 	 * Get an array of pages by whitespace-separated keywords.
@@ -145,12 +150,21 @@ public class Notebook implements Pageable, PageListener {
 
 		//list and load all of the folders in there
 		for(File file : pagesDir.listFiles()) {
-			pagesList.add(new SinglePage(file.getPath()));
+			Page page = new SinglePage(file.getPath());
+			addPage(page);
 		}
 
 		//sort the pages by time of creation
 		Collections.sort(pagesList, new LastModifiedComparator());
 	}
+
+
+	private void addPage(Page page){
+		page.addListener(this);
+		pagesList.add(page);
+	}
+
+
 
 
 

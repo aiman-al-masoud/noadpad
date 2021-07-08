@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
+import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
+
 import java.io.Serializable;
 
 public interface Page extends Serializable {
@@ -52,5 +54,11 @@ public interface Page extends Serializable {
 
 
 	public int getLastPosition();
+
+
+	public void addListener(PageListener listener);
+
+	public String getPreview();
+
 
 }

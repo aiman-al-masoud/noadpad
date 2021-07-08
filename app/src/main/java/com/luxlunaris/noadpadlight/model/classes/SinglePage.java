@@ -4,6 +4,7 @@ import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.ui.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -164,7 +165,15 @@ public class SinglePage extends File implements Page {
 		return Integer.parseInt(lastPosString);
 	}
 
+	@Override
+	public void addListener(PageListener listener) {
+		this.pageListener = listener;
+	}
 
+	@Override
+	public String getPreview() {
+		return getText().substring(0, Math.min(10, getText().length()))+"...";
+	}
 
 
 }

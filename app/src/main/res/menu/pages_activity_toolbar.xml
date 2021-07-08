@@ -17,22 +17,10 @@
 
 
     <item
-        android:id="@+id/previous"
-        android:icon="@android:drawable/ic_media_rew"
-        android:title="go back"
+        android:id="@+id/edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="edit"
         app:showAsAction="always" />
-
-
-    <item
-        android:id="@+id/next"
-        android:icon="@android:drawable/ic_media_ff"
-        android:title="go forth"
-        app:showAsAction="always" />
-
-
-
-
-
 
 
 
