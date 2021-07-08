@@ -60,6 +60,10 @@ public class ReaderActivity extends AppCompatActivity {
         //set the view's initial text to the Page's text
         textView.setText(page.getText());
 
+        //jump to the last-saved position of the page
+        jumpToPosition(page.getLastPosition());
+
+
     }
 
 
@@ -82,6 +86,8 @@ public class ReaderActivity extends AppCompatActivity {
         super.onDestroy();
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
         page.setText(textView.getText().toString());
+        //save the current position
+        page.savePosition(textView.getSelectionStart());
     }
 
 
@@ -115,7 +121,7 @@ public class ReaderActivity extends AppCompatActivity {
     }
 
     /**
-     * Define the toolbars behavior
+     * Define the toolbar's behavior
      * @param item
      * @return
      */
@@ -141,8 +147,12 @@ public class ReaderActivity extends AppCompatActivity {
     }
 
 
-
-
+    /**
+     * Uses volume keys to navigate up and down between token positions.
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

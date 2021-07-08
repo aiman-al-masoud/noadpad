@@ -18,8 +18,6 @@ public class SinglePage extends File implements Page {
 	PageListener pageListener;
 
 
-
-
 	Integer[] positionsOfToken;
 	String currentToken = "";
 	int posIndex = 0;
@@ -155,7 +153,16 @@ public class SinglePage extends File implements Page {
 		return previousPosition(currentToken);
 	}
 
+	@Override
+	public void savePosition(int pos) {
+		metadata.setTagValue("LAST_POSITION", pos+"");
+	}
 
+	@Override
+	public int getLastPosition() {
+		String lastPosString = metadata.getTagValue("LAST_POSITION")==null? "0" : metadata.getTagValue("LAST_POSITION");
+		return Integer.parseInt(lastPosString);
+	}
 
 
 
