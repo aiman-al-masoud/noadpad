@@ -43,7 +43,10 @@ public class ReaderActivity extends AppCompatActivity {
     String textSizeString = Settings.get().getTagValue(Settings.TAGS.TEXT_SIZE.toString());
     int TEXT_SIZE = textSizeString==null? 18 : Integer.parseInt(textSizeString.trim());
 
-
+    /**
+     *This instance
+     */
+    ReaderActivity THIS;
 
 
     @Override
@@ -51,6 +54,8 @@ public class ReaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
 
+        //reference to this ReaderActivity instance
+        THIS = this;
         //get the text view
         textView = findViewById(R.id.reader_text_view);
         //set the initial text size
@@ -123,7 +128,8 @@ public class ReaderActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                jumpToPosition(page.nextPosition( query));
+                jumpToPosition(page.nextPosition(query));
+                Toast.makeText(THIS, "found "+page.numOfTokens(query)+" occrrs. vol. up/down to nav.", Toast.LENGTH_LONG).show();
                 return true;
             }
 
@@ -174,10 +180,10 @@ public class ReaderActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode){
-            case 25: //volume up pressed: back
+            case 25:  //volume down pressed: forth
                 jumpToPosition(page.nextPosition());
                 return true; //makes sure volume toast doesn't get displayed
-            case 24: //volume down pressed: forth
+            case 24:  //volume up pressed: back
                 jumpToPosition(page.previousPosition());
                 return true;
         }

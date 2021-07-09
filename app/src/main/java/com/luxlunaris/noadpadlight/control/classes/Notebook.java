@@ -51,6 +51,7 @@ public class Notebook implements Pageable, PageListener {
 
 
 
+
 	private Notebook() {
 		pagesList = new ArrayList<Page>();
 		selectedPagesList = new ArrayList<Page>();
@@ -130,6 +131,7 @@ public class Notebook implements Pageable, PageListener {
 			selectedPagesList.remove(page);
 		}
 		pagesList.remove(page);
+
 	}
 
 	@Override
@@ -145,7 +147,7 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public Page[] getNext(int amount) {
 
-		amount = Math.min(amount, pagesList.size());
+		amount = Math.min(amount, pagesList.size() -currentPage );
 
 		try{
 			List<Page> result  = pagesList.subList(currentPage, currentPage+amount);
@@ -228,6 +230,8 @@ public class Notebook implements Pageable, PageListener {
 	public void unselectAll(){
 		selectedPagesList.clear();
 	}
+
+
 
 
 

@@ -22,6 +22,14 @@ public interface Page extends Serializable {
 
 
 	/**
+	 * get the number of tokens
+	 * @param token
+	 * @return
+	 */
+	public int numOfTokens(String token);
+
+
+	/**
 	 * Get the next position of a token
 	 * @param token
 	 * @return
@@ -61,8 +69,6 @@ public interface Page extends Serializable {
 	public String getPreview();
 
 	public boolean contains(String[] keywords);
-
-
 
 
 	public boolean isSelected();

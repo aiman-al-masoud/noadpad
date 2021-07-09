@@ -8,6 +8,7 @@ import com.luxlunaris.noadpadlight.model.services.FileIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class SinglePage extends File implements Page {
@@ -26,6 +27,8 @@ public class SinglePage extends File implements Page {
 	boolean selected = false;
 
 
+
+
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
@@ -35,7 +38,8 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public String getText() {
-		return FileIO.read(textFile.getPath());
+		String text = FileIO.read(textFile.getPath());
+		return text ==null? "" : text;
 	}
 
 	@Override
@@ -74,6 +78,12 @@ public class SinglePage extends File implements Page {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public int numOfTokens(String token) {
+		return getText().split(token).length-1;
+	}
+
 
 
 
@@ -161,11 +171,13 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public int nextPosition() {
+
 		return nextPosition(currentToken);
 	}
 
 	@Override
 	public int previousPosition() {
+
 		return previousPosition(currentToken);
 	}
 
@@ -187,11 +199,7 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public String getPreview() {
-		try{
-			return getText().substring(0, Math.min(10, getText().length()))+"...";
-		}catch (NullPointerException e){
-		}
-		return "...";
+		return FileIO.readLine(textFile.getPath())+"...\n" +new Date(getLastModifiedTime()).toString();
 	}
 
 	/**

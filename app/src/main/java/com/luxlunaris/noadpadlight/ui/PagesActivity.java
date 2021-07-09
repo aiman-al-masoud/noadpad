@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
+import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class PagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
 
+
+
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
 
@@ -63,6 +66,8 @@ public class PagesActivity extends AppCompatActivity {
 
         //defines what the activity does when scrolling occurs
         setOnScrollAction();
+
+
 
     }
 
@@ -79,7 +84,14 @@ public class PagesActivity extends AppCompatActivity {
 
                 //if can't scroll vertically anymore: bottom reached
                 if(!v.canScrollVertically(1)){
-                    loadNextPagesBlock();
+
+                    try{
+                        loadNextPagesBlock();
+                    }catch (Exception e){
+
+                    }
+
+
                 }
 
             }
@@ -113,6 +125,7 @@ public class PagesActivity extends AppCompatActivity {
         PageFragment pgFrag = getFragment(page);
         getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,"").commit();
         pageFragments.add(pgFrag);
+
     }
 
 
@@ -144,12 +157,21 @@ public class PagesActivity extends AppCompatActivity {
         pageFragments.clear();
     }
 
+
+    /**
+     * Removes a fragment without deleting its page
+     * @param page
+     */
+    private void removeFragment(Page page ){
+        getSupportFragmentManager().beginTransaction().remove(getFragment(page)).commit();
+    }
+
     /**
      * Deletes a page and its corresponding fragment
      * @param page
      */
     private void deletePage(Page page){
-        getSupportFragmentManager().beginTransaction().remove(getFragment(page)).commit();
+        removeFragment(page);
         page.delete();
     }
 
@@ -247,11 +269,6 @@ public class PagesActivity extends AppCompatActivity {
             notebook.unselectAll();
         }
     }
-
-
-
-
-
 
 
 

@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     Button goToPagesButton;
 
 
+    /**
+     * If true, onCreate was called at least once
+     */
+    boolean appStartedFlag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         //jump to a blank page
         //TODO: replace hardcoded true with persistent setting
-        if(true){
+        if(true && !appStartedFlag){
+            //the launch phase is over
+            appStartedFlag = true;
             Intent intent = new Intent(this, ReaderActivity.class);
             intent.putExtra("PAGE", Notebook.getInstance().newPage());
             startActivity(intent);

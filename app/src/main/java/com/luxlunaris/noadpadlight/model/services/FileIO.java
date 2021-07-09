@@ -3,9 +3,11 @@ package com.luxlunaris.noadpadlight.model.services;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class FileIO {
 
@@ -69,6 +71,27 @@ public class FileIO {
 		}
 		
 	}
+
+
+	/**
+	 * Reads a single line from a file.
+	 * @param filepath
+	 * @return
+	 */
+	public static synchronized String readLine(String filepath){
+		try {
+			RandomAccessFile raf = new RandomAccessFile(filepath, "r");
+			String buf = raf.readLine();
+			raf.close();
+			return buf;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+
+
 		
 	
 }
