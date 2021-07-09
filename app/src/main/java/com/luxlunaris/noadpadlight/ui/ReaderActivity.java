@@ -82,12 +82,29 @@ public class ReaderActivity extends AppCompatActivity {
      * Save the progress when exiting from the activity
      */
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
-        page.setText(textView.getText().toString());
-        //save the current position
+    protected void onPause() {
+        super.onPause();
+
+        //get the edited text from the edittext view
+        String editedText = textView.getText().toString();
+
+        //if the edited text is empty, delete the Page
+        if(editedText.trim().isEmpty()){
+            page.delete();
+            return;
+        }
+
+        //save the current position on the page
         page.savePosition(textView.getSelectionStart());
+
+        //if the edited text doesn't differ from the text in the page, don't re-write it
+        if(editedText.equals(page.getText())){
+            return;
+        }
+
+        //else save the new text
+        page.setText(editedText);
+        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
     }
 
 

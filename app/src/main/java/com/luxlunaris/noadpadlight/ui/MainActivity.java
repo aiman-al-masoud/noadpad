@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.Notebook;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
         CONTEXT = this.getApplicationContext();
 
-        goToPagesButton = findViewById(R.id.goToPagesList);
-        goToPagesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
+        //make the pages-listing activity
+        Intent goToPagesIntent = new Intent(this, PagesActivity.class);
+        startActivity(goToPagesIntent);
 
 
-        Intent intent = new Intent(this, PagesActivity.class);
-        startActivity(intent);
+        //jump to a blank page
+        //TODO: replace hardcoded true with persistent setting
+        if(true){
+            Intent intent = new Intent(this, ReaderActivity.class);
+            intent.putExtra("PAGE", Notebook.getInstance().newPage());
+            startActivity(intent);
+        }
 
 
     }

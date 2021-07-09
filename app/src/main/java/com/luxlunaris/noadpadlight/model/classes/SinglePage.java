@@ -187,7 +187,11 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public String getPreview() {
-		return getText().substring(0, Math.min(10, getText().length()))+"...";
+		try{
+			return getText().substring(0, Math.min(10, getText().length()))+"...";
+		}catch (NullPointerException e){
+		}
+		return "...";
 	}
 
 	/**
