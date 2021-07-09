@@ -4,7 +4,6 @@ import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
-import com.luxlunaris.noadpadlight.ui.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,17 +15,22 @@ public class SinglePage extends File implements Page {
 	Metadata metadata;
 	File textFile;
 	
-	PageListener pageListener;
+	ArrayList<PageListener> listeners;
 
 
 	Integer[] positionsOfToken;
 	String currentToken = "";
 	int posIndex = 0;
 
+
+	boolean selected = false;
+
+
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
 		textFile = new File(getPath()+File.separator+"text");
+		listeners = new ArrayList<>();
 	}
 
 	@Override
@@ -37,15 +41,26 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void setText(String text) {
 		FileIO.write(textFile.getPath(), text);
+		for(PageListener listener : listeners){
+			listener.onModified(this);
+		}
+
 	}
 
 
 	@Override
 	public boolean delete() {
-		pageListener.onDeleted(this);
 		textFile.delete();
 		((MetadataFile)metadata).delete();
-		return super.delete();
+		boolean del = super.delete();
+
+		for(PageListener listener : listeners){
+			listener.onDeleted(this);
+
+		}
+
+
+		return del;
 	}
 
 	@Override
@@ -167,7 +182,7 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public void addListener(PageListener listener) {
-		this.pageListener = listener;
+		listeners.add(listener);
 	}
 
 	@Override
@@ -190,6 +205,22 @@ public class SinglePage extends File implements Page {
 		}
 		return true;
 	}
+
+	@Override
+	public boolean isSelected() {
+		return selected;
+	}
+
+	@Override
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+		//notify the listener
+		for(PageListener listener : listeners){
+			listener.onSelected(this);
+		}
+	}
+
+
 
 
 

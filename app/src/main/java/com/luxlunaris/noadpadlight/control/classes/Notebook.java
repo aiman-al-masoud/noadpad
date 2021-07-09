@@ -36,7 +36,13 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * List of pages loaded in memory
 	 */
-	volatile ArrayList<Page> pagesList;
+	private ArrayList<Page> pagesList;
+
+	/**
+	 * List of pages selected by the user
+	 */
+	private ArrayList<Page> selectedPagesList;
+
 
 	/**
 	 * Current page index
@@ -47,6 +53,7 @@ public class Notebook implements Pageable, PageListener {
 
 	private Notebook() {
 		pagesList = new ArrayList<Page>();
+		selectedPagesList = new ArrayList<Page>();
 		loadPages();
 		currentPage = 0;
 	}
@@ -84,6 +91,33 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
+	/**
+	 * Called by a Page when it gets selected.
+	 * Notebook adds it to the list of selected pages
+	 * @param page
+	 */
+	@Override
+	public void onSelected(Page page) {
+		if(page.isSelected()){
+			selectedPagesList.add(page);
+		}else{
+			selectedPagesList.remove(page);
+		}
+	}
+
+
+	/**
+	 * Returns an array of the selected pages
+	 */
+	public Page[] getSelected(){
+
+		for(Page page : selectedPagesList){
+			System.out.println(page.getPreview());
+		}
+
+		return selectedPagesList.toArray(new Page[0]);
+	}
+
 
 
 	/**
@@ -92,10 +126,22 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public void onDeleted(Page page) {
+		if(page.isSelected()){
+			selectedPagesList.remove(page);
+		}
 		pagesList.remove(page);
 	}
 
+	@Override
+	public void onModified(Page page) {
 
+	}
+
+	/**
+	 * Returns the next batch of pages
+	 * @param amount
+	 * @return
+	 */
 	@Override
 	public Page[] getNext(int amount) {
 
@@ -156,11 +202,32 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
+	/**
+	 * Add a page to the list and start listening to it
+	 * @param page
+	 */
 	private void addPage(Page page){
 		page.addListener(this);
 		pagesList.add(page);
 	}
 
+
+	/**
+	 * Get the number of loaded pages
+	 * @return
+	 */
+	public int getPagesNum(){
+		return pagesList.size();
+	}
+
+
+	public void selectAll(){
+		selectedPagesList = new ArrayList<>(pagesList);
+	}
+
+	public void unselectAll(){
+		selectedPagesList.clear();
+	}
 
 
 

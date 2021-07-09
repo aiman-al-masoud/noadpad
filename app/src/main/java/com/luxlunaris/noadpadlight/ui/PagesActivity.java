@@ -1,14 +1,6 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.loader.content.AsyncTaskLoader;
-
-import android.content.AsyncQueryHandler;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.SearchView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
@@ -40,10 +37,10 @@ public class PagesActivity extends AppCompatActivity {
     /**
      * How many pages are loaded in a batch
      */
-    final int PAGES_IN_A_BLOCK = 10; //too small makes it impossible to reach the bottom
+    final int PAGES_IN_A_BATCH = 10; //too small makes it impossible to reach the bottom
 
     /**
-     * The page fragments that on screen
+     * The page fragments that are on-screen
      */
     ArrayList<PageFragment> pageFragments;
 
@@ -54,16 +51,18 @@ public class PagesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
+
+        //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
 
+        //initialize list to store fragments
         pageFragments = new ArrayList<>();
 
         //load first block of pages
         loadNextPagesBlock();
 
-
+        //defines what the activity does when scrolling occurs
         setOnScrollAction();
-
 
     }
 
@@ -89,10 +88,29 @@ public class PagesActivity extends AppCompatActivity {
 
 
     /**
-     * Add a page fragment to the list
-     * @param pgFrag
+     * Ensures that there is ONE and only ONE fragment for each Page in the fragments list.
+     * @param page
+     * @return
      */
-    private void addFragment(PageFragment pgFrag){
+    private PageFragment getFragment(Page page){
+
+        //check if it's "equal" to an already existing one
+        for(PageFragment pgFrag : pageFragments){
+            if(pgFrag.getPage().getName().equals(page.getName())){
+                return pgFrag;
+            }
+        }
+        //create a new fragment
+        return PageFragment.newInstance(page);
+    }
+
+
+    /**
+     * Add a page fragment to the list
+     * @param page
+     */
+    private void addPage(Page page){
+        PageFragment pgFrag = getFragment(page);
         getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,"").commit();
         pageFragments.add(pgFrag);
     }
@@ -104,45 +122,36 @@ public class PagesActivity extends AppCompatActivity {
     private void loadPages(Page[] pages){
 
         for(Page page : pages){
-            PageFragment pgFrag = PageFragment.newInstance(page);
-            addFragment(pgFrag);
+            addPage(page);
         }
 
     }
-
 
     /**
      * Loads the next block of page fragments
      */
     private void loadNextPagesBlock(){
-       loadPages(notebook.getNext(PAGES_IN_A_BLOCK));
+       loadPages(notebook.getNext(PAGES_IN_A_BATCH));
     }
 
     /**
-     * Removes all of currently displayed pages
+     * Removes all of currently displayed pages (without deleting the pages)
      */
     private void removeAllPages(){
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
+        pageFragments.clear();
     }
 
-
-    private void removeFragment(PageFragment pgFrag){
-        getSupportFragmentManager().beginTransaction().remove(pgFrag).commit();
+    /**
+     * Deletes a page and its corresponding fragment
+     * @param page
+     */
+    private void deletePage(Page page){
+        getSupportFragmentManager().beginTransaction().remove(getFragment(page)).commit();
+        page.delete();
     }
-
-    private ArrayList<PageFragment> getSelected(){
-        ArrayList<PageFragment> result = new ArrayList<PageFragment>();
-        for(PageFragment pgFrag : pageFragments){
-            if(pgFrag.isSelected()){
-                result.add(pgFrag);
-            }
-        }
-        return result;
-    }
-
-
 
 
     /**
@@ -191,8 +200,7 @@ public class PagesActivity extends AppCompatActivity {
 
             case R.id.new_page:
                 Page page = notebook.newPage();
-                PageFragment pgFrag = PageFragment.newInstance(page);
-                addFragment(pgFrag);
+                addPage(page);
                 Intent intent = new Intent(this, ReaderActivity.class);
                 intent.putExtra("PAGE",page);
                 startActivity(intent);
@@ -206,9 +214,8 @@ public class PagesActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.delete:
-                                for(PageFragment pgFrag : getSelected()){
-                                    pgFrag.delete();
-                                    removeFragment(pgFrag);
+                                for(Page page : notebook.getSelected()){
+                                    deletePage(page);
                                 }
                                 break;
                         }
@@ -228,11 +235,23 @@ public class PagesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * Action when the back button is pressed
+     */
     @Override
     public void onBackPressed() {
-        //stay where you are
+        if(notebook.getPagesNum() > pageFragments.size()){
+            removeAllPages();
+            notebook.selectAll();
+            loadPages(notebook.getSelected());
+            notebook.unselectAll();
+        }
     }
+
+
+
+
+
 
 
 

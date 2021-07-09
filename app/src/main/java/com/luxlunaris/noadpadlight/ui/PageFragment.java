@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+
+import java.io.Serializable;
 
 public class PageFragment extends Fragment {
 
@@ -24,12 +27,8 @@ public class PageFragment extends Fragment {
     /**
      * The button that gets pressed
      */
-    Button pageButton;
+    transient Button pageButton;
 
-    /**
-     * Is this fragment selected?
-     */
-    private boolean selected = false;
 
 
     /**
@@ -42,6 +41,8 @@ public class PageFragment extends Fragment {
      * Text color when selected
      */
     private int SELECTED_TEXT_COLOR = Color.RED;
+
+
 
 
     public static PageFragment newInstance(Page page) {
@@ -79,7 +80,7 @@ public class PageFragment extends Fragment {
         pageButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                setSelected(!selected);
+                setSelected(!page.isSelected());
                 return true;
             }
         });
@@ -88,13 +89,19 @@ public class PageFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        pageButton.setText(page.getPreview());
+    }
+
 
     /**
      * Set this fragment's status as selected
      */
     public void setSelected(boolean selected){
 
-        this.selected = selected;
+        page.setSelected(selected);
 
         if(selected){
             pageButton.setTextColor(this.SELECTED_TEXT_COLOR);
@@ -109,17 +116,19 @@ public class PageFragment extends Fragment {
      * @return
      */
     public boolean isSelected(){
-        return selected;
+        return page.isSelected();
     }
 
 
-    /**
-     * Delete page
-     */
-    public void delete(){
-        page.delete();
+
+    public Page getPage(){
+        return page;
     }
 
+
+    public boolean equals(PageFragment pgFrag){
+        return pgFrag.getPage().getName().equals(pgFrag.getPage().getName());
+    }
 
 
 

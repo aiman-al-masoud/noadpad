@@ -60,9 +60,15 @@ public interface Page extends Serializable {
 
 	public String getPreview();
 
-
-
 	public boolean contains(String[] keywords);
+
+
+
+
+	public boolean isSelected();
+	public void setSelected(boolean select);
+
+
 
 
 	}
