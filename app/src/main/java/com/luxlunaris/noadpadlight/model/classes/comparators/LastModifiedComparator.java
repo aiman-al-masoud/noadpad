@@ -10,6 +10,6 @@ import java.util.Comparator;
 public class LastModifiedComparator implements Comparator<Page> {
     @Override
     public int compare(Page p1, Page p2) {
-        return (int)(p1.getLastModifiedTime() - p2.getLastModifiedTime());
+        return (int)(p2.getLastModifiedTime() - p1.getLastModifiedTime() );
     }
 }

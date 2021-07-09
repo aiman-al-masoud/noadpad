@@ -175,5 +175,23 @@ public class SinglePage extends File implements Page {
 		return getText().substring(0, Math.min(10, getText().length()))+"...";
 	}
 
+	/**
+	 * Checks if this page contains all of the passed keywords
+	 * (ANDed keywords)
+	 * @param keywords
+	 * @return
+	 */
+	public boolean contains(String[] keywords){
+		String text = getText().toUpperCase();
+		for(String keyword : keywords){
+			if(!text.contains(keyword.toUpperCase())){
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+
 
 }

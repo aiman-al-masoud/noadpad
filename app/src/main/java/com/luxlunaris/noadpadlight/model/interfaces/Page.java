@@ -61,4 +61,8 @@ public interface Page extends Serializable {
 	public String getPreview();
 
 
-}
+
+	public boolean contains(String[] keywords);
+
+
+	}

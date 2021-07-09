@@ -116,23 +116,20 @@ public class Notebook implements Pageable, PageListener {
 	
 	/**
 	 * Get an array of pages by whitespace-separated keywords.
-	 * @param keywords
+	 * @param query
 	 * @return
 	 */
-	public Page[] getByKeywords(String keywords) {
+	public Page[] getByKeywords(String query) {
 		
-		String[] keywordz = keywords.split("\\s+");
+		String[] keywords = query.split("\\s+");
 		ArrayList<Page> result = new ArrayList<>(pagesList);
 				
 		for(Page page : pagesList) {
-			for(String keyword : keywordz) {
-				boolean containsKeyword = page.getText().toUpperCase().contains(keyword.toUpperCase());
-				if(!containsKeyword) {
+			if(!page.contains(keywords)) {
 					result.remove(page);
-				}
 			}	
 		}
-		
+
 		return result.toArray(new Page[0]);
 	}
 
