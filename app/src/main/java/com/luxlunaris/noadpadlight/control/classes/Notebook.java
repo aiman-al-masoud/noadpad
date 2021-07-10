@@ -50,8 +50,6 @@ public class Notebook implements Pageable, PageListener {
 	int currentPage;
 
 
-
-
 	private Notebook() {
 		pagesList = new ArrayList<Page>();
 		selectedPagesList = new ArrayList<Page>();

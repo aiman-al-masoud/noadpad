@@ -81,7 +81,7 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public int numOfTokens(String token) {
-		return getText().split(token).length-1;
+		return getText().toUpperCase().split(token.toUpperCase()).length-1;
 	}
 
 

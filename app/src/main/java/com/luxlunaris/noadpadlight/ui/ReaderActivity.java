@@ -192,14 +192,4 @@ public class ReaderActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
 }
