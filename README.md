@@ -5,7 +5,7 @@ Most android notepad apps are either:
 * or: free and awesome, but with ads to spoil the fun,
 * or: free, and without ads, but utterly awful.
 
-This app (aims) to be free, awesome, and totally devoid of ads!
+This app (aims) to be free, awesome, open-source, and totally devoid of ads!
 
 
 
