@@ -19,13 +19,13 @@ You are hereby granted the right to use, modify, and re-distribute This Product,
 
 3. And, preserve the rights of others to use, modify, and re-distribute any Derived Product.
 
-You are NOT hereby granted the right to sell this product for a profit, unless:
+You are NOT hereby granted the right to sell this product for a profit, unless all of the following are met:
 
 1. You explicitly ask for the author's permission.
 
 2. Your Derived Product contains significant optimizations to the code; or what an average user would deem to be an "additional feature".
 
-3. And, your Derived Product shall contain no advertisements.
+3. And, your Derived Product contains no advertisements.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
