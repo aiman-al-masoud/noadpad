@@ -5,7 +5,7 @@
 https://github.com/aiman-al-masoud/noadpadlight
 
 
-* Derived Product/Modified Version: any product derived from the modification and/or extension of the Original Product's source-code. 
+* Derived Product/Modified Version/Derived Work: any product derived from the modification and/or extension of the Original Product's source-code. 
 
 
 
@@ -19,7 +19,7 @@ You are hereby granted the right to use, modify, and re-distribute This Product,
 
 3. And, preserve the rights of others to use, modify, and re-distribute any Derived Product.
 
-You are NOT hereby granted the right to sell this product for a profit, unless all of the following are met:
+You are NOT hereby granted the right to sell This Product or any Derived Work for a profit, unless all of the following are met:
 
 1. You explicitly ask for the author's permission.
 
