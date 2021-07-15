@@ -1,6 +1,6 @@
 # noadpadlight
 
-There are generally 3 kinds of Andoroid notepad app:
+There are generally 3 kinds of Andoroid notepad apps:
 
 * the paid and awesome
 * the free and awesome, but with ads to spoil the day
