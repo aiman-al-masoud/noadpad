@@ -1,6 +1,6 @@
 # noadpadlight
 
-There are generally 3 kinds of Android notepad apps:
+Android notepad apps fall into 3 general categories:
 
 * the paid and awesome
 * the free and awesome, but with ads to spoil the day
