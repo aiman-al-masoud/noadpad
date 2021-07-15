@@ -10,21 +10,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * SinglePage is a persistent implementation of the Page interface.
+ */
 
 public class SinglePage extends File implements Page {
-	
+
+	/**
+	 * manages this Page's stored metadata
+	 */
 	Metadata metadata;
+
+	/**
+	 * contains this Page's user-generated text
+	 */
 	File textFile;
-	
+
+	/**
+	 * this Page's listeners (Notebook)
+	 */
 	ArrayList<PageListener> listeners;
 
 
+	/**
+	 * true if this Page is currently "selected"
+	 */
+	boolean selected = false;
+
+
 	Integer[] positionsOfToken;
-	String currentToken = "";
+	String currentToken;
 	int posIndex = 0;
 
-
-	boolean selected = false;
 
 
 
@@ -36,12 +53,20 @@ public class SinglePage extends File implements Page {
 		listeners = new ArrayList<>();
 	}
 
+	/**
+	 * get this Page's text from the text file
+	 * @return
+	 */
 	@Override
 	public String getText() {
 		String text = FileIO.read(textFile.getPath());
 		return text ==null? "" : text;
 	}
 
+	/**
+	 * Save new/edited text to the text file
+	 * @param text
+	 */
 	@Override
 	public void setText(String text) {
 		FileIO.write(textFile.getPath(), text);
@@ -52,21 +77,27 @@ public class SinglePage extends File implements Page {
 	}
 
 
+	/**
+	 * Delete this page and all of its contents from disk
+	 * @return
+	 */
 	@Override
 	public boolean delete() {
 		textFile.delete();
 		((MetadataFile)metadata).delete();
 		boolean del = super.delete();
 
+		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
 
 		}
-
-
 		return del;
 	}
 
+	/**
+	 * Create this Page on disk as a directory
+	 */
 	@Override
 	public void create() {
 		mkdir();
@@ -79,29 +110,55 @@ public class SinglePage extends File implements Page {
 		}
 	}
 
+
+	/**
+	 * How many times does a token appear in this Page's text?
+	 * @param token
+	 * @return
+	 */
 	@Override
 	public int numOfTokens(String token) {
 		return getText().toUpperCase().split(token.toUpperCase()).length-1;
 	}
 
-
-
-
+	/**
+	 * Get this Page's name
+	 * @return
+	 */
 	@Override
 	public String getName(){
 		return super.getName();
 	}
 
+	/**
+	 * Get the time of creation of this Page
+	 * @return
+	 */
 	@Override
 	public long getCreationTime() {
 		return Long.parseLong(getName());
 	}
 
+	/**
+	 * Get this time this Page got last modified
+	 * @return
+	 */
 	@Override
 	public long getLastModifiedTime() {
 		return lastModified();
 	}
 
+
+	/**
+	 * Set the token to be found in this Page
+	 * @param token
+	 */
+	@Override
+	public void setTokenToBeFound(String token){
+		positionsOfToken = getTokensPositions(token);
+		currentToken = token;
+		posIndex = 0;
+	}
 
 	/**
 	 * Find all of the positions of a token in this Page
@@ -134,13 +191,16 @@ public class SinglePage extends File implements Page {
 	}
 
 
+	/**
+	 *  Get the next position of the currently sought-after token
+	 * @return
+	 */
 	@Override
-	public int nextPosition(String token){
+	public int nextPosition() {
 
-		if(!currentToken.equals(token)){
-			positionsOfToken = getTokensPositions(token);
-			currentToken = token;
-			posIndex = 0;
+		//if no token, or no positions, return index = 0
+		if(currentToken ==null || positionsOfToken.length==0){
+			return 0;
 		}
 
 
@@ -152,13 +212,17 @@ public class SinglePage extends File implements Page {
 		return positionsOfToken[posIndex++];
 	}
 
-	@Override
-	public int previousPosition(String token){
+	/**
+	 *  Get the previous position of the currently sought-after token
+	 * @return
+	 */
 
-		if(!currentToken.equals(token)){
-			positionsOfToken = getTokensPositions(token);
-			currentToken = token;
-			posIndex = 0;
+	@Override
+	public int previousPosition() {
+
+		//if no token, or no positions, return index = 0
+		if(currentToken ==null || positionsOfToken.length==0){
+			return 0;
 		}
 
 		if(posIndex-1 < 0){
@@ -169,41 +233,47 @@ public class SinglePage extends File implements Page {
 		return positionsOfToken[posIndex--];
 	}
 
-	@Override
-	public int nextPosition() {
 
-		return nextPosition(currentToken);
-	}
-
-	@Override
-	public int previousPosition() {
-
-		return previousPosition(currentToken);
-	}
-
+	/**
+	 * Set a "bookmark" within this page
+	 * @param pos
+	 */
 	@Override
 	public void savePosition(int pos) {
 		metadata.setTagValue("LAST_POSITION", pos+"");
 	}
 
+	/**
+	 * Get this Page's "bookmark", aka last position visited.
+	 * @return
+	 */
 	@Override
 	public int getLastPosition() {
 		String lastPosString = metadata.getTagValue("LAST_POSITION")==null? "0" : metadata.getTagValue("LAST_POSITION");
 		return Integer.parseInt(lastPosString);
 	}
 
+	/**
+	 * Add a PageListener to this Page
+	 * @param listener
+	 */
 	@Override
 	public void addListener(PageListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Get a text-based preview of this Page.
+	 * (The first line and the time last-modified)
+	 * @return
+	 */
 	@Override
 	public String getPreview() {
 		return FileIO.readLine(textFile.getPath())+"...\n" +new Date(getLastModifiedTime()).toString();
 	}
 
 	/**
-	 * Checks if this page contains all of the passed keywords
+	 * Checks if this page contains ALL of the provided keywords
 	 * (ANDed keywords)
 	 * @param keywords
 	 * @return
@@ -218,11 +288,19 @@ public class SinglePage extends File implements Page {
 		return true;
 	}
 
+	/**
+	 * Is this Page's "selected" flag true?
+	 * @return
+	 */
 	@Override
 	public boolean isSelected() {
 		return selected;
 	}
 
+	/**
+	 * Set this Page's "selected" flag
+	 * @param selected
+	 */
 	@Override
 	public void setSelected(boolean selected) {
 		this.selected = selected;

@@ -4,20 +4,54 @@ import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 
 import java.io.Serializable;
 
+/**
+ * Page is the atom-component of the Notebook.
+ *
+ * The user can create several Pages, each Page
+ * can contain text and the relative metadata.
+ *
+ */
 public interface Page extends Serializable {
-	
+
+	/**
+	 * Get the Page's text
+	 * @return
+	 */
 	public String getText();
-	
+
+	/**
+	 * Modify/set the Page's text
+	 * @param text
+	 */
 	public void setText(String text);
 
+	/**
+	 * Get the Page's name
+	 * @return
+	 */
 	public String getName();
 
+	/**
+	 * Get the time the Page was created
+	 * @return
+	 */
 	public long getCreationTime();
 
+	/**
+	 * Get the last time the Page was modified
+	 * @return
+	 */
 	public long getLastModifiedTime();
 
+	/**
+	 * Delete the Page
+	 * @return
+	 */
 	public boolean delete();
-	
+
+	/**
+	 * Create the Page
+	 */
 	public void create();
 
 
@@ -30,18 +64,10 @@ public interface Page extends Serializable {
 
 
 	/**
-	 * Get the next position of a token
+	 * Set the token to be found.
 	 * @param token
-	 * @return
 	 */
-	public int nextPosition(String token);
-
-	/**
-	 * Get the previous position of a token.
-	 * @param token
-	 * @return
-	 */
-	public int previousPosition(String token);
+	public void setTokenToBeFound(String token);
 
 
 	/**
@@ -58,22 +84,52 @@ public interface Page extends Serializable {
 	public int previousPosition();
 
 
+	/**
+	 * Save the current position
+	 * @param pos
+	 */
 	public void savePosition(int pos);
 
 
+	/**
+	 * Get the last-saved (last visited) position
+	 * @return
+	 */
 	public int getLastPosition();
 
-
+	/**
+	 * Add a PageListener to this Page
+	 * @param listener
+	 */
 	public void addListener(PageListener listener);
 
+	/**
+	 * Get a text based preview of this Page
+	 * @return
+	 */
 	public String getPreview();
 
+	/**
+	 *  Checks if this page contains ALL of the provided keywords
+	 * 	(ANDed keywords)
+	 * @param keywords
+	 * @return
+	 */
 	public boolean contains(String[] keywords);
 
 
+	/**
+	 * Is this Page currently selected?
+	 * @return
+	 */
 	public boolean isSelected();
-	public void setSelected(boolean select);
 
+
+	/**
+	 * Set this Page as selected.
+	 * @param select
+	 */
+	public void setSelected(boolean select);
 
 
 

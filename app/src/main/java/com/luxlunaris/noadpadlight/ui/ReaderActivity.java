@@ -64,7 +64,6 @@ public class ReaderActivity extends AppCompatActivity {
         page = (Page)getIntent().getSerializableExtra("PAGE");
         //set the view's initial text to the Page's text
         textView.setText(page.getText());
-
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
 
@@ -128,8 +127,18 @@ public class ReaderActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                jumpToPosition(page.nextPosition(query));
-                Toast.makeText(THIS, "found "+page.numOfTokens(query)+" occrrs. vol. up/down to nav.", Toast.LENGTH_LONG).show();
+
+                //set the token to be found in the Page
+                page.setTokenToBeFound(query);
+
+                //get the number of such tokens
+                int multiplicity = page.numOfTokens(query);
+
+                //auto-jump to its first position
+                jumpToPosition(page.nextPosition());
+
+                //display a toast about the multiplicity of said token
+                Toast.makeText(THIS, "found "+ multiplicity +" occrrs. vol. up/down to nav.", Toast.LENGTH_LONG).show();
                 return true;
             }
 
