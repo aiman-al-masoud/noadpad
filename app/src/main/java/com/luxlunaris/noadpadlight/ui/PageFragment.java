@@ -17,7 +17,7 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.Serializable;
 
-public class PageFragment extends Fragment {
+public class PageFragment extends Fragment{
 
     /**
      * The Page that this fragment represents
@@ -111,25 +111,10 @@ public class PageFragment extends Fragment {
 
     }
 
-    /**
-     * Is this fragment currently selected?
-     * @return
-     */
-    public boolean isSelected(){
-        return page.isSelected();
-    }
-
-
 
     public Page getPage(){
         return page;
     }
-
-
-    public boolean equals(PageFragment pgFrag){
-        return pgFrag.getPage().getName().equals(pgFrag.getPage().getName());
-    }
-
 
 
 

@@ -50,11 +50,17 @@ public class Notebook implements Pageable, PageListener {
 	int currentPage;
 
 
+
+
+
+
 	private Notebook() {
 		pagesList = new ArrayList<Page>();
 		selectedPagesList = new ArrayList<Page>();
 		loadPages();
 		currentPage = 0;
+
+
 	}
 
 	/**
@@ -86,6 +92,7 @@ public class Notebook implements Pageable, PageListener {
 			page.create();
 			addPage(page);
 		}
+
 		return (Page)page;
 	}
 
@@ -109,11 +116,6 @@ public class Notebook implements Pageable, PageListener {
 	 * Returns an array of the selected pages
 	 */
 	public Page[] getSelected(){
-
-		for(Page page : selectedPagesList){
-			System.out.println(page.getPreview());
-		}
-
 		return selectedPagesList.toArray(new Page[0]);
 	}
 
@@ -130,12 +132,13 @@ public class Notebook implements Pageable, PageListener {
 		}
 		pagesList.remove(page);
 
+
 	}
 
 	@Override
 	public void onModified(Page page) {
-
 	}
+
 
 	/**
 	 * Returns the next batch of pages
@@ -145,17 +148,22 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public Page[] getNext(int amount) {
 
+
+		//calculating the amount of pages left to deliver
 		amount = Math.min(amount, pagesList.size() -currentPage );
 
+		List<Page> result = new ArrayList<>();
+
+
 		try{
-			List<Page> result  = pagesList.subList(currentPage, currentPage+amount);
+			result = pagesList.subList(currentPage, currentPage+amount);
 			currentPage+=amount;
-			return result.toArray(new Page[0]);
 		}catch (Exception e){
 
 		}
 
-		return new Page[0];
+		return result.toArray(new Page[0]);
+
 	}
 
 
@@ -228,6 +236,15 @@ public class Notebook implements Pageable, PageListener {
 	public void unselectAll(){
 		selectedPagesList.clear();
 	}
+
+
+
+
+
+
+
+
+
 
 
 

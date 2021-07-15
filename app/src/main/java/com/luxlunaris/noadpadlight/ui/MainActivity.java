@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public  static  Context CONTEXT;
 
 
+
     /**
      * Takes you to the pages list
      */
@@ -40,11 +41,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CONTEXT = this.getApplicationContext();
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CONTEXT = this.getApplicationContext();
 
 
         //make the pages-listing activity

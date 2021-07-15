@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
@@ -22,8 +23,9 @@ import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-public class PagesActivity extends AppCompatActivity {
+public class PagesActivity extends AppCompatActivity{
 
     /**
      * The Notebook manages the pages.
@@ -54,7 +56,6 @@ public class PagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pages);
 
 
-
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
 
@@ -66,9 +67,6 @@ public class PagesActivity extends AppCompatActivity {
 
         //defines what the activity does when scrolling occurs
         setOnScrollAction();
-
-
-
     }
 
 
@@ -90,8 +88,6 @@ public class PagesActivity extends AppCompatActivity {
                     }catch (Exception e){
 
                     }
-
-
                 }
 
             }
@@ -117,16 +113,38 @@ public class PagesActivity extends AppCompatActivity {
     }
 
 
+
+
+
+
     /**
      * Add a page fragment to the list
      * @param page
      */
-    private void addPage(Page page){
-        PageFragment pgFrag = getFragment(page);
-        getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,"").commit();
-        pageFragments.add(pgFrag);
+    private void addPage(Page page, boolean top){
 
+        //get the appropriate page fragment
+        PageFragment pgFrag = getFragment(page);
+
+        if(!top){
+            //add the new page fragment to the bottom of the list layout
+            getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,page.getName()).commit();
+        }else{
+            //else add the new page fragment on top of all others
+            FrameLayout child = new FrameLayout(pagesLinLayout.getContext());
+            child.setId(new Random().nextInt(1000000000));
+            pagesLinLayout.addView(child, 0);
+            getSupportFragmentManager().beginTransaction().add(child.getId(),pgFrag,page.getName()).commit();
+
+        }
+
+        //add the page fragment to the fragment's list
+        pageFragments.add(pgFrag);
     }
+
+
+
+
 
 
     /**
@@ -135,7 +153,7 @@ public class PagesActivity extends AppCompatActivity {
     private void loadPages(Page[] pages){
 
         for(Page page : pages){
-            addPage(page);
+            addPage(page, false);
         }
 
     }
@@ -162,8 +180,10 @@ public class PagesActivity extends AppCompatActivity {
      * Removes a fragment without deleting its page
      * @param page
      */
-    private void removeFragment(Page page ){
-        getSupportFragmentManager().beginTransaction().remove(getFragment(page)).commit();
+    private void removeFragment(Page page){
+        PageFragment frag = getFragment(page);
+        pageFragments.remove(frag);
+        getSupportFragmentManager().beginTransaction().remove(frag).commit();
     }
 
     /**
@@ -222,7 +242,7 @@ public class PagesActivity extends AppCompatActivity {
 
             case R.id.new_page:
                 Page page = notebook.newPage();
-                addPage(page);
+                addPage(page, true);
                 Intent intent = new Intent(this, ReaderActivity.class);
                 intent.putExtra("PAGE",page);
                 startActivity(intent);
@@ -269,6 +289,14 @@ public class PagesActivity extends AppCompatActivity {
             notebook.unselectAll();
         }
     }
+
+
+
+
+
+
+
+
 
 
 
