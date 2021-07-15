@@ -21,9 +21,9 @@ You are hereby granted the right to use, modify, and re-distribute This Product,
 
 You are NOT hereby granted the right to sell This Product or any Derived Work for a profit, unless all of the following are met:
 
-1. You explicitly ask for the author's permission.
+1. You explicitly ask for the author's permission,
 
-2. Your Derived Product contains significant optimizations to the code; or what an average user would deem to be an "additional feature".
+2. Your Derived Product contains significant optimizations to the code; or what an average user would deem to be an "additional feature",
 
 3. And, Your Derived Product contains no advertisements.
 
