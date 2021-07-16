@@ -81,13 +81,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public synchronized static Notebook getInstance() {
-		//return instance!=null? instance : (instance = new Notebook());
-
-		if(instance==null){
-			instance = new Notebook();
-		}
-
-		return instance;
+		return instance!=null? instance : (instance = new Notebook());
 	}
 
 
