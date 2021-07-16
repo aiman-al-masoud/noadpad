@@ -57,7 +57,12 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	static private ArrayList<Page> justDeletedList;
 
-
+	/**
+	 * Pages that just got created
+	 * (Needed on restarting the UI that handles
+	 * visualizing the available Pages)
+	 */
+	static private ArrayList<Page> justCreatedList;
 
 
 
@@ -65,14 +70,11 @@ public class Notebook implements Pageable, PageListener {
 	private Notebook() {
 
 		pagesList = new ArrayList<>();
-		selectedPagesList = new ArrayList<Page>();
+		selectedPagesList = new ArrayList<>();
 		loadPages();
 		currentPage = 0;
-
-
 		justDeletedList = new ArrayList<>();
-
-
+		justCreatedList = new ArrayList<>();
 
 	}
 
@@ -111,6 +113,7 @@ public class Notebook implements Pageable, PageListener {
 			addPage(page);
 		}
 
+		justCreatedList.add(page);
 
 		return page;
 	}
@@ -162,6 +165,8 @@ public class Notebook implements Pageable, PageListener {
 
 		//add the page to the "just deleted" list
 		justDeletedList.add(page);
+
+		justCreatedList.remove(page);
 
 	}
 
@@ -280,6 +285,16 @@ public class Notebook implements Pageable, PageListener {
 	public Page[] getJustDeleted(){
 		Page[] result = justDeletedList.toArray(new Page[0]);
 		justDeletedList.clear();
+		return result;
+	}
+
+	/**
+	 * Get the Pages that were just created, then forget about 'em.
+	 * @return
+	 */
+	public Page[] getJustCreated(){
+		Page[] result = justCreatedList.toArray(new Page[0]);
+		justCreatedList.clear();
 		return result;
 	}
 

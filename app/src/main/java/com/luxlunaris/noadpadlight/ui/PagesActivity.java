@@ -58,8 +58,6 @@ public class PagesActivity extends AppCompatActivity{
         setContentView(R.layout.activity_pages);
 
 
-
-
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
 
@@ -157,7 +155,13 @@ public class PagesActivity extends AppCompatActivity{
     private void loadPages(Page[] pages){
 
         for(Page page : pages){
-            addPage(page, false);
+
+            try{
+                addPage(page, false);
+            }catch (IllegalStateException e){
+
+            }
+
         }
 
     }
@@ -301,12 +305,19 @@ public class PagesActivity extends AppCompatActivity{
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
-        Page[] delPages = notebook.getJustDeleted();
-        for(Page page : delPages){
+        for(Page page : notebook.getJustDeleted()){
             removeFragment(page);
         }
 
+        //get the pages that were created while this activity was in the
+        //background and add the appropriate fragments
+        for(Page page : notebook.getJustCreated()){
+            try{
+                addPage(page, true);
+            }catch (IllegalStateException e){
 
+            }
+        }
 
     }
 
