@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,12 +90,20 @@ public class ReaderActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
+
+
         //get the edited text from the edittext view
         String editedText = textView.getText().toString();
 
+
+
+
+
         //if the edited text is empty, delete the Page
+
+
         if(editedText.trim().isEmpty()){
-            page.delete();
+            boolean t = page.delete();
             return;
         }
 

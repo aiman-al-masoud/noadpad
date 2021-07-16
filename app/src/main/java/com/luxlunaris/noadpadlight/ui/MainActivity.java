@@ -12,6 +12,7 @@ import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+
 import android.view.View;
 
 import android.view.Menu;
@@ -62,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
             //the launch phase is over
             appStartedFlag = true;
             Intent intent = new Intent(this, ReaderActivity.class);
-            intent.putExtra("PAGE", Notebook.getInstance().newPage());
+
+            Notebook notebook = Notebook.getInstance();
+
+
+            intent.putExtra("PAGE", notebook.newPage());
             startActivity(intent);
         }
 

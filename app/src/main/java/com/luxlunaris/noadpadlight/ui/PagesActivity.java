@@ -32,6 +32,8 @@ public class PagesActivity extends AppCompatActivity{
      */
     Notebook notebook = Notebook.getInstance();
 
+
+
     /**
      * The layout that hosts the page fragments.
      */
@@ -54,6 +56,8 @@ public class PagesActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
+
+
 
 
         //get the lin layout that will hold the fragments
@@ -291,11 +295,20 @@ public class PagesActivity extends AppCompatActivity{
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //get the pages that were deleted while this activity was in the
+        //background and remove the relative fragments
+        Page[] delPages = notebook.getJustDeleted();
+        for(Page page : delPages){
+            removeFragment(page);
+        }
 
 
 
-
-
+    }
 
 
 

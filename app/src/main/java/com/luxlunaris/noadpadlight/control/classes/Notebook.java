@@ -1,12 +1,12 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
+
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
 import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-import com.luxlunaris.noadpadlight.ui.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * The instance of this Singleton class
 	 */
-	static Notebook instance;
+	private static Notebook instance;
 
 
 	/**
@@ -50,15 +50,28 @@ public class Notebook implements Pageable, PageListener {
 	int currentPage;
 
 
+	/**
+	 * Pages that just got deleted
+	 * (Needed on restarting the UI that handles
+	 * visualizing the available Pages)
+	 */
+	static private ArrayList<Page> justDeletedList;
+
+
 
 
 
 
 	private Notebook() {
-		pagesList = new ArrayList<Page>();
+
+		pagesList = new ArrayList<>();
 		selectedPagesList = new ArrayList<Page>();
 		loadPages();
 		currentPage = 0;
+
+
+		justDeletedList = new ArrayList<>();
+
 
 
 	}
@@ -67,8 +80,14 @@ public class Notebook implements Pageable, PageListener {
 	 * Notebook is a Singleton
 	 * @return
 	 */
-	public static Notebook getInstance() {
-		return instance!=null? instance : (instance = new Notebook());		
+	public synchronized static Notebook getInstance() {
+		//return instance!=null? instance : (instance = new Notebook());
+
+		if(instance==null){
+			instance = new Notebook();
+		}
+
+		return instance;
 	}
 
 
@@ -79,6 +98,11 @@ public class Notebook implements Pageable, PageListener {
 	public Page newPage(){
 		return newPage(System.currentTimeMillis()+"");
 	}
+
+
+
+
+
 
 
 	/**
@@ -93,8 +117,14 @@ public class Notebook implements Pageable, PageListener {
 			addPage(page);
 		}
 
-		return (Page)page;
+
+		return page;
 	}
+
+
+
+
+
 
 
 	/**
@@ -127,11 +157,17 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public void onDeleted(Page page) {
+
+		//remove the page from the "selected" list
 		if(page.isSelected()){
 			selectedPagesList.remove(page);
 		}
+
+		//remove the page from the pages list
 		pagesList.remove(page);
 
+		//add the page to the "just deleted" list
+		justDeletedList.add(page);
 
 	}
 
@@ -229,20 +265,29 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
+	/**
+	 * Mark all Pages as selected
+	 */
 	public void selectAll(){
 		selectedPagesList = new ArrayList<>(pagesList);
 	}
 
+	/**
+	 * Mark all pages as unselected
+	 */
 	public void unselectAll(){
 		selectedPagesList.clear();
 	}
 
-
-
-
-
-
-
+	/**
+	 * Get the Pages that were just deleted, then forget about 'em.
+	 * @return
+	 */
+	public Page[] getJustDeleted(){
+		Page[] result = justDeletedList.toArray(new Page[0]);
+		justDeletedList.clear();
+		return result;
+	}
 
 
 

@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
@@ -90,7 +92,6 @@ public class SinglePage extends File implements Page {
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
-
 		}
 		return del;
 	}
