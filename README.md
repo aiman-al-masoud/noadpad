@@ -1,9 +1,10 @@
 # noadpadlight
-Most android notepad apps are either: 
 
-* paid and awesome,
-* or: free and awesome, but with ads to spoil the fun,
-* or: free, and without ads, but utterly awful.
+Android notepad apps fall into 3 general categories:
+
+* the paid and awesome
+* the free and awesome, but with ads to spoil the day
+* the free and without ads, but utterly awful.
 
 This app (aims) to be free, awesome, open-source, and totally devoid of ads!
 
