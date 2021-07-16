@@ -15,7 +15,13 @@ public class Settings {
 
     private static String SETTINGS_FILE_PATH = Paths.APP_DIR_PATH+ File.separator+"settings";
 
-    static MetadataFile settingsFile;
+    private static MetadataFile settingsFile;
+
+
+    public static String TRUE = "true";
+
+    public static String FALSE = "false";
+
 
     /**
      * Get the settingsFile metadata file
@@ -37,10 +43,13 @@ public class Settings {
 
     /**
      * Some tags for the most important settings.
+     *
+     * NB: when using these to access a tagValue via the getTagValue method
+     * of Metadata you need to convert a TAGS tag to a string. (toString())
      */
     public enum TAGS{
 
-        TEXT_SIZE;
+        TEXT_SIZE, LAUNCH_TO_BLANK_PAGE;
 
     }
 

@@ -8,6 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
+import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -57,17 +58,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(goToPagesIntent);
 
 
-        //jump to a blank page
-        //TODO: replace hardcoded true with persistent setting
-        if(true && !appStartedFlag){
-            //the launch phase is over
+        //decide whether or not to open a blank page at app launch
+        boolean startToBlankPage = Settings.get().getTagValue(Settings.TAGS.LAUNCH_TO_BLANK_PAGE.toString()).equals(Settings.TRUE)? true : false;
+        if(startToBlankPage && !appStartedFlag){
+
+            //set the "launch phase is over" flag
             appStartedFlag = true;
+
+            //jump to the reader activity with a new blank page
             Intent intent = new Intent(this, ReaderActivity.class);
-
-            Notebook notebook = Notebook.getInstance();
-
-
-            intent.putExtra("PAGE", notebook.newPage());
+            intent.putExtra("PAGE", Notebook.getInstance().newPage());
             startActivity(intent);
         }
 

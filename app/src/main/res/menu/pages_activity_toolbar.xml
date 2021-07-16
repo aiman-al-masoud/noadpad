@@ -23,5 +23,12 @@
         app:showAsAction="always" />
 
 
+    <item
+        android:id="@+id/go_to_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="settings"
+        app:showAsAction="always" />
+
+
 
 </menu>

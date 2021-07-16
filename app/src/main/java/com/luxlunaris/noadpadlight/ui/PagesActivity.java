@@ -248,6 +248,13 @@ public class PagesActivity extends AppCompatActivity{
 
         switch(item.getItemId()){
 
+            case R.id.go_to_settings:
+
+                //start the settings activity
+                Intent goToSetIntent = new Intent(this, SettingsActivity.class);
+                startActivity(goToSetIntent);
+
+                break;
             case R.id.new_page:
                 Page page = notebook.newPage();
                 addPage(page, true);
