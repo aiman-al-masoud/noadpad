@@ -1,5 +1,6 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
 
@@ -37,7 +38,7 @@ public class MetadataFile extends File implements Metadata {
 	public void setTagValue(String key, String value) {
 
 		//get the old value of the key
-		String oldValue = getTagValue(key);
+		String oldValue = getString(key);
 		
 		//get this file's text
 		String text = FileIO.read(this.getPath());
@@ -65,7 +66,7 @@ public class MetadataFile extends File implements Metadata {
 	 * @return
 	 */
 	@Override
-	public String getTagValue(String key) {
+	public String getString(String key) {
 		//get this file's text
 		String text = FileIO.read(this.getPath());
 		String value = null;
@@ -83,15 +84,75 @@ public class MetadataFile extends File implements Metadata {
 		
 		return value;
 	}
-	
-	
+
+
+	/**
+	 * Get the value of a tag that stores an integer
+	 * @param tagName
+	 * @return
+	 * @throws WrongTagTypeException
+	 */
+	@Override
+	public int getInt(String tagName) throws WrongTagTypeException {
+
+		try{
+			int parsedInt = Integer.parseInt(getString(tagName).trim());
+			return parsedInt;
+		}catch(NumberFormatException e) {
+			throw new WrongTagTypeException(tagName+" is not an int!");
+		}
+
+	}
+
+
+	/**
+	 * Get the value of a tag that stores a boolean
+	 * @param tagName
+	 * @return
+	 * @throws WrongTagTypeException
+	 */
+	@Override
+	public boolean getBoolean(String tagName) throws WrongTagTypeException {
+
+		String boolString = getString(tagName);
+
+		if(boolString.toLowerCase().trim().equals("true")){
+			return true;
+		}
+
+		if(boolString.toLowerCase().trim().equals("false")){
+			return false;
+		}
+
+		throw new WrongTagTypeException(tagName+" is not a boolean!");
+
+	}
+
+	/**
+	 * Get the value of a tag that stores a floating point number.
+	 * @param tagName
+	 * @return
+	 * @throws WrongTagTypeException
+	 */
+	@Override
+	public double getFloat(String tagName) throws WrongTagTypeException {
+		try{
+			double parsedDouble = Double.parseDouble(getString(tagName).trim());
+			return parsedDouble;
+		}catch (NumberFormatException e){
+			throw new WrongTagTypeException(tagName+" is not a number!");
+		}
+
+	}
+
+
 	/**
 	 * Removes a key and its associated value.
 	 * @param key
 	 */
 	@Override
 	public void removeTag(String key) {
-		String value = getTagValue(key);
+		String value = getString(key);
 		if(value==null) {
 			return; //no key to remove
 		}
@@ -99,6 +160,10 @@ public class MetadataFile extends File implements Metadata {
 		FileIO.write(this.getPath(), newText);
 		
 	}
+
+
+
+
 
 	
 }

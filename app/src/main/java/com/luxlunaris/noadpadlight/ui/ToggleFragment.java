@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 /**
@@ -31,7 +32,7 @@ public class ToggleFragment extends Fragment {
     /**
      * The tag of a binary setting
      */
-    private Enum SETTING_TAG;
+    private SETTINGS_TAGS SETTING_TAG;
 
     /**
      * Tag's value in the settings file when setting enabled
@@ -49,7 +50,7 @@ public class ToggleFragment extends Fragment {
     }
 
 
-    public static ToggleFragment newInstance(String text, Enum SETTING_TAG) {
+    public static ToggleFragment newInstance(String text, SETTINGS_TAGS SETTING_TAG) {
         ToggleFragment fragment = new ToggleFragment();
         fragment.text = text;
         fragment.SETTING_TAG = SETTING_TAG;
@@ -77,13 +78,12 @@ public class ToggleFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                System.out.println("I got clicked "+isChecked);
 
                 //if checked set the value of the setting to true
                 if(isChecked){
-                    Settings.get().setTagValue(SETTING_TAG.toString(), ENABLED);
+                    Settings.setTagValue(SETTING_TAG, ENABLED);
                 }else{
-                    Settings.get().setTagValue(SETTING_TAG.toString(), DISABLED);
+                    Settings.setTagValue(SETTING_TAG, DISABLED);
                 }
 
             }
@@ -101,21 +101,8 @@ public class ToggleFragment extends Fragment {
     private boolean getCurrentValue(){
 
         //get the current value of the binary setting
-        String currentSettingValue = Settings.get().getTagValue(SETTING_TAG.toString());
-
-        //if no value is currently saved, assume setting is "false"
-        if(currentSettingValue==null){
-            return false;
-        }
-
-        //if the value saved on the file is "true":
-        if(currentSettingValue.toLowerCase().trim().equals(ENABLED)){
-            return true;
-        }
-
-
-
-        return false;
+        boolean currentSettingValue = Settings.getBoolean(SETTING_TAG);
+        return currentSettingValue;
     }
 
     /**

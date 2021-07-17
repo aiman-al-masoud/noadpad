@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         linearLayout = findViewById(R.id.settings_lin_layout);
 
-        ToggleFragment lauchToBlankPageToggle = ToggleFragment.newInstance("Auto-launch the app to a blank page.", Settings.TAGS.LAUNCH_TO_BLANK_PAGE);
+        ToggleFragment lauchToBlankPageToggle = ToggleFragment.newInstance("Auto-launch the app to a blank page.", SETTINGS_TAGS.LAUNCH_TO_BLANK_PAGE);
         getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), lauchToBlankPageToggle, "" ).commit();
 
 

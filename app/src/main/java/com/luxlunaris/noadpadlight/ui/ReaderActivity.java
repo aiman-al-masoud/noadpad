@@ -4,20 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
@@ -41,8 +38,9 @@ public class ReaderActivity extends AppCompatActivity {
      * current text size
      * defaults to: 18
      */
-    String textSizeString = Settings.get().getTagValue(Settings.TAGS.TEXT_SIZE.toString());
-    int TEXT_SIZE = textSizeString==null? 18 : Integer.parseInt(textSizeString.trim());
+    //String textSizeString = Settings.instance().getString(Settings.TAGS.TEXT_SIZE.toString());
+    int TEXT_SIZE = Settings.getInt(SETTINGS_TAGS.TEXT_SIZE);
+
 
     /**
      *This instance
@@ -173,14 +171,14 @@ public class ReaderActivity extends AppCompatActivity {
                 //increment the text size
                 textView.setTextSize(++TEXT_SIZE);
                 //save the new text size
-                Settings.get().setTagValue(Settings.TAGS.TEXT_SIZE.toString(), TEXT_SIZE+"");
+                Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
 
             case R.id.zoom_out:
                 //increment the text size
                 textView.setTextSize(--TEXT_SIZE);
                 //save the new text size
-                Settings.get().setTagValue(Settings.TAGS.TEXT_SIZE.toString(), TEXT_SIZE+"");
+                Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
         }
 

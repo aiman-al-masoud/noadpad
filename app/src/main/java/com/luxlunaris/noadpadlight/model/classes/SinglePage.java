@@ -1,7 +1,5 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import android.util.Log;
-
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
@@ -250,7 +248,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public int getLastPosition() {
-		String lastPosString = metadata.getTagValue("LAST_POSITION")==null? "0" : metadata.getTagValue("LAST_POSITION");
+		String lastPosString = metadata.getString("LAST_POSITION")==null? "0" : metadata.getString("LAST_POSITION");
 		return Integer.parseInt(lastPosString);
 	}
 

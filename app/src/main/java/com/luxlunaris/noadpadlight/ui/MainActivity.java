@@ -4,17 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
-import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //decide whether or not to open a blank page at app launch
-        boolean startToBlankPage = Settings.get().getTagValue(Settings.TAGS.LAUNCH_TO_BLANK_PAGE.toString()).equals(Settings.TRUE)? true : false;
+        //boolean startToBlankPage = Settings.get().getTagValue(Settings.TAGS.LAUNCH_TO_BLANK_PAGE.toString()).equals(Settings.TRUE)? true : false;
+        boolean startToBlankPage = Settings.getBoolean(SETTINGS_TAGS.LAUNCH_TO_BLANK_PAGE);
+
         if(startToBlankPage && !appStartedFlag){
 
             //set the "launch phase is over" flag
