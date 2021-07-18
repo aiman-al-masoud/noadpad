@@ -54,7 +54,7 @@ public class Settings {
 
         try {
             return settingsFile.getBoolean(TAG_NAME.toString());
-        } catch (WrongTagTypeException e) {
+        } catch (WrongTagTypeException | NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -76,7 +76,7 @@ public class Settings {
 
         try {
             return settingsFile.getInt(TAG_NAME.toString());
-        } catch (WrongTagTypeException e) {
+        } catch (WrongTagTypeException | NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -97,7 +97,14 @@ public class Settings {
         //set up all instance attributes
         makeInstance();
 
-        return settingsFile.getString(TAG_NAME.toString());
+        try{
+            return settingsFile.getString(TAG_NAME.toString());
+        }catch (NullPointerException e){
+        }
+
+        //return the default value of the tag
+        return (String) TAG_NAME.DEFAULT_VAL;
+
     }
 
 
@@ -114,7 +121,7 @@ public class Settings {
 
         try {
             return settingsFile.getFloat(TAG_NAME.toString());
-        } catch (WrongTagTypeException e) {
+        } catch (WrongTagTypeException | NullPointerException  e) {
             e.printStackTrace();
         }
 

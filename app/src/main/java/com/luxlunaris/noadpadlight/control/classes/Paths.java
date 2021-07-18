@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class Paths {
 
-    public static String APP_DIR_PATH = 	MainActivity.CONTEXT.getFilesDir().getPath();
+    public static String APP_DIR_PATH =	MainActivity.CONTEXT.getFilesDir().getPath();
 
 
 }
