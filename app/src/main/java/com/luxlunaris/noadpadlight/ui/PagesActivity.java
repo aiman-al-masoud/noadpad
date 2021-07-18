@@ -3,6 +3,7 @@ package com.luxlunaris.noadpadlight.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -25,19 +27,17 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PagesActivity extends AppCompatActivity{
+public class PagesActivity extends AppCompatActivity implements NotebookListener{
 
     /**
      * The Notebook manages the pages.
      */
     Notebook notebook = Notebook.getInstance();
 
-
-
     /**
      * The layout that hosts the page fragments.
      */
-    LinearLayout pagesLinLayout;
+    transient LinearLayout pagesLinLayout;
 
     /**
      * How many pages are loaded in a batch
@@ -47,7 +47,17 @@ public class PagesActivity extends AppCompatActivity{
     /**
      * The page fragments that are on-screen
      */
-    ArrayList<PageFragment> pageFragments;
+    transient ArrayList<PageFragment> pageFragments;
+
+
+    /**
+     * Buffers to keep track of all of the changes made to Pages
+     * while this Activity is the background, and needed upon restart.
+     */
+    static private ArrayList<Page> justDeletedList = new ArrayList<>();
+    static private ArrayList<Page> justCreatedList = new ArrayList<>();
+    static private ArrayList<Page> justModifiedList = new ArrayList<>();
+
 
 
 
@@ -57,6 +67,8 @@ public class PagesActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
 
+        //start listening to the notebook
+        notebook.setListener(this);
 
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
@@ -116,9 +128,6 @@ public class PagesActivity extends AppCompatActivity{
 
 
 
-
-
-
     /**
      * Add a page fragment to the list
      * @param page
@@ -143,9 +152,6 @@ public class PagesActivity extends AppCompatActivity{
         //add the page fragment to the fragment's list
         pageFragments.add(pgFrag);
     }
-
-
-
 
 
 
@@ -305,27 +311,78 @@ public class PagesActivity extends AppCompatActivity{
         }
     }
 
-
+    /**
+     * On resume, this activity checks if there have been
+     * changes to the Pages displayed, and eventually
+     * updates the list.
+     */
     @Override
     protected void onResume() {
         super.onResume();
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
-        for(Page page : notebook.getJustDeleted()){
+        for(Page page : justDeletedList){
             removeFragment(page);
         }
+        justDeletedList.clear();
 
         //get the pages that were created while this activity was in the
         //background and add the appropriate fragments
-        for(Page page : notebook.getJustCreated()){
+        for(Page page : justCreatedList){
             try{
                 addPage(page, true);
             }catch (IllegalStateException e){
 
             }
         }
+        justCreatedList.clear();
 
+        //put the modified pages back on top
+        for(Page page : justModifiedList){
+
+            try{
+                removeFragment(page);
+                addPage(page, true);
+            }catch (IllegalStateException e){
+
+            }
+        }
+        justModifiedList.clear();
+
+    }
+
+    /**
+     * Called by Notebook when a Page gets created.
+     * Adds the Page to the "justCreatedList".
+     * @param page
+     */
+    @Override
+    public void onCreated(Page page) {
+        justCreatedList.add(page);
+    }
+
+    /**
+     * Called by Notebook when a Page gets deleted.
+     * Adds the Page to the "justDeletedList",
+     * and removes it from anywhere else.
+     * @param page
+     */
+    @Override
+    public void onDeleted(Page page) {
+        justDeletedList.add(page);
+        justCreatedList.remove(page);
+        justModifiedList.remove(page);
+    }
+
+    /**
+     * Called by Notebook when a Page gets modified.
+     * Adds the Page to the "justModifiedList".
+     * @param page
+     */
+    @Override
+    public void onModified(Page page) {
+        justModifiedList.add(page);
     }
 
 

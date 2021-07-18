@@ -1,6 +1,8 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
@@ -17,6 +19,10 @@ import java.util.List;
  * This is a facade controller that maintains a list of all of the user's pages,
  * and provides methods to create a new page, get a batch of pages of a specified size,
  * and more...
+ *
+ * It listens to all Pages, and it's listened to by a
+ * NotebookListener.
+ *
  *
  */
 public class Notebook implements Pageable, PageListener {
@@ -43,43 +49,24 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private ArrayList<Page> selectedPagesList;
 
-
 	/**
 	 * Current page index
 	 */
 	int currentPage;
 
-
 	/**
-	 * Pages that just got deleted
-	 * (Needed on restarting the UI that handles
-	 * visualizing the available Pages)
+	 * Listens to this Notebook to receive updates on the status
+	 * of the Pages therein.
 	 */
-	static private ArrayList<Page> justDeletedList;
-
-	/**
-	 * Pages that just got created
-	 * (Needed on restarting the UI that handles
-	 * visualizing the available Pages)
-	 */
-	static private ArrayList<Page> justCreatedList;
-
-
-
-
-
+	private NotebookListener listener;
 
 
 
 	private Notebook() {
-
 		pagesList = new ArrayList<>();
 		selectedPagesList = new ArrayList<>();
 		loadPages();
 		currentPage = 0;
-		justDeletedList = new ArrayList<>();
-		justCreatedList = new ArrayList<>();
-
 	}
 
 	/**
@@ -100,11 +87,6 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
-
-
-
-
-
 	/**
 	 * Create a new page and return it
 	 * @param name
@@ -117,7 +99,11 @@ public class Notebook implements Pageable, PageListener {
 			addPage(page);
 		}
 
-		justCreatedList.add(page);
+		try {
+			listener.onCreated(page);
+		}catch (NullPointerException e){
+
+		}
 
 		return page;
 	}
@@ -167,15 +153,24 @@ public class Notebook implements Pageable, PageListener {
 		//remove the page from the pages list
 		pagesList.remove(page);
 
-		//add the page to the "just deleted" list
-		justDeletedList.add(page);
 
-		justCreatedList.remove(page);
+		try {
+			listener.onDeleted(page);
+		}catch (NullPointerException e){
+
+		}
 
 	}
 
 	@Override
 	public void onModified(Page page) {
+
+		try{
+			listener.onModified(page);
+		}catch (NullPointerException e){
+
+		}
+
 	}
 
 
@@ -282,30 +277,14 @@ public class Notebook implements Pageable, PageListener {
 		selectedPagesList.clear();
 	}
 
-	/**
-	 * Get the Pages that were just deleted, then forget about 'em.
-	 * @return
-	 */
-	public Page[] getJustDeleted(){
-		Page[] result = justDeletedList.toArray(new Page[0]);
-		justDeletedList.clear();
-		return result;
-	}
 
 	/**
-	 * Get the Pages that were just created, then forget about 'em.
-	 * @return
+	 * Add a NotebookListener to this Notebook.
+	 * @param listener
 	 */
-	public Page[] getJustCreated(){
-		Page[] result = justCreatedList.toArray(new Page[0]);
-		justCreatedList.clear();
-		return result;
+	public void setListener(NotebookListener listener){
+		this.listener = listener;
 	}
-
-
-
-
-
 
 
 

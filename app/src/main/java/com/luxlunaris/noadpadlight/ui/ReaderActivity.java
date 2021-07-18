@@ -67,6 +67,7 @@ public class ReaderActivity extends AppCompatActivity {
         jumpToPosition(page.getLastPosition());
 
 
+
     }
 
 
