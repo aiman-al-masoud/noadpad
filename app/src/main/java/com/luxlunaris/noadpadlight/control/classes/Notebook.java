@@ -67,6 +67,10 @@ public class Notebook implements Pageable, PageListener {
 
 
 
+
+
+
+
 	private Notebook() {
 
 		pagesList = new ArrayList<>();

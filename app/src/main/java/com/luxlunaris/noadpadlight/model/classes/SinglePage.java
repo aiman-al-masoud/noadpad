@@ -144,7 +144,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public long getLastModifiedTime() {
-		return lastModified();
+		return textFile.lastModified();
 	}
 
 
