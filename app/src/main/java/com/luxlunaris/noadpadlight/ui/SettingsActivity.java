@@ -26,6 +26,10 @@ public class SettingsActivity extends ColorActivity {
         getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), lauchToBlankPageToggle, "" ).commit();
 
 
+        SpinnerFragment spinner =  SpinnerFragment.newInstance(SETTINGS_TAGS.THEME, THEMES.values(), "Select the app-theme:");
+        getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), spinner, "").commit();
+
+
 
     }
 

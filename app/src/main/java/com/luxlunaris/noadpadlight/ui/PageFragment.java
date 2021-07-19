@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
+import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
@@ -61,6 +63,9 @@ public class PageFragment extends Fragment{
 
         View view =inflater.inflate(R.layout.fragment_page, container, false);
 
+
+
+
         pageButton = (Button)view.findViewById(R.id.pageButton);
 
         pageButton.setText(page.getPreview());
@@ -84,6 +89,17 @@ public class PageFragment extends Fragment{
                 return true;
             }
         });
+
+
+
+
+        ///
+        THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME) );
+        pageButton.setBackgroundColor(theme.BG_COLOR);
+        pageButton.setTextColor(theme.FG_COLOR);
+
+        ///
+
 
 
         return view;

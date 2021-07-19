@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
+import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 import java.util.List;
 
@@ -33,7 +35,8 @@ public abstract class ColorActivity extends AppCompatActivity {
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
         if(!GOT_INITIALIZED){
-            setTheme(THEMES.getThemeByName("DARK"));
+            String themeName = Settings.getString(SETTINGS_TAGS.THEME);
+            setTheme(THEMES.getThemeByName(themeName));
         }
 
         super.onCreate(savedInstanceState);
