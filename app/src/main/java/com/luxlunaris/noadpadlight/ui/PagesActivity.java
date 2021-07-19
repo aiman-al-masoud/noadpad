@@ -27,7 +27,7 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PagesActivity extends AppCompatActivity implements NotebookListener{
+public class PagesActivity extends ColorActivity implements NotebookListener{
 
     /**
      * The Notebook manages the pages.
@@ -60,10 +60,13 @@ public class PagesActivity extends AppCompatActivity implements NotebookListener
 
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
 
@@ -277,6 +280,9 @@ public class PagesActivity extends AppCompatActivity implements NotebookListener
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.delete:
+
+                                System.out.println(notebook.getSelected().length+" selected......................");
+
                                 for(Page page : notebook.getSelected()){
                                     deletePage(page);
                                 }

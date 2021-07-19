@@ -10,7 +10,7 @@ import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends ColorActivity {
 
 
     LinearLayout linearLayout;

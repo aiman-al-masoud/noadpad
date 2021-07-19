@@ -47,7 +47,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * List of pages selected by the user
 	 */
-	private ArrayList<Page> selectedPagesList;
+	private static ArrayList<Page> selectedPagesList;
 
 	/**
 	 * Current page index
@@ -121,6 +121,7 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public void onSelected(Page page) {
+		System.out.println(page+" is getting selected..........");
 		if(page.isSelected()){
 			selectedPagesList.add(page);
 		}else{

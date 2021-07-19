@@ -22,7 +22,7 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
  * The activity responsible for displaying and editing a Page.
  */
 
-public class ReaderActivity extends AppCompatActivity {
+public class ReaderActivity extends ColorActivity {
 
     /**
      * The currently displayed Page
