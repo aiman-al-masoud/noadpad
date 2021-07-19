@@ -64,14 +64,15 @@ public class PagesActivity extends ColorActivity implements NotebookListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
+        setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
 
         //start listening to the notebook
         notebook.setListener(this);
+
 
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);

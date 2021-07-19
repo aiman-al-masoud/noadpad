@@ -1,6 +1,7 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 
 import java.util.List;
 
@@ -17,62 +19,83 @@ import java.util.List;
  * Abstract class extended by all Activities.
  * Handles color, themes, style...
  */
-public abstract class ColorActivity extends AppCompatActivity {
-
-    boolean THEME_CHANGED = false;
-
-    boolean GOT_INITIALIZED = false;
-
+public abstract class ColorActivity extends AppCompatActivity implements SettingsTagListener {
 
     /**
-     * Current Theme from THEMES enum
+     * The current global theme
      */
-    THEMES theme;
+    THEMES currentTheme;
+
+    /**
+     * true if the activity has just been created
+     */
+    boolean justCreatedFlag = true;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        //totally unrelated to THEMES
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
-        if(!GOT_INITIALIZED){
-            String themeName = Settings.getString(SETTINGS_TAGS.THEME);
-            setTheme(THEMES.getThemeByName(themeName));
-        }
+        //get the current theme from the global Settings
+        currentTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+
+        //set the theme of this activity
+        setTheme(currentTheme);
+
+        Settings.listenToTag(SETTINGS_TAGS.THEME, this);
+
 
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Check if the theme changed, if that's the case
+     * repaint all of the views on this activity.
+     */
     @Override
     protected void onResume() {
         super.onResume();
 
-        //set look and feel only if it changed or if the activity is being started for the first time
-        if(!GOT_INITIALIZED || THEME_CHANGED){
+        if(justCreatedFlag){
             repaintViews();
-            GOT_INITIALIZED = true;
+            justCreatedFlag = false;
         }
+
+        THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        if(currentTheme!=newTheme){
+            currentTheme = newTheme;
+            repaintViews();
+        }
+
     }
 
 
+    /**
+     * Set the current theme.
+     * @param theme
+     */
     public void setTheme(THEMES theme){
-        this.theme = theme;
-        //this.THEME_CHANGED = true;
+        this.currentTheme = theme;
     }
 
+    /**
+     * Repaint all of the views on this activity.
+     */
     public void repaintViews(){
         //get all children views of this activity
         for(View view : getAllChildren()){
 
-            view.setBackgroundColor(theme.BG_COLOR);
+            view.setBackgroundColor(currentTheme.BG_COLOR);
 
             try{
-                ((TextView)view).setTextColor(theme.FG_COLOR);
+                ((TextView)view).setTextColor(currentTheme.FG_COLOR);
             }catch (ClassCastException e){
 
             }
         }
     }
-
 
 
     /**
@@ -84,8 +107,12 @@ public abstract class ColorActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    public void onTagUpdated(SETTINGS_TAGS tag) {
+        System.out.println("HELLOOO??????????????????");
+        setTheme(THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)));
+        repaintViews();
+    }
 
 
 

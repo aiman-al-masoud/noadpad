@@ -5,7 +5,10 @@ import android.graphics.Color;
 public enum THEMES {
 
     DARK(Color.BLACK, Color.WHITE),
-    LIGHT(Color.WHITE, Color.BLACK);
+    LIGHT(Color.WHITE, Color.BLACK),
+    BEEHIVE(Color.YELLOW, Color.BLACK),
+    SEPIA(  Color.WHITE, Color.argb(100,112, 66, 20))
+    ;
 
 
     int BG_COLOR, FG_COLOR;

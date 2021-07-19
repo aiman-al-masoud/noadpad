@@ -1,14 +1,22 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
+import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.classes.MetadataFile;
 import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A Facade-controller-singleton that handles ALL of the local settings of the app.
  *
  * Makes use of the Metadata IF.
+ *
+ *
+ * It notifies registered listeners of a tag when the value of
+ * that tag changes.
+ *
  */
 public class Settings {
 
@@ -23,6 +31,34 @@ public class Settings {
      */
     private static MetadataFile settingsFile;
 
+    /**
+     * Associates to (potentially) each tag a list of listeners of that tag.
+     */
+    private static HashMap<SETTINGS_TAGS, ArrayList<SettingsTagListener>> tagListeners;
+
+
+    /**
+     * Registers a new listener interested in being notified when the
+     * value of a tag changes.
+     * @param tag
+     * @param listener
+     */
+    public static void listenToTag(SETTINGS_TAGS tag, SettingsTagListener listener){
+
+        //get the list of listeners of a tag
+        ArrayList<SettingsTagListener> listeners = tagListeners.get(tag);
+
+        //if the tag doesn't have any listeners yet
+        if(listeners==null){
+            //create the list
+            listeners =  new ArrayList<SettingsTagListener>();
+            //add the list to the map
+            tagListeners.put(tag,listeners);
+        }
+
+        //add the new listener to the list of listeners of a certain tag
+        listeners.add(listener);
+    }
 
 
     /**
@@ -37,6 +73,10 @@ public class Settings {
 
         if(!settingsFile.exists()){
             settingsFile.create();
+        }
+
+        if(tagListeners==null){
+            tagListeners= new HashMap<>();
         }
 
     }
@@ -140,8 +180,29 @@ public class Settings {
         //set up all instance attributes
         makeInstance();
 
-
+        //set the new tag value
         settingsFile.setTagValue(TAG_NAME.toString(), newValue);
+
+        //notify all of the listeners of the modified tag that its value changed
+        notifyListenersOfTag(TAG_NAME);
+
+    }
+
+    /**
+     * notify all of the listeners of the modified tag that its value changed
+     * @param tag
+     */
+    private static void notifyListenersOfTag(SETTINGS_TAGS tag){
+        ArrayList<SettingsTagListener> listenersOfTag = tagListeners.get(tag);
+        if(listenersOfTag!=null){
+            for(SettingsTagListener listener : listenersOfTag){
+                try {
+                    listener.onTagUpdated(tag);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

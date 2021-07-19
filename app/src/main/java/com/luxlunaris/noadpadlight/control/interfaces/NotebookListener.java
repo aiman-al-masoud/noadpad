@@ -4,6 +4,10 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.Serializable;
 
+/**
+ * Listens to the Notebook for updates about the status
+ * of created, deleted, modified Pages.
+ */
 public interface NotebookListener extends Serializable {
 
     public void onCreated(Page page);

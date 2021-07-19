@@ -102,15 +102,11 @@ public class Notebook implements Pageable, PageListener {
 		try {
 			listener.onCreated(page);
 		}catch (NullPointerException e){
-
+			e.printStackTrace();
 		}
 
 		return page;
 	}
-
-
-
-
 
 
 
