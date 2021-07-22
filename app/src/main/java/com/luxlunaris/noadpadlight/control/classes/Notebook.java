@@ -33,7 +33,6 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private static Notebook instance;
 
-
 	/**
 	 * The path to which all of the pages are stored
 	 */
@@ -60,6 +59,12 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private NotebookListener listener;
 
+	/**
+	 * Tmp. keeps track of all of the changes made to
+	 * the Pages list (created, modified, deleted).
+	 */
+	private ProxyNotebookListener proxyNtBkListener;
+
 
 
 	private Notebook() {
@@ -67,6 +72,8 @@ public class Notebook implements Pageable, PageListener {
 		selectedPagesList = new ArrayList<>();
 		loadPages();
 		currentPage = 0;
+		proxyNtBkListener = new ProxyNotebookListener();
+		this.setListener(proxyNtBkListener);
 	}
 
 	/**
@@ -185,7 +192,6 @@ public class Notebook implements Pageable, PageListener {
 
 		List<Page> result = new ArrayList<>();
 
-
 		try{
 			result = pagesList.subList(currentPage, currentPage+amount);
 			currentPage+=amount;
@@ -282,6 +288,15 @@ public class Notebook implements Pageable, PageListener {
 	public void setListener(NotebookListener listener){
 		this.listener = listener;
 	}
+
+	/**
+	 * Get the object that keeps track of changes.
+	 * @return
+	 */
+	public ProxyNotebookListener getChanges(){
+		return proxyNtBkListener;
+	}
+
 
 
 

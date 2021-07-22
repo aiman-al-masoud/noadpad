@@ -21,13 +21,18 @@ import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
+import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PagesActivity extends ColorActivity implements NotebookListener{
+/**
+ * This activity allows the user to access, delete, modify
+ * Pages, presenting them on a PageFragment each.
+ */
+public class PagesActivity extends ColorActivity {
 
     /**
      * The Notebook manages the pages.
@@ -51,28 +56,17 @@ public class PagesActivity extends ColorActivity implements NotebookListener{
 
 
     /**
-     * Buffers to keep track of all of the changes made to Pages
-     * while this Activity is the background, and needed upon restart.
+     * On create.
+     * @param savedInstanceState
      */
-    static private ArrayList<Page> justDeletedList = new ArrayList<>();
-    static private ArrayList<Page> justCreatedList = new ArrayList<>();
-    static private ArrayList<Page> justModifiedList = new ArrayList<>();
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
-
-        //start listening to the notebook
-        notebook.setListener(this);
-
 
         //get the lin layout that will hold the fragments
         pagesLinLayout = findViewById(R.id.pages_linear_layout);
@@ -282,8 +276,6 @@ public class PagesActivity extends ColorActivity implements NotebookListener{
                         switch (item.getItemId()){
                             case R.id.delete:
 
-                                System.out.println(notebook.getSelected().length+" selected......................");
-
                                 for(Page page : notebook.getSelected()){
                                     deletePage(page);
                                 }
@@ -327,26 +319,25 @@ public class PagesActivity extends ColorActivity implements NotebookListener{
     protected void onResume() {
         super.onResume();
 
+
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
-        for(Page page : justDeletedList){
+        for(Page page : notebook.getChanges().popJustDeleted()){
             removeFragment(page);
         }
-        justDeletedList.clear();
 
         //get the pages that were created while this activity was in the
         //background and add the appropriate fragments
-        for(Page page : justCreatedList){
+        for(Page page : notebook.getChanges().popJustCreated()){
             try{
                 addPage(page, true);
             }catch (IllegalStateException e){
 
             }
         }
-        justCreatedList.clear();
 
         //put the modified pages back on top
-        for(Page page : justModifiedList){
+        for(Page page : notebook.getChanges().popJustModified()){
 
             try{
                 removeFragment(page);
@@ -355,42 +346,15 @@ public class PagesActivity extends ColorActivity implements NotebookListener{
 
             }
         }
-        justModifiedList.clear();
 
     }
 
-    /**
-     * Called by Notebook when a Page gets created.
-     * Adds the Page to the "justCreatedList".
-     * @param page
-     */
-    @Override
-    public void onCreated(Page page) {
-        justCreatedList.add(page);
-    }
 
-    /**
-     * Called by Notebook when a Page gets deleted.
-     * Adds the Page to the "justDeletedList",
-     * and removes it from anywhere else.
-     * @param page
-     */
-    @Override
-    public void onDeleted(Page page) {
-        justDeletedList.add(page);
-        justCreatedList.remove(page);
-        justModifiedList.remove(page);
-    }
 
-    /**
-     * Called by Notebook when a Page gets modified.
-     * Adds the Page to the "justModifiedList".
-     * @param page
-     */
-    @Override
-    public void onModified(Page page) {
-        justModifiedList.add(page);
-    }
+
+
+
+
 
 
 
