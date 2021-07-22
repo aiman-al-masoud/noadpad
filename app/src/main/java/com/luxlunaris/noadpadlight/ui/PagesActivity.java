@@ -260,10 +260,8 @@ public class PagesActivity extends ColorActivity {
 
                 break;
             case R.id.new_page:
-                Page page = notebook.newPage();
-                addPage(page, true);
                 Intent intent = new Intent(this, ReaderActivity.class);
-                intent.putExtra("PAGE",page);
+                intent.putExtra("PAGE",notebook.newPage());
                 startActivity(intent);
                 break;
             case R.id.edit:
@@ -302,6 +300,7 @@ public class PagesActivity extends ColorActivity {
      */
     @Override
     public void onBackPressed() {
+        //on back pressed add all pages to this activity
         if(notebook.getPagesNum() > pageFragments.size()){
             removeAllPages();
             notebook.selectAll();
