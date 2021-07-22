@@ -98,7 +98,7 @@ public class MetadataFile extends File implements Metadata {
 		try{
 			int parsedInt = Integer.parseInt(getString(tagName).trim());
 			return parsedInt;
-		}catch(NumberFormatException e) {
+		}catch(NumberFormatException | NullPointerException e) {
 			throw new WrongTagTypeException(tagName+" is not an int!");
 		}
 

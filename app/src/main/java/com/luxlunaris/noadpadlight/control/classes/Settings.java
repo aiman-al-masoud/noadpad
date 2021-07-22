@@ -137,14 +137,16 @@ public class Settings {
         //set up all instance attributes
         makeInstance();
 
-        try{
-            return settingsFile.getString(TAG_NAME.toString());
-        }catch (NullPointerException e){
+        //get the string from the settings file
+        String string = settingsFile.getString(TAG_NAME.toString());
+
+        //return the string only if it's not null
+        if(string!=null){
+            return string;
         }
 
         //return the default value of the tag
         return (String) TAG_NAME.DEFAULT_VAL;
-
     }
 
 
