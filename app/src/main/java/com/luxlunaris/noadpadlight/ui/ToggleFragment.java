@@ -15,7 +15,8 @@ import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 /**
- *
+ * Toggle fragment contains a switch/toggle, that regulates
+ * a single persistent binary setting.
  */
 public class ToggleFragment extends Fragment {
 

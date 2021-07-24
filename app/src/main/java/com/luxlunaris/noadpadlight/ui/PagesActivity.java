@@ -1,5 +1,6 @@
 package com.luxlunaris.noadpadlight.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;

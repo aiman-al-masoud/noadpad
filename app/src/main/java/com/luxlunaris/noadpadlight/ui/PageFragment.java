@@ -15,11 +15,12 @@ import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
+import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.Serializable;
 
-public class PageFragment extends Fragment{
+public class PageFragment extends Fragment implements SettingsTagListener {
 
     /**
      * The Page that this fragment represents
@@ -35,7 +36,7 @@ public class PageFragment extends Fragment{
     /**
      * Text color when unselected
      */
-    private int NORMAL_TEXT_COLOR = Color.WHITE;
+    private static int NORMAL_TEXT_COLOR = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)).FG_COLOR;
 
 
     /**
@@ -45,12 +46,10 @@ public class PageFragment extends Fragment{
 
 
 
-
-
-
     public static PageFragment newInstance(Page page) {
         PageFragment fragment = new PageFragment();
         fragment.page = page;
+        Settings.listenToTag(SETTINGS_TAGS.THEME, fragment);
         return fragment;
     }
 
@@ -129,6 +128,15 @@ public class PageFragment extends Fragment{
 
     public Page getPage(){
         return page;
+    }
+
+
+    @Override
+    public void onTagUpdated(SETTINGS_TAGS tag) {
+
+        THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        NORMAL_TEXT_COLOR =  newTheme.FG_COLOR;
+
     }
 
 

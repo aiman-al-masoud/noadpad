@@ -1,6 +1,5 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -8,8 +7,10 @@ import android.widget.LinearLayout;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
-import com.luxlunaris.noadpadlight.control.classes.Settings;
 
+/**
+ * Displays various app-wide settings and lets the user decide their preferences.
+ */
 public class SettingsActivity extends ColorActivity {
 
 

@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A collection of useful methods to deal with views.
+ */
 public class ViewUtils {
 
 
