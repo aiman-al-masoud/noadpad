@@ -132,6 +132,8 @@ public class PagesActivity extends ColorActivity {
         //get the appropriate page fragment
         PageFragment pgFrag = getFragment(page);
 
+        //Log.d("ADDING_PAGE", "frag "+pgFrag.getPage().toString());
+
         if(!top){
             //add the new page fragment to the bottom of the list layout
 
@@ -320,18 +322,22 @@ public class PagesActivity extends ColorActivity {
     protected void onResume() {
         super.onResume();
 
-        //get the pages that were created while this activity was in the
-        //background and add the appropriate fragments
-        for(Page page : notebook.getChanges().popJustCreated()){
-            addPage(page, true);
-        }
-
 
         //put the modified pages back on top
         for(Page page : notebook.getChanges().popJustModified()){
             removeFragment(page);
             addPage(page, true);
         }
+
+        //get the pages that were created while this activity was in the
+        //background and add the appropriate fragments
+        Log.d("ADDING_PAGE", "ADDING PAGESSSSSSSS");
+        for(Page page : notebook.getChanges().popJustCreated()){
+            Log.d("ADDING_PAGE", page.toString());
+            addPage(page, true);
+        }
+        Log.d("ADDING_PAGE", "END ADDING PAGESSSSSSSS");
+
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
