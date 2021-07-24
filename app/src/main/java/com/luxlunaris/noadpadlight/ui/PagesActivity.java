@@ -94,12 +94,7 @@ public class PagesActivity extends ColorActivity {
 
                 //if can't scroll vertically anymore: bottom reached
                 if(!v.canScrollVertically(1)){
-
-                    try{
-                        loadNextPagesBlock();
-                    }catch (Exception e){
-
-                    }
+                    loadNextPagesBlock();
                 }
 
             }
@@ -137,13 +132,24 @@ public class PagesActivity extends ColorActivity {
 
         if(!top){
             //add the new page fragment to the bottom of the list layout
-            getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,page.getName()).commit();
+
+            try{
+                getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,page.getName()).commit();
+            }catch (IllegalStateException e){
+
+            }
+
         }else{
             //else add the new page fragment on top of all others
             FrameLayout child = new FrameLayout(pagesLinLayout.getContext());
             child.setId(new Random().nextInt(1000000000));
             pagesLinLayout.addView(child, 0);
-            getSupportFragmentManager().beginTransaction().add(child.getId(),pgFrag,page.getName()).commit();
+
+            try{
+                getSupportFragmentManager().beginTransaction().add(child.getId(),pgFrag,page.getName()).commit();
+            }catch (IllegalStateException e){
+
+            }
 
         }
 
@@ -157,17 +163,9 @@ public class PagesActivity extends ColorActivity {
      * Loads an array of pages as page fragments
      */
     private void loadPages(Page[] pages){
-
         for(Page page : pages){
-
-            try{
-                addPage(page, false);
-            }catch (IllegalStateException e){
-
-            }
-
+            addPage(page, false);
         }
-
     }
 
     /**
@@ -194,7 +192,9 @@ public class PagesActivity extends ColorActivity {
      */
     private void removeFragment(Page page){
         PageFragment frag = getFragment(page);
-        pageFragments.remove(frag);
+        Log.d("PAGE_TRACKER", "got fragment to be removed "+frag.getPage().toString());
+        boolean wasthere = pageFragments.remove(frag);
+        Log.d("PAGE_TRACKER", "frag was there before: "+wasthere+"");
         getSupportFragmentManager().beginTransaction().remove(frag).commit();
     }
 
@@ -318,32 +318,23 @@ public class PagesActivity extends ColorActivity {
     protected void onResume() {
         super.onResume();
 
+        //get the pages that were created while this activity was in the
+        //background and add the appropriate fragments
+        for(Page page : notebook.getChanges().popJustCreated()){
+            addPage(page, true);
+        }
+
+
+        //put the modified pages back on top
+        for(Page page : notebook.getChanges().popJustModified()){
+            removeFragment(page);
+            addPage(page, true);
+        }
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
         for(Page page : notebook.getChanges().popJustDeleted()){
             removeFragment(page);
-        }
-
-        //get the pages that were created while this activity was in the
-        //background and add the appropriate fragments
-        for(Page page : notebook.getChanges().popJustCreated()){
-            try{
-                addPage(page, true);
-            }catch (IllegalStateException e){
-
-            }
-        }
-
-        //put the modified pages back on top
-        for(Page page : notebook.getChanges().popJustModified()){
-
-            try{
-                removeFragment(page);
-                addPage(page, true);
-            }catch (IllegalStateException e){
-
-            }
         }
 
     }

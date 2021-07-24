@@ -41,7 +41,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * List of pages loaded in memory
 	 */
-	private ArrayList<Page> pagesList;
+	private static ArrayList<Page> pagesList;
 
 	/**
 	 * List of pages selected by the user
@@ -51,19 +51,19 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * Current page index
 	 */
-	int currentPage;
+	static int currentPage;
 
 	/**
 	 * Listens to this Notebook to receive updates on the status
 	 * of the Pages therein.
 	 */
-	private NotebookListener listener;
+	private static NotebookListener listener;
 
 	/**
 	 * Tmp. keeps track of all of the changes made to
 	 * the Pages list (created, modified, deleted).
 	 */
-	private ProxyNotebookListener proxyNtBkListener;
+	private static ProxyNotebookListener proxyNtBkListener;
 
 
 
@@ -172,8 +172,11 @@ public class Notebook implements Pageable, PageListener {
 		try{
 			listener.onModified(page);
 		}catch (NullPointerException e){
-
 		}
+
+
+		//re-sort the list of pages.
+		Collections.sort(pagesList, new LastModifiedComparator());
 
 	}
 

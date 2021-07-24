@@ -32,7 +32,6 @@ public class PageFragment extends Fragment{
     transient Button pageButton;
 
 
-
     /**
      * Text color when unselected
      */
@@ -43,6 +42,8 @@ public class PageFragment extends Fragment{
      * Text color when selected
      */
     private int SELECTED_TEXT_COLOR = Color.RED;
+
+
 
 
 
@@ -62,8 +63,6 @@ public class PageFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view =inflater.inflate(R.layout.fragment_page, container, false);
-
-
 
 
         pageButton = (Button)view.findViewById(R.id.pageButton);

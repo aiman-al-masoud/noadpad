@@ -27,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /**
-     * Takes you to the pages list
-     */
-    Button goToPagesButton;
-
 
     /**
      * If true, onCreate was called at least once
