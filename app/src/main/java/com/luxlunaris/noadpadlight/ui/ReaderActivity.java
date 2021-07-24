@@ -88,19 +88,11 @@ public class ReaderActivity extends ColorActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-
-
+        
         //get the edited text from the edittext view
         String editedText = textView.getText().toString();
 
-
-
-
-
         //if the edited text is empty, delete the Page
-
-
         if(editedText.trim().isEmpty()){
             boolean t = page.delete();
             return;

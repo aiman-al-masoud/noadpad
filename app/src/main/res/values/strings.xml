@@ -11,4 +11,18 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="credits_eng">
+        
+        Thanks for trying out Noadpad! :-) \n
+        
+        For any suggestions:  \n\n
+        
+        Contact: luxlunarislabs@gmail.com  \n
+        Repo: https://github.com/aiman-al-masoud/noadpadlight  \n
+        License: https://github.com/aiman-al-masoud/noadpadlight/blob/master/LICENSE.md  \n
+    </string>
+
+
 </resources>
