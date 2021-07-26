@@ -125,29 +125,27 @@ public class PagesActivity extends ColorActivity {
         //get the appropriate page fragment
         PageFragment pgFrag = getFragment(page);
 
+        //the id of the future container of pgFrag
+        int containerId = -1;
+
+
         if(!top){
             //add the new page fragment to the bottom of the list layout
-
-            try{
-                getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,page.getName()).commit();
-                getSupportFragmentManager().executePendingTransactions();
-            }catch (Exception | Error  e){
-                e.printStackTrace();
-            }
-
+            containerId = pagesLinLayout.getId();
         }else{
             //else add the new page fragment on top of all others
             FrameLayout child = new FrameLayout(pagesLinLayout.getContext());
             child.setId(new Random().nextInt(1000000000));
             pagesLinLayout.addView(child, 0);
+            containerId = child.getId();
+        }
 
-            try{
-                getSupportFragmentManager().beginTransaction().add(child.getId(),pgFrag,page.getName()).commit();
-                getSupportFragmentManager().executePendingTransactions();
-            }catch (IllegalStateException e){
-                e.printStackTrace();
-            }
-
+        //add the fragment to the screen
+        try{
+            getSupportFragmentManager().beginTransaction().add(containerId,pgFrag,page.getName()).commit();
+            getSupportFragmentManager().executePendingTransactions();
+        }catch (Exception | Error  e){
+            e.printStackTrace();
         }
 
         //add the page fragment to the fragment's list
