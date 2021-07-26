@@ -1,8 +1,6 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
 
-import android.util.Log;
-
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
@@ -255,8 +253,10 @@ public class Notebook implements Pageable, PageListener {
 	 * @param page
 	 */
 	private void addPage(Page page){
+		//start listening to the new page
 		page.addListener(this);
-		pagesList.add(page);
+		//add the page at beginning (list sorted newest first)
+		pagesList.add(0, page);
 	}
 
 
@@ -298,6 +298,14 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	public ProxyNotebookListener getChanges(){
 		return proxyNtBkListener;
+	}
+
+
+	/**
+	 * The next batch of pages to deliver is reset to the initial one.
+	 */
+	public void rewind(){
+		currentPage = 0;
 	}
 
 

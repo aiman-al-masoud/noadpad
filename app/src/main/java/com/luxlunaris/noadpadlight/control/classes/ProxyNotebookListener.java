@@ -1,7 +1,5 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
-import android.util.Log;
-
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
@@ -55,7 +53,13 @@ public class ProxyNotebookListener implements NotebookListener {
      */
     @Override
     public void onModified(Page page) {
-        justModifiedList.add(page);
+
+        //add a page to the list of modified items,
+        //except if it was just created.
+        if(!justCreatedList.contains(page)){
+            justModifiedList.add(page);
+        }
+
     }
 
 

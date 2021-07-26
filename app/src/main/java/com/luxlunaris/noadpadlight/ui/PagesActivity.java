@@ -1,10 +1,8 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,18 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
-import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
-import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.util.ArrayList;
@@ -132,15 +125,14 @@ public class PagesActivity extends ColorActivity {
         //get the appropriate page fragment
         PageFragment pgFrag = getFragment(page);
 
-        //Log.d("ADDING_PAGE", "frag "+pgFrag.getPage().toString());
-
         if(!top){
             //add the new page fragment to the bottom of the list layout
 
             try{
                 getSupportFragmentManager().beginTransaction().add(pagesLinLayout.getId(),pgFrag,page.getName()).commit();
-            }catch (IllegalStateException e){
-
+                getSupportFragmentManager().executePendingTransactions();
+            }catch (Exception | Error  e){
+                e.printStackTrace();
             }
 
         }else{
@@ -151,8 +143,9 @@ public class PagesActivity extends ColorActivity {
 
             try{
                 getSupportFragmentManager().beginTransaction().add(child.getId(),pgFrag,page.getName()).commit();
+                getSupportFragmentManager().executePendingTransactions();
             }catch (IllegalStateException e){
-
+                e.printStackTrace();
             }
 
         }
@@ -183,10 +176,17 @@ public class PagesActivity extends ColorActivity {
      * Removes all of currently displayed pages (without deleting the pages)
      */
     private void removeAllPages(){
+
+        //remove all fragments
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            removeFragment(fragment);
         }
+
+        //forget about all fragments
         pageFragments.clear();
+
+        //tell the notebook that you want to start over cycling through pages.
+        notebook.rewind();
     }
 
 
@@ -196,11 +196,23 @@ public class PagesActivity extends ColorActivity {
      */
     private void removeFragment(Page page){
         PageFragment frag = getFragment(page);
-        Log.d("PAGE_TRACKER", "got fragment to be removed "+frag.getPage().toString());
-        boolean wasthere = pageFragments.remove(frag);
-        Log.d("PAGE_TRACKER", "frag was there before: "+wasthere+"");
-        getSupportFragmentManager().beginTransaction().remove(frag).commit();
+        pageFragments.remove(frag);
+        removeFragment(frag);
     }
+
+
+    /**
+     * Removes a fragment.
+     * @param fragment
+     */
+    private void removeFragment(Fragment fragment){
+        try{
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }catch (Exception | Error e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Deletes a page and its corresponding fragment
@@ -307,9 +319,7 @@ public class PagesActivity extends ColorActivity {
         //on back pressed add all pages to this activity
         if(notebook.getPagesNum() > pageFragments.size()){
             removeAllPages();
-            notebook.selectAll();
-            loadPages(notebook.getSelected());
-            notebook.unselectAll();
+            loadNextPagesBlock();
         }
     }
 
@@ -331,13 +341,9 @@ public class PagesActivity extends ColorActivity {
 
         //get the pages that were created while this activity was in the
         //background and add the appropriate fragments
-        Log.d("ADDING_PAGE", "ADDING PAGESSSSSSSS");
         for(Page page : notebook.getChanges().popJustCreated()){
-            Log.d("ADDING_PAGE", page.toString());
             addPage(page, true);
         }
-        Log.d("ADDING_PAGE", "END ADDING PAGESSSSSSSS");
-
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
