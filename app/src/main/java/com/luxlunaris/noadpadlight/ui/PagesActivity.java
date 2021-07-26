@@ -180,6 +180,9 @@ public class PagesActivity extends ColorActivity {
             removeFragment(fragment);
         }
 
+        //make sure they're all removed
+        getSupportFragmentManager().executePendingTransactions();
+
         //forget about all fragments
         pageFragments.clear();
 
@@ -238,8 +241,8 @@ public class PagesActivity extends ColorActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Page[] result = notebook.getByKeywords(query);
                 removeAllPages();
+                Page[] result = notebook.getByKeywords(query);
                 loadPages(result);
                 return true;
             }
@@ -329,7 +332,6 @@ public class PagesActivity extends ColorActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
 
         //put the modified pages back on top
         for(Page page : notebook.getChanges().popJustModified()){
