@@ -1,12 +1,15 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
 import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * The path to which all of the pages are stored
 	 */
-	private static String PAGES_DIR = Paths.APP_DIR_PATH+File.separator+"pages";
+	private static String PAGES_DIR = Paths.PAGES_DIR;
 
 	/**
 	 * List of pages loaded in memory
@@ -307,6 +310,20 @@ public class Notebook implements Pageable, PageListener {
 	public void rewind(){
 		currentPage = 0;
 	}
+
+
+
+	public File generateBackupFile(String destPath){
+		Log.d("BACKUP_TEST", destPath+" destPath in export pages");
+		return FileIO.zipDir(PAGES_DIR, destPath);
+	}
+
+	public void importPages(String sourcePath){
+		//FileIO.unzipDir(sourcePath, PAGES_DIR);
+	}
+
+
+
 
 
 

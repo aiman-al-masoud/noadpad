@@ -1,5 +1,8 @@
 package com.luxlunaris.noadpadlight.model.services;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -88,6 +91,49 @@ public class FileIO {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+
+	/**
+	 * Turn a directory at sourcePath to a zipped file at destPath
+	 * @param sourcePath
+	 * @param destPath
+	 * @return
+	 */
+	public static File zipDir(String sourcePath, String destPath) {
+
+		ZipFile zipped = new ZipFile(destPath);
+
+		try {
+			zipped.addFolder(new File(sourcePath));
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return zipped.getFile();
+	}
+
+
+	/**
+	 * Turn a zipped file at zippedPath to a folder at destPath.
+	 * @param zippedPath
+	 * @param destPath
+	 * @return
+	 */
+	public static File unzipDir(String zippedPath, String destPath) {
+
+		ZipFile zipped = new ZipFile(zippedPath);
+
+		try {
+			zipped.extractAll(destPath);
+		} catch (ZipException e) {
+			e.printStackTrace();
+		}
+
+		return new File(destPath);
 	}
 
 

@@ -2,6 +2,7 @@ package com.luxlunaris.noadpadlight.ui;
 
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ public class SettingsActivity extends ColorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
 
         linearLayout = findViewById(R.id.settings_lin_layout);
 
@@ -44,6 +46,13 @@ public class SettingsActivity extends ColorActivity {
 
         SpinnerFragment spinner =  SpinnerFragment.newInstance(SETTINGS_TAGS.THEME, THEMES.values(), "Select the app-theme:");
         getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), spinner, "").commit();
+
+
+        BackupFragment backupFragment = BackupFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), backupFragment, "").commit();
+
+
+
 
 
 
