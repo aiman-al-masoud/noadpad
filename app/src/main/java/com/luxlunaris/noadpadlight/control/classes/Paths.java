@@ -25,8 +25,10 @@ public class Paths {
 
 
 
-
     public static String BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"backup";
+
+
+    public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
 
 
 

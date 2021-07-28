@@ -1,7 +1,10 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
@@ -11,7 +14,11 @@ import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedCompara
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -318,8 +325,24 @@ public class Notebook implements Pageable, PageListener {
 		return FileIO.zipDir(PAGES_DIR, destPath);
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public void importPages(String sourcePath){
-		//FileIO.unzipDir(sourcePath, PAGES_DIR);
+		File unzipped = FileIO.unzipDir(sourcePath, sourcePath+"unzipped");
+
+		File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
+
+		for(File file : pagesFolder.listFiles()){
+			Log.d("IMPORT_TEST", "hello "+file.getPath());
+			//copy each file from
+			try {
+				FileUtils.copyDirectory(file, new File(PAGES_DIR+File.separator+file.getName()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+
 	}
 
 
