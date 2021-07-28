@@ -23,9 +23,10 @@ public class Paths {
      */
     public static String PAGES_DIR = Paths.APP_DIR_PATH+File.separator+"pages";
 
-
-
-    public static String BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"backup";
+    /**
+     * Tmp stores the backup file containing all of the pages.
+     */
+    public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
 
 
     public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";

@@ -1,11 +1,6 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
 
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
@@ -18,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -319,30 +313,34 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
-
-	public File generateBackupFile(String destPath){
-		Log.d("BACKUP_TEST", destPath+" destPath in export pages");
-		return FileIO.zipDir(PAGES_DIR, destPath);
+	/**
+	 * Generate and return a zipped backup file that contains
+	 * all of the pages' contents.
+	 * @return
+	 */
+	public File generateBackupFile(){
+		return FileIO.zipDir(PAGES_DIR, Paths.PAGES_BACKUP_DIR);
 	}
 
-	@RequiresApi(api = Build.VERSION_CODES.O)
 	public void importPages(String sourcePath){
 		File unzipped = FileIO.unzipDir(sourcePath, sourcePath+"unzipped");
 
 		File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
 
 		for(File file : pagesFolder.listFiles()){
-			Log.d("IMPORT_TEST", "hello "+file.getPath());
-			//copy each file from
+
+			//copy each file from the unzipped file
 			try {
 				FileUtils.copyDirectory(file, new File(PAGES_DIR+File.separator+file.getName()));
+				Page page = new SinglePage(file.getPath());
+				addPage(page);
+				listener.onCreated(page);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
+			Collections.sort(pagesList, new LastModifiedComparator());
 		}
-
-
 	}
 
 

@@ -102,12 +102,10 @@ public class FileIO {
 	 */
 	public static File zipDir(String sourcePath, String destPath) {
 
-		ZipFile zipped = new ZipFile(destPath);
+		ZipFile zipped = new ZipFile(destPath+".zip");
 
 		try {
 			zipped.addFolder(new File(sourcePath));
-
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
