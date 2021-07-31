@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
@@ -90,7 +88,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         loadNextPagesBlock();
 
         //defines what the activity does when scrolling occurs
-        setOnScrollAction();
+        ScrollView scrollView = findViewById(R.id.scroll_view_pages);
+        scrollView.setOnScrollChangeListener(new ScrollHandler());
 
         //to keep track of changes while in the background
         changes = new ProxyNotebookListener();
@@ -99,31 +98,31 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         notebook.setListener(this);
     }
 
-
     /**
-     * Defines the scroll behavior of this activity
+     * Used to add more pages when you scroll all the
+     * way down.
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setOnScrollAction(){
-        ScrollView scrollView = findViewById(R.id.scroll_view_pages);
-        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+    class ScrollHandler implements View.OnScrollChangeListener{
 
-                //if can't scroll vertically anymore: bottom reached
-                if(!v.canScrollVertically(1)){
+        @Override
+        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            //if can't scroll vertically anymore: bottom reached
+            if(!v.canScrollVertically(1)){
 
-                    //load no new pages if the user is currently running a query
-                    if(isSearching){
-                        return;
-                    }
-
-                    loadNextPagesBlock();
+                //load no new pages if the user is currently running a query
+                if(isSearching){
+                    return;
                 }
 
+                loadNextPagesBlock();
             }
-        });
+
+        }
     }
+
+
+
 
 
     /**
@@ -245,16 +244,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
 
     /**
-     * Deletes a page and its corresponding fragment
-     * @param page
-     */
-    private void deletePage(Page page){
-        removeFragment(page);
-        page.delete();
-    }
-
-
-    /**
      * Create the toolbar menu for this activity
      * @param menu
      * @return
@@ -344,7 +333,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 case R.id.delete:
 
                     for(Page page : notebook.getSelected()){
-                        deletePage(page);
+                        //delete the page (the fragment will automatically be removed too through the callback method "onDeleted")
+                        page.delete();
                     }
                     break;
                 case R.id.compact:
