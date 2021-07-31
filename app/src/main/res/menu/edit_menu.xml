@@ -5,4 +5,7 @@
     <item
         android:id="@+id/delete"
         android:title="delete" />
+    <item
+        android:id="@+id/compact"
+        android:title="compact" />
 </menu>

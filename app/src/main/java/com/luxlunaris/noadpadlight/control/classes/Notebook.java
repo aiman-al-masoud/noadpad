@@ -1,16 +1,14 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
-
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
+import com.luxlunaris.noadpadlight.model.classes.Compacter;
 import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
-
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,21 +59,12 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private static NotebookListener listener;
 
-	/**
-	 * Tmp. keeps track of all of the changes made to
-	 * the Pages list (created, modified, deleted).
-	 */
-	private static ProxyNotebookListener proxyNtBkListener;
-
-
 
 	private Notebook() {
 		pagesList = new ArrayList<>();
 		selectedPagesList = new ArrayList<>();
 		loadPages();
 		currentPage = 0;
-		proxyNtBkListener = new ProxyNotebookListener();
-		this.setListener(proxyNtBkListener);
 	}
 
 	/**
@@ -215,18 +204,29 @@ public class Notebook implements Pageable, PageListener {
 	 * @param query
 	 * @return
 	 */
-	public Page[] getByKeywords(String query) {
-		
-		String[] keywords = query.split("\\s+");
-		ArrayList<Page> result = new ArrayList<>(pagesList);
-				
-		for(Page page : pagesList) {
-			if(!page.contains(keywords)) {
-					result.remove(page);
-			}	
-		}
+	public void getByKeywords(String query) {
 
-		return result.toArray(new Page[0]);
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+
+				String[] keywords = query.split("\\s+");
+				ArrayList<Page> result = new ArrayList<>(pagesList);
+
+				for (Page page : pagesList) {
+					if (page.contains(keywords)) {
+
+						//as soon as you find a page that fits the keywords tell the
+						//listener to display it.
+						listener.onCreated(page);
+
+					}
+				}
+
+			}
+		};
+
+		t.start();
 	}
 
 
@@ -297,21 +297,11 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 	/**
-	 * Get the object that keeps track of changes.
-	 * @return
-	 */
-	public ProxyNotebookListener getChanges(){
-		return proxyNtBkListener;
-	}
-
-
-	/**
 	 * The next batch of pages to deliver is reset to the initial one.
 	 */
 	public void rewind(){
 		currentPage = 0;
 	}
-
 
 	/**
 	 * Generate and return a zipped backup file that contains
@@ -344,8 +334,22 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
+	public void compactSelection(){
 
+		//create a new blank page
+		Page page = newPage();
 
+		//write the contents of the selected pages onto the blank page
+		new Compacter().compact(selectedPagesList, page);
+
+		//copy due to concurrent modification exception
+		ArrayList<Page> copy = new ArrayList<>(selectedPagesList);
+		//delete the old pages
+		for(int i=0; i<copy.size(); i++){
+			copy.get(i).delete();
+		}
+
+	}
 
 
 

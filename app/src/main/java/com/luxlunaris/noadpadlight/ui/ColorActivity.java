@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
@@ -112,6 +113,15 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
         System.out.println("HELLOOO??????????????????");
         setTheme(THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)));
         repaintViews();
+    }
+
+
+    /**
+     * True if the activity is currently visible.
+     * @return
+     */
+    public boolean isInForeground(){
+        return  getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
     }
 
 
