@@ -185,7 +185,10 @@ public class SinglePage extends File implements Page {
 
 		//convert token and text to upper case
 		token = token.toUpperCase();
-		String text = getText().toUpperCase();
+
+		//String text = getText().toUpperCase();
+
+		String text = Html.fromHtml(getText()).toString().toUpperCase();
 
 		//split the text by the token
 		String[] parts = text.split(token);
