@@ -1,5 +1,8 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+import android.text.Html;
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
@@ -26,6 +29,12 @@ public class SinglePage extends File implements Page {
 	 */
 	File textFile;
 
+
+
+	File imageDir;
+
+
+
 	/**
 	 * this Page's listeners (Notebook)
 	 */
@@ -50,6 +59,7 @@ public class SinglePage extends File implements Page {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
 		textFile = new File(getPath()+File.separator+"text");
+		imageDir = new File(getPath()+File.separator+"images");
 		listeners = new ArrayList<>();
 	}
 
@@ -69,6 +79,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void setText(String text) {
+		Log.d("TEST_IMAGE", "saving: "+text);
 		FileIO.write(textFile.getPath(), text);
 		for(PageListener listener : listeners){
 			listener.onModified(this);
@@ -83,15 +94,17 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public boolean delete() {
-		textFile.delete();
-		((MetadataFile)metadata).delete();
-		boolean del = super.delete();
+		//textFile.delete();
+		//((MetadataFile)metadata).delete();
+		//boolean del = super.delete();
+		FileIO.deleteDirectory(this.getPath());
 
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
 		}
-		return del;
+		//return del;
+		return true;
 	}
 
 	/**
@@ -104,6 +117,7 @@ public class SinglePage extends File implements Page {
 		try {
 			((MetadataFile)metadata).createNewFile();
 			textFile.createNewFile();
+			imageDir.mkdir();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -268,7 +282,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public String getPreview() {
-		return FileIO.readLine(textFile.getPath())+"...\n" +new Date(getLastModifiedTime()).toString();
+		return FileIO.readLine(textFile.getPath())+"\n" +new Date(getLastModifiedTime()).toString();
 	}
 
 	/**
@@ -278,7 +292,8 @@ public class SinglePage extends File implements Page {
 	 * @return
 	 */
 	public boolean contains(String[] keywords){
-		String text = getText().toUpperCase();
+		//String text = getText().toUpperCase();
+		String text = Html.fromHtml(getText()).toString().toUpperCase();
 		for(String keyword : keywords){
 			if(!text.contains(keyword.toUpperCase())){
 				return false;
@@ -309,6 +324,22 @@ public class SinglePage extends File implements Page {
 		}
 	}
 
+
+	@Override
+	public void addImage(String path, int position) {
+
+		File imageCopy = new File(imageDir.getPath()+File.separator+System.currentTimeMillis());
+		FileIO.copyFile(path, imageCopy.getPath());
+
+		String text = getText();
+
+		String partBefore = text.substring(0, position);
+		String partAfter = text.substring(position, text.length()-1);
+		String tag = "<img src=\'"+imageCopy.getPath()+"\' />";
+		text = partBefore+" "+tag+" "+partAfter;
+
+		setText(text);
+	}
 
 
 

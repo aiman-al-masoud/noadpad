@@ -1,7 +1,13 @@
 package com.luxlunaris.noadpadlight.model.services;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +17,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 
 public class FileIO {
 
@@ -134,6 +141,23 @@ public class FileIO {
 		return new File(destPath);
 	}
 
+
+	public static void copyFile(String sourcePath, String destPath){
+
+		try {
+			FileUtils.copyFile(new File(sourcePath), new File(destPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void deleteDirectory(String path){
+		try {
+			FileUtils.deleteDirectory(new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 		

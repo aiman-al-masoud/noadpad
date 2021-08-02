@@ -294,7 +294,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 break;
             case R.id.new_page:
                 Intent intent = new Intent(this, ReaderActivity.class);
-                intent.putExtra("PAGE",notebook.newPage());
+                intent.putExtra(ReaderActivity.PAGE_EXTRA,notebook.newPage());
                 startActivity(intent);
                 break;
             case R.id.edit:

@@ -2,10 +2,12 @@ package com.luxlunaris.noadpadlight.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +20,13 @@ import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
+import java.io.File;
+
 /**
  * The activity responsible for displaying and editing a Page.
  */
 
-public class ReaderActivity extends ColorActivity {
+public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester {
 
     /**
      * The currently displayed Page
@@ -48,6 +52,14 @@ public class ReaderActivity extends ColorActivity {
     ReaderActivity THIS;
 
 
+    /**
+     * Used to call this activity by an intent.
+     */
+    public static final String PAGE_EXTRA = "PAGE";
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +72,44 @@ public class ReaderActivity extends ColorActivity {
         //set the initial text size
         textView.setTextSize(TEXT_SIZE);
         //retrieve the page that you were called to display
-        page = (Page)getIntent().getSerializableExtra("PAGE");
+        page = (Page)getIntent().getSerializableExtra(PAGE_EXTRA);
         //set the view's initial text to the Page's text
-        textView.setText(page.getText());
+        reloadText();
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
 
 
+    }
 
+    /**
+     * Reload text from current page.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void reloadText(){
+
+        String text =page.getText();
+
+        Log.d("TEST_IMAGE", "PLAIN FROM FILE: "+text);
+
+
+        //String[] lines = text.split("\n");
+        //text ="";
+
+        //for(String line : lines){
+        //    text += "<p>"+line+"</p>";
+        //}
+
+
+        Log.d("TEST_IMAGE", text);
+
+        Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
+
+        textView.setText(s);
+    }
+
+
+    private String getEdited(){
+        return Html.toHtml(textView.getEditableText()).toString();
     }
 
 
@@ -90,7 +132,9 @@ public class ReaderActivity extends ColorActivity {
         super.onPause();
         
         //get the edited text from the edittext view
-        String editedText = textView.getText().toString();
+
+
+        String editedText = getEdited();
 
         //if the edited text is empty, delete the Page
         if(editedText.trim().isEmpty()){
@@ -173,6 +217,13 @@ public class ReaderActivity extends ColorActivity {
                 //save the new text size
                 Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
+            case R.id.importImage:
+                ImportFileFragment frag = ImportFileFragment.newInstance();
+                frag.setFileRequester(this);
+                frag.show(getSupportFragmentManager(), "");
+                break;
+
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -198,6 +249,17 @@ public class ReaderActivity extends ColorActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onFileObtained(File file) {
+        Toast.makeText(this, file.getPath()+"", Toast.LENGTH_LONG).show();
+        page.addImage(file.getPath(), textView.getSelectionStart());
+        reloadText();
+    }
+
+
 
 
 

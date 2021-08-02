@@ -3,21 +3,18 @@ package com.luxlunaris.noadpadlight.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.Notebook;
-import com.luxlunaris.noadpadlight.control.classes.Settings;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
+import com.luxlunaris.noadpadlight.control.classes.Notebook;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
+import com.luxlunaris.noadpadlight.control.classes.Settings;
 
-import android.provider.ContactsContract;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-
+/**
+ * This Activity is just a launchpad, and it's never actually
+ * shown to the user.
+ */
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -26,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     public  static  Context CONTEXT;
 
 
+    /**
+     * The facade controller-singleton that manages Pages.
+     */
+    Notebook notebook;
 
 
     /**
@@ -42,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
         CONTEXT = this.getApplicationContext();
 
 
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        notebook  = Notebook.getInstance();
+        Log.d("SPEED_TEST", "DONE INITIALIZING NOTEBOOK!");
 
 
 
@@ -52,9 +52,11 @@ public class MainActivity extends AppCompatActivity {
         Intent goToPagesIntent = new Intent(this, PagesActivity.class);
         startActivity(goToPagesIntent);
 
+        Log.d("SPEED_TEST", "CREATED PAGESACTIVITY!");
+
+
 
         //decide whether or not to open a blank page at app launch
-        //boolean startToBlankPage = Settings.get().getTagValue(Settings.TAGS.LAUNCH_TO_BLANK_PAGE.toString()).equals(Settings.TRUE)? true : false;
         boolean startToBlankPage = Settings.getBoolean(SETTINGS_TAGS.LAUNCH_TO_BLANK_PAGE);
 
         if(startToBlankPage && !appStartedFlag){
@@ -64,30 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
             //jump to the reader activity with a new blank page
             Intent intent = new Intent(this, ReaderActivity.class);
-            intent.putExtra("PAGE", Notebook.getInstance().newPage());
+            intent.putExtra(ReaderActivity.PAGE_EXTRA, notebook.newPage());
             startActivity(intent);
         }
 
+        Log.d("SPEED_TEST", "DECIDED WHERE TO GO!");
+
+        Log.d("SPEED_TEST", "DONE????");
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
 
 }

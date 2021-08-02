@@ -9,6 +9,9 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
     <item
+        android:id="@+id/importImage"
+        android:title="import image" />
+    <item
         android:id="@+id/zoom_out"
         android:icon="@android:drawable/btn_minus"
         android:title="shrink text"

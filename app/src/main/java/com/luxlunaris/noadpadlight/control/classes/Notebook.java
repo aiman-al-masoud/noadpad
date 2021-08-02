@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;

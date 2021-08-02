@@ -29,7 +29,7 @@ public class Paths {
     public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
 
 
-    public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
+    //public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
 
 
 

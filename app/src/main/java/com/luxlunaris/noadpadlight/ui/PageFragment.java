@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,11 +105,13 @@ public class PageFragment extends Fragment implements SettingsTagListener {
         return view;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-        pageButton.setText(page.getPreview());
+        pageButton.setText(Html.fromHtml(page.getPreview()));
     }
+
 
 
     /**

@@ -33,6 +33,9 @@ public class Compacter {
         }
 
         blankPage.setText(textBlob);
+
+        //TODO: migrate images
+
     }
 
 
