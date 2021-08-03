@@ -372,17 +372,19 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     @Override
     public void onCreated(Page page) {
 
-        //run on ui thread if onCreated gets called from a different thread.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //if in foreground simply add page
-                if(isInForeground()){
+        //if in foreground, just add the page fragment.
+        if(isInForeground()) {
+
+            //run on ui thread if onCreated gets called from a different thread.
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     addPage(page, true);
-                    return;
                 }
-            }
-        });
+            });
+
+            return;
+        }
 
 
         //else you're in background, stash in changes
