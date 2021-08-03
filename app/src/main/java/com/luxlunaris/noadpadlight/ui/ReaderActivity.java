@@ -87,27 +87,19 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void reloadText(){
 
+        //get the html source code from the Page.
         String text =page.getText();
-
-        Log.d("TEST_IMAGE", "PLAIN FROM FILE: "+text);
-
-
-        //String[] lines = text.split("\n");
-        //text ="";
-
-        //for(String line : lines){
-        //    text += "<p>"+line+"</p>";
-        //}
-
-
-        Log.d("TEST_IMAGE", text);
-
+        Log.d("TEST_IMAGE", "TEXT FROM PAGE-FILE: "+text);
+        //convert the html source code to a Spanned object
         Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
-
+        //pass the spanned object to the text view.
         textView.setText(s);
     }
 
-
+    /**
+     * Get the html source that is currently being rendered.
+     * @return
+     */
     private String getEdited(){
         return Html.toHtml(textView.getEditableText()).toString();
     }
@@ -132,8 +124,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         super.onPause();
         
         //get the edited text from the edittext view
-
-
         String editedText = getEdited();
 
         //if the edited text is empty, delete the Page
@@ -212,7 +202,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 break;
 
             case R.id.zoom_out:
-                //increment the text size
+                //decrement the text size
                 textView.setTextSize(--TEXT_SIZE);
                 //save the new text size
                 Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
@@ -250,7 +240,10 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         return super.onKeyDown(keyCode, event);
     }
 
-
+    /**
+     * When you obtain an image file to be added to the current page.
+     * @param file
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onFileObtained(File file) {

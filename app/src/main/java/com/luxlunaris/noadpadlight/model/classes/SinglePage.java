@@ -29,11 +29,10 @@ public class SinglePage extends File implements Page {
 	 */
 	File textFile;
 
-
-
-	File imageDir;
-
-
+	/**
+	 * Directory that contains this Page's images.
+	 */
+	private File imageDir;
 
 	/**
 	 * this Page's listeners (Notebook)
@@ -46,12 +45,12 @@ public class SinglePage extends File implements Page {
 	 */
 	boolean selected = false;
 
-
+	/**
+	 * Data relative to the currently searched-for token.
+	 */
 	Integer[] positionsOfToken;
 	String currentToken;
 	int posIndex = 0;
-
-
 
 
 
@@ -64,7 +63,8 @@ public class SinglePage extends File implements Page {
 	}
 
 	/**
-	 * get this Page's text from the text file
+	 * get this Page's text from the text file.
+	 * (The raw text with all of the html tags).
 	 * @return
 	 */
 	@Override
@@ -74,7 +74,7 @@ public class SinglePage extends File implements Page {
 	}
 
 	/**
-	 * Save new/edited text to the text file
+	 * Save new/edited text to the text file.
 	 * @param text
 	 */
 	@Override
@@ -87,6 +87,14 @@ public class SinglePage extends File implements Page {
 
 	}
 
+	/**
+	 * Get the text of this Page without any html tags.
+	 * @return
+	 */
+	public String getTextNoTags(){
+		return Html.fromHtml(getText()).toString();
+	}
+
 
 	/**
 	 * Delete this page and all of its contents from disk
@@ -94,15 +102,14 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public boolean delete() {
-		//textFile.delete();
-		//((MetadataFile)metadata).delete();
-		//boolean del = super.delete();
+
 		FileIO.deleteDirectory(this.getPath());
 
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
 		}
+
 		//return del;
 		return true;
 	}
@@ -131,7 +138,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public int numOfTokens(String token) {
-		return getText().toUpperCase().split(token.toUpperCase()).length-1;
+		return getTextNoTags().toUpperCase().split(token.toUpperCase()).length-1;
 	}
 
 	/**
@@ -186,9 +193,8 @@ public class SinglePage extends File implements Page {
 		//convert token and text to upper case
 		token = token.toUpperCase();
 
-		//String text = getText().toUpperCase();
-
-		String text = Html.fromHtml(getText()).toString().toUpperCase();
+		//get the text (w/out tags, as displayed on screen) and convert it to upper case
+		String text = getTextNoTags().toUpperCase();
 
 		//split the text by the token
 		String[] parts = text.split(token);
@@ -295,8 +301,8 @@ public class SinglePage extends File implements Page {
 	 * @return
 	 */
 	public boolean contains(String[] keywords){
-		//String text = getText().toUpperCase();
-		String text = Html.fromHtml(getText()).toString().toUpperCase();
+
+		String text =  getTextNoTags().toUpperCase();
 		for(String keyword : keywords){
 			if(!text.contains(keyword.toUpperCase())){
 				return false;
@@ -328,6 +334,11 @@ public class SinglePage extends File implements Page {
 	}
 
 
+	/**
+	 * Add an image to this Page.
+	 * @param path
+	 * @param position
+	 */
 	@Override
 	public void addImage(String path, int position) {
 
@@ -344,8 +355,14 @@ public class SinglePage extends File implements Page {
 		setText(text);
 	}
 
-
-
+	/**
+	 * Returns this Page's image directory
+	 * @return
+	 */
+	@Override
+	public File getImageDir() {
+		return imageDir;
+	}
 
 
 }

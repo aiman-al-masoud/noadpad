@@ -1,7 +1,11 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import android.os.FileUtils;
 
+import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
+
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +39,14 @@ public class Compacter {
         blankPage.setText(textBlob);
 
         //TODO: migrate images
+        //the problem is that the img tags are currently
+        //referencing files inside of a particular page,
+        //TLDR; You need to convert the html text, not just
+        //transfer the image files.
+        //for(Page page : pages){
+        //    File[] imageFiles = page.getImageDir().listFiles();
+        //    FileIO.copyFilesToDirectory(imageFiles, blankPage.getImageDir().getPath());
+        //}
 
     }
 

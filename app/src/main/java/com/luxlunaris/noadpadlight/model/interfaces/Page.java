@@ -2,13 +2,14 @@ package com.luxlunaris.noadpadlight.model.interfaces;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
- * Page is the atom-component of the Notebook.
+ * Page is the storage unit of the Notebook.
  *
  * The user can create several Pages, each Page
- * can contain text and the relative metadata.
+ * can contain text, other files, and the relative metadata.
  *
  */
 public interface Page extends Serializable {
@@ -138,6 +139,13 @@ public interface Page extends Serializable {
 	 * @param position
 	 */
 	public void addImage(String path, int position);
+
+
+	/**
+	 * Returns the image directory of this Page.
+	 * @return
+	 */
+	public File getImageDir();
 
 
 

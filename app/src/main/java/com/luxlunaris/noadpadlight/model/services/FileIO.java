@@ -1,8 +1,5 @@
 package com.luxlunaris.noadpadlight.model.services;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -12,12 +9,10 @@ import org.apache.commons.io.FileUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.Files;
 
 public class FileIO {
 
@@ -142,6 +137,11 @@ public class FileIO {
 	}
 
 
+	/**
+	 * Given a sourcefile's filepath clone it somewhere else.
+	 * @param sourcePath
+	 * @param destPath
+	 */
 	public static void copyFile(String sourcePath, String destPath){
 
 		try {
@@ -151,6 +151,10 @@ public class FileIO {
 		}
 	}
 
+	/**
+	 * Delete a directory recursively.
+	 * @param path
+	 */
 	public static void deleteDirectory(String path){
 		try {
 			FileUtils.deleteDirectory(new File(path));
@@ -158,6 +162,41 @@ public class FileIO {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Copy a directory.
+	 * @param sourcePath
+	 * @param destPath
+	 */
+	public static void copyDirectory(String sourcePath, String destPath){
+
+		try {
+			FileUtils.copyDirectory(new File(sourcePath), new File(destPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Copy an array of files to a destination directory.
+	 * (Does not remove files already in the directory).
+	 * @param files
+	 * @param destDirPath
+	 */
+	public static void copyFilesToDirectory(File[] files, String destDirPath){
+		File destDir = new File(destDirPath);
+		for(File file : files){
+			try {
+				FileUtils.copyFileToDirectory(file, destDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+
 
 
 		
