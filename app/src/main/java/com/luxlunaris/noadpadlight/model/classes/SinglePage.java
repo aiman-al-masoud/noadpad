@@ -128,6 +128,9 @@ public class SinglePage extends File implements Page {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		Log.d("CREATED_PAGE", "CREATED PAGE: "+getName()+" "+textFile.exists()+" "+imageDir.exists());
+
 	}
 
 

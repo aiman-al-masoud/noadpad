@@ -99,6 +99,8 @@ public class Notebook implements Pageable, PageListener {
 			addPage(page);
 		}
 
+		Log.d("CREATED_PAGE", "CREATED PAGE: "+page.getName()+" "+page.exists());
+
 		try {
 			listener.onCreated(page);
 		}catch (NullPointerException e){
