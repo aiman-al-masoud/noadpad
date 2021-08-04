@@ -353,12 +353,6 @@ public class SinglePage extends File implements Page {
 		//get this page's raw html code
 		String text = getText();
 
-		//quick fix
-		if(text.trim().isEmpty()){
-			text +="<p>image:</p>";
-		}
-
-
 		//opening and closing tags
 		String openImgTag = "<img src=\'";
 		String closeImgTag = "\' />";

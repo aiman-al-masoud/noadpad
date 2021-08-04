@@ -136,7 +136,7 @@ public class ImportFileFragment extends DialogFragment {
             case IMPORT_CODE:
                 Uri uri = data.getData();
                 selectedFile = getFileFromUri(uri);
-                fileSelectedText.setText("selected: "+selectedFile.getPath()+"");
+                fileSelectedText.setText("selected: "+uri.getPath());
                 break;
 
         }
