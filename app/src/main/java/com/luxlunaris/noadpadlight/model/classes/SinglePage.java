@@ -340,10 +340,9 @@ public class SinglePage extends File implements Page {
 	/**
 	 * Add an image to this Page.
 	 * @param path
-	 * @param position
 	 */
 	@Override
-	public void addImage(String path, int position) {
+	public void addImage(String path) {
 
 		//prepare a new file in this Page's imgDir
 		File imageCopy = new File(imageDir.getPath()+File.separator+System.currentTimeMillis());
@@ -354,21 +353,23 @@ public class SinglePage extends File implements Page {
 		//get this page's raw html code
 		String text = getText();
 
+		//quick fix
+		if(text.trim().isEmpty()){
+			text +="<p>image:</p>";
+		}
+
+
+		//opening and closing tags
 		String openImgTag = "<img src=\'";
 		String closeImgTag = "\' />";
 
-		//if current length of the html code is 0, add the image at position 0.
-		if(text.length()==0){
-			text+=openImgTag+imageCopy.getPath()+closeImgTag;
-			setText(text);
-			return;
-		}
+		//image element
+		String imgElement = openImgTag+imageCopy.getPath()+closeImgTag;
 
-		String partBefore = text.substring(0, position);
-		String partAfter = text.substring(position, text.length()-1);
-		String tag = "<img src=\'"+imageCopy.getPath()+"\' />";
-		text = partBefore+" "+tag+" "+partAfter;
+		//append the image element to rest of the html
+		text+=imgElement;
 
+		//overwrite text
 		setText(text);
 	}
 

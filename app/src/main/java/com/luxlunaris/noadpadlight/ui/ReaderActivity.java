@@ -58,6 +58,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     public static final String PAGE_EXTRA = "PAGE";
 
 
+    /**
+     * If this is on, the text edited by the user
+     * will be interpreted as html source code.
+     */
+    private boolean HTML_EDIT_MODE = false;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -92,17 +99,51 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         Log.d("TEST_IMAGE", "TEXT FROM PAGE-FILE: "+text);
         //convert the html source code to a Spanned object
         Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
-        //pass the spanned object to the text view.
-        textView.setText(s);
+
+        if(HTML_EDIT_MODE){
+            //pass raw html text
+            textView.setText(text);
+        }else{
+            //pass the spanned object to the text view.
+            textView.setText(s);
+        }
     }
+
+    /**
+     * Overwrite the page's contents.
+     */
+    private void saveToPage(){
+        String edited = getEdited();
+        page.setText(edited);
+    }
+
 
     /**
      * Get the html source that is currently being rendered.
      * @return
      */
     private String getEdited(){
+
+        if(HTML_EDIT_MODE){
+            return textView.getText().toString();
+        }
+
         return Html.toHtml(textView.getEditableText()).toString();
+
     }
+
+
+    /**
+     * Switch between editing html source directly to
+     * editing "text".
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void switchEditMode(){
+        saveToPage();
+        HTML_EDIT_MODE = !HTML_EDIT_MODE;
+        reloadText();
+    }
+
 
 
     /**
@@ -112,7 +153,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private void jumpToPosition(int position){
         textView.setFocusable(true);
         textView.requestFocus();
-        textView.setSelection(position);
+        try{
+            textView.setSelection(position);
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -141,7 +186,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         }
 
         //else save the new text
-        page.setText(editedText);
+        saveToPage();
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
     }
 
@@ -191,6 +236,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * @param item
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -211,6 +257,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 ImportFileFragment frag = ImportFileFragment.newInstance();
                 frag.setFileRequester(this);
                 frag.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.switch_edit_mode:
+                switchEditMode();
+                String currentMode = HTML_EDIT_MODE? "you're editing html source!" : "you're back in normal mode.";
+                Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
                 break;
 
 
@@ -248,7 +299,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     @Override
     public void onFileObtained(File file) {
         Toast.makeText(this, file.getPath()+"", Toast.LENGTH_LONG).show();
-        page.addImage(file.getPath(), textView.getSelectionStart());
+        saveToPage();
+        page.addImage(file.getPath());
         reloadText();
     }
 
