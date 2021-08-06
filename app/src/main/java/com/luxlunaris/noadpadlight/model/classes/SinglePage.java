@@ -85,6 +85,9 @@ public class SinglePage extends File implements Page {
 			listener.onModified(this);
 		}
 
+		//delete any non-used image files.
+		checkDeleteImages();
+
 	}
 
 	/**
@@ -338,6 +341,23 @@ public class SinglePage extends File implements Page {
 
 
 	/**
+	 * Generate an image "tag" given its path.
+	 * @param path
+	 * @return
+	 */
+	private String generateImgTag(String path){
+		//opening and closing tags
+		String openImgTag = "<img src=\'";
+		String closeImgTag = "\' />";
+
+		String element = openImgTag+path+closeImgTag;
+
+		return element;
+	}
+
+
+
+	/**
 	 * Add an image to this Page.
 	 * @param path
 	 */
@@ -354,11 +374,11 @@ public class SinglePage extends File implements Page {
 		String text = getText();
 
 		//opening and closing tags
-		String openImgTag = "<img src=\'";
-		String closeImgTag = "\' />";
+		//String openImgTag = "<img src=\'";
+		//String closeImgTag = "\' />";
 
 		//image element
-		String imgElement = openImgTag+imageCopy.getPath()+closeImgTag;
+		String imgElement = generateImgTag(imageCopy.getPath());
 
 		//append the image element to rest of the html
 		text+=imgElement;
@@ -375,6 +395,39 @@ public class SinglePage extends File implements Page {
 	public File getImageDir() {
 		return imageDir;
 	}
+
+	/**
+	 * Checks if there are any images that
+	 * don't have a corresponding tag in the
+	 * html source and deletes them from the
+	 * imageDir.
+	 */
+	private void checkDeleteImages(){
+
+		//get the html source
+		String text = getText();
+
+		Log.d( "IMAGE_DEL", imageDir.listFiles().length+" how many imgs");
+
+		//for each image...
+		for(File imgFile : imageDir.listFiles()){
+
+			Log.d("IMAGE_DEL", imgFile.getName());
+
+			String nameOfImage = imgFile.getName();
+
+			//if the name of the image is not in the html source, the image file is useless
+			if(!text.contains(nameOfImage)){
+				imgFile.delete();
+				Log.d("IMAGE_DEL", imgFile.getName() + "no longer in use, deleted!");
+			}
+
+		}
+
+	}
+
+
+
 
 
 }
