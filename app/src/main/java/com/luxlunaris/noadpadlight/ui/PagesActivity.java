@@ -98,6 +98,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         notebook.setListener(this);
     }
 
+
     /**
      * Used to add more pages when you scroll all the
      * way down.
