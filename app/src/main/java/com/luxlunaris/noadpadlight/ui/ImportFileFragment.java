@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
+import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,6 +78,17 @@ public class ImportFileFragment extends DialogFragment {
 
         selectFileButton.setOnClickListener(new HandleImport());
         confirmSelectionButton.setOnClickListener(new HandleConfirm());
+
+        //paint this fragment with the current theme
+        THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        view.setBackgroundColor(theme.BG_COLOR);
+        selectFileButton.setBackgroundColor(theme.BG_COLOR);
+        confirmSelectionButton.setBackgroundColor(theme.BG_COLOR);
+        fileSelectedText.setBackgroundColor(theme.BG_COLOR);
+        selectFileButton.setTextColor(theme.FG_COLOR);
+        confirmSelectionButton.setTextColor(theme.FG_COLOR);
+        fileSelectedText.setTextColor(theme.FG_COLOR);
+
 
         return view;
     }
