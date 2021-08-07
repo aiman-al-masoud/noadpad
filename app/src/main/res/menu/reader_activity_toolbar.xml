@@ -26,12 +26,9 @@
         android:icon="@android:drawable/btn_plus"
         android:title="enlarge text"
         app:showAsAction="always" />
-
-
-
-
-
-
+    <item
+        android:id="@+id/make_bold"
+        android:title="bold" />
 
 
 

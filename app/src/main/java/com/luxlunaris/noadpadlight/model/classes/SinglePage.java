@@ -1,6 +1,7 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
@@ -420,6 +421,77 @@ public class SinglePage extends File implements Page {
 			}
 
 		}
+
+	}
+
+	/**
+	 * Convert a position that the user can see on the
+	 * rendered text to a position in the html source
+	 * behind the scenes.
+	 * @param pos
+	 * @return
+	 */
+	private int convertPosition(int pos){
+
+		Log.d("TEXT_EXPERIMENTS", "this is the pos in the rendered text: "+pos+"");
+
+		String textNoTags = getTextNoTags();
+
+		//get some of the text coming after the specified pos
+		String textAfter = textNoTags.substring(pos, Math.min(pos+10, textNoTags.length()-1));
+
+		textAfter = Html.escapeHtml(textAfter);
+
+
+		Log.d("TEXT_EXPERIMENTS", "some text after: "+textAfter);
+
+		int posInHtml = getText().indexOf(textAfter);
+
+		Log.d("TEXT_EXPERIMENTS", "pos in html: "+posInHtml);
+
+		return posInHtml;
+	}
+
+	/**
+	 * Surround some text with an html tag and save.
+	 * @param start
+	 * @param end
+	 * @param tag
+	 */
+	@Override
+	public void addHtmlTag(int start, int end, String tag){
+
+		//convert the positions that the user sees to html positions
+		int startInHtml = convertPosition(start);
+		int endInHtml = convertPosition(end);
+
+		//if both not found (-1), halt.
+		if(startInHtml ==-1 && endInHtml ==-1){
+			return;
+		}
+
+		//leverage redundancy of start-end
+		if(startInHtml==-1  && endInHtml!=-1){
+			startInHtml = endInHtml- (end-start);
+		}
+
+		//leverage redundancy of start-end
+		if(endInHtml==-1  && startInHtml!=-1){
+			endInHtml = startInHtml + (end-start);
+		}
+
+		//make the tags from the inner part
+		String startTag = "<"+tag+">";
+		String endTag = "</"+tag+">";
+
+		//get the current html source
+		String html = getText();
+
+		//add the surrounding tag
+		String editedHtml = html.substring(0, startInHtml-1)+" "+startTag+html.substring(startInHtml, endInHtml)+endTag+" "+html.substring(endInHtml+1, html.length()-1);
+
+		//save the new text.
+		setText(editedHtml);
 
 	}
 

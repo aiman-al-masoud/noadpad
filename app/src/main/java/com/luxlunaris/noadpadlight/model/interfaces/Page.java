@@ -146,6 +146,14 @@ public interface Page extends Serializable {
 	 */
 	public File getImageDir();
 
+	/**
+	 * Surround a part of this Page's text with an html tag.
+	 * @param start
+	 * @param end
+	 * @param tag
+	 */
+	public void addHtmlTag(int start, int end, String tag);
+
 
 
 

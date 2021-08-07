@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.File;
@@ -91,7 +92,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
-
 
     }
 
@@ -259,7 +259,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 //save the new text size
                 Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
-
             case R.id.zoom_out:
                 //decrement the text size
                 textView.setTextSize(--TEXT_SIZE);
@@ -276,6 +275,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 switchEditMode();
                 String currentMode = HTML_EDIT_MODE? "you're editing html source!" : "you're back in normal mode.";
                 Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.make_bold:
+                int currentPos = textView.getSelectionStart();
+                saveToPage();
+                page.addHtmlTag(textView.getSelectionStart(), textView.getSelectionEnd(), "b");
+                reloadText();
+                jumpToPosition(currentPos);
                 break;
 
 
@@ -317,6 +323,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         page.addImage(file.getPath());
         reloadText();
     }
+
+
 
 
 

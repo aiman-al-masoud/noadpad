@@ -460,17 +460,4 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

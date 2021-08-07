@@ -3,24 +3,19 @@ package com.luxlunaris.noadpadlight.ui;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
-import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-
-import java.io.Serializable;
 
 public class PageFragment extends Fragment implements SettingsTagListener {
 
@@ -66,9 +61,12 @@ public class PageFragment extends Fragment implements SettingsTagListener {
         View view =inflater.inflate(R.layout.fragment_page, container, false);
 
 
-        pageButton = (Button)view.findViewById(R.id.pageButton);
+        pageButton = view.findViewById(R.id.pageButton);
+
 
         pageButton.setText(page.getPreview());
+
+
 
         //set the button's on-click action
         pageButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +107,9 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     @Override
     public void onResume() {
         super.onResume();
+
         pageButton.setText(Html.fromHtml(page.getPreview()));
+
     }
 
 
