@@ -56,7 +56,7 @@ public class ProxyNotebookListener implements NotebookListener {
 
         //add a page to the list of modified items,
         //except if it was just created.
-        if(!justCreatedList.contains(page)){
+        if(!justCreatedList.contains(page)   && !justModifiedList.contains(page)){
             justModifiedList.add(page);
         }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -372,6 +374,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
      */
     @Override
     public void onCreated(Page page) {
+
+        Log.d("TEST_IMAGE", "page got created, from pagesactivity: "+page+" exists: "+((File)page).exists());
 
         //if in foreground, just add the page fragment.
         if(isInForeground()) {

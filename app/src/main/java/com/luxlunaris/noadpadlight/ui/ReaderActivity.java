@@ -64,6 +64,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private boolean HTML_EDIT_MODE = false;
 
+    /**
+     * True if onPause is getting called
+     * when the activity is being left for good.
+     * (False if the activity is being
+     * temporarily left to choose a file from the file explorer).
+     */
+    private boolean EXITING =  true;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -167,6 +174,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     @Override
     protected void onPause() {
         super.onPause();
+
+        //if you're not exiting the activity for good don't run the rest of this method.
+        if(!EXITING){
+            EXITING = true;
+            return;
+        }
         
         //get the edited text from the edittext view
         String editedText = getEdited();
@@ -181,7 +194,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         page.savePosition(textView.getSelectionStart());
 
         //if the edited text doesn't differ from the text in the page, don't re-write it
-        if(editedText.equals(page.getText())){
+        if(Html.toHtml(textView.getEditableText()).equals(page.getText())){
             return;
         }
 
@@ -254,6 +267,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.importImage:
+                EXITING = false;
                 ImportFileFragment frag = ImportFileFragment.newInstance();
                 frag.setFileRequester(this);
                 frag.show(getSupportFragmentManager(), "");

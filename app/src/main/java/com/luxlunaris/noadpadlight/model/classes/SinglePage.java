@@ -80,6 +80,7 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void setText(String text) {
 		Log.d("TEST_IMAGE", "saving: "+text);
+
 		FileIO.write(textFile.getPath(), text);
 		for(PageListener listener : listeners){
 			listener.onModified(this);
@@ -373,10 +374,6 @@ public class SinglePage extends File implements Page {
 		//get this page's raw html code
 		String text = getText();
 
-		//opening and closing tags
-		//String openImgTag = "<img src=\'";
-		//String closeImgTag = "\' />";
-
 		//image element
 		String imgElement = generateImgTag(imageCopy.getPath());
 
@@ -407,7 +404,7 @@ public class SinglePage extends File implements Page {
 		//get the html source
 		String text = getText();
 
-		Log.d( "IMAGE_DEL", imageDir.listFiles().length+" how many imgs");
+		//Log.d( "IMAGE_DEL", imageDir.listFiles().length+" how many imgs");
 
 		//for each image...
 		for(File imgFile : imageDir.listFiles()){
