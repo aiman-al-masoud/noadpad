@@ -277,9 +277,19 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
                 break;
             case R.id.make_bold:
+                applyTag("b");
+                break;
+            case R.id.make_underlined:
+                applyTag("u");
+                break;
+            case R.id.make_italics:
+                applyTag("i");
+                break;
+
+            case R.id.make_plain:
                 int currentPos = textView.getSelectionStart();
                 saveToPage();
-                page.addHtmlTag(textView.getSelectionStart(), "b");
+                page.removeHtmlTags(textView.getSelectionStart());
                 reloadText();
                 jumpToPosition(currentPos);
                 break;
@@ -289,6 +299,17 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void applyTag(String tag){
+        int currentPos = textView.getSelectionStart();
+        saveToPage();
+        page.addHtmlTag(textView.getSelectionStart(), tag);
+        reloadText();
+        jumpToPosition(currentPos);
+    }
+
 
 
     /**

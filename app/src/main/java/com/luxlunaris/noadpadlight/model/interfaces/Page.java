@@ -154,6 +154,12 @@ public interface Page extends Serializable {
 	public void addHtmlTag(int pos, String tag);
 
 
+	/**
+	 * Remove all of the html tags from a position.
+	 * @param pos
+	 */
+	public void removeHtmlTags(int pos);
+
 
 
 	}

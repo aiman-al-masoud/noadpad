@@ -445,9 +445,27 @@ public class SinglePage extends File implements Page {
 	}
 
 
+	/**
+	 * Get the html source as a list of paragraphs.
+	 * @return
+	 */
+	private String[] getParagraphs(){
+		//split the html source by end of paragraph tags
+		String[] pars = getText().split("</p>");
+
+		//adjust each paragraph
+		for(int i =0; i<pars.length; i++){
+			pars[i] = pars[i].replaceAll("\n", "");
+			pars[i] = pars[i]+" </p>";
+		}
+
+		return pars;
+	}
+
 
 	/**
 	 * Surround some text with an html tag and save.
+	 * (Works on entire paragraphs.)
 	 * @param pos
 	 * @param tag
 	 */
@@ -459,14 +477,8 @@ public class SinglePage extends File implements Page {
 		int lineNum = getLine(pos);
 		Log.d("LINE_NUM", lineNum+"");
 
-		//split the html source by end of paragraph tags
-		String[] pars = getText().split("</p>");
-
-		//adjust each paragraph
-		for(int i =0; i<pars.length; i++){
-			pars[i] = pars[i].replaceAll("\n", "");
-			pars[i] = pars[i]+" </p>";
-		}
+		//get the paragraphs
+		String[] pars = getParagraphs();
 
 		//Log.d("LINE_NUM", "PARAGRAPHS:");
 		//for(int i =0; i<pars.length-1; i++){
@@ -486,6 +498,40 @@ public class SinglePage extends File implements Page {
 		//apply the html tag
 		pars[lineNum] = startTag+pars[lineNum]+endTag;
 
+
+		//re-build the html source from the single paragraphs.
+		String newHtml = "";
+		for(String par : pars){
+			newHtml+=par;
+		}
+
+		//save it.
+		setText(newHtml);
+
+	}
+
+	/**
+	 * Remove all html tags from a paragraph.
+	 * @param pos
+	 */
+	@Override
+	public void removeHtmlTags(int pos){
+
+		int lineNum = getLine(pos);
+
+		//get the paragraphs
+		String[] pars = getParagraphs();
+
+		//convert the line number to the paragraph number.
+		lineNum = (int)(((double)0.5*lineNum) -0.5);
+
+		String modifiedPar = pars[lineNum];
+
+		//remove all tags other than the paragraph tag. (sort of)
+		modifiedPar = modifiedPar.replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
+
+		//replace the paragraph
+		pars[lineNum] = modifiedPar;
 
 		//re-build the html source from the single paragraphs.
 		String newHtml = "";

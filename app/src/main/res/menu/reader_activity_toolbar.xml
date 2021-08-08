@@ -26,9 +26,37 @@
         android:icon="@android:drawable/btn_plus"
         android:title="enlarge text"
         app:showAsAction="always" />
+
+
+
     <item
-        android:id="@+id/make_bold"
-        android:title="bold" />
+        android:id="@+id/styles_menu"
+        android:title="style">
+
+        <menu>
+
+
+            <item
+                android:id="@+id/make_plain"
+                android:title="plain" />
+
+            <item
+                android:id="@+id/make_bold"
+                android:title="bold" />
+
+            <item
+                android:id="@+id/make_underlined"
+                android:title="underlined"/>
+
+            <item
+                android:id="@+id/make_italics"
+                android:title="italics"/>
+
+
+
+        </menu>
+
+        </item>
 
 
 
