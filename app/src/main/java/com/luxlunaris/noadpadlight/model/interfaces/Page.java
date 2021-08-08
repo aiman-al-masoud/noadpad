@@ -148,11 +148,10 @@ public interface Page extends Serializable {
 
 	/**
 	 * Surround a part of this Page's text with an html tag.
-	 * @param start
-	 * @param end
+	 * @param pos
 	 * @param tag
 	 */
-	public void addHtmlTag(int start, int end, String tag);
+	public void addHtmlTag(int pos, String tag);
 
 
 

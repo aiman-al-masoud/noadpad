@@ -279,7 +279,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             case R.id.make_bold:
                 int currentPos = textView.getSelectionStart();
                 saveToPage();
-                page.addHtmlTag(textView.getSelectionStart(), textView.getSelectionEnd(), "b");
+                page.addHtmlTag(textView.getSelectionStart(), "b");
                 reloadText();
                 jumpToPosition(currentPos);
                 break;

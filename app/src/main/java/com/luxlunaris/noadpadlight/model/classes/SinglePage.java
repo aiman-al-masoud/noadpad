@@ -424,76 +424,83 @@ public class SinglePage extends File implements Page {
 
 	}
 
+
 	/**
-	 * Convert a position that the user can see on the
-	 * rendered text to a position in the html source
-	 * behind the scenes.
+	 * From the position in the rendered text, determine
+	 * the line.
 	 * @param pos
 	 * @return
 	 */
-	private int convertPosition(int pos){
+	private int getLine(int pos){
 
-		Log.d("TEXT_EXPERIMENTS", "this is the pos in the rendered text: "+pos+"");
+		String text = getTextNoTags();
 
-		String textNoTags = getTextNoTags();
+		Log.d("LINE_NUM", "TEXT: "+text);
 
-		//get some of the text coming after the specified pos
-		String textAfter = textNoTags.substring(pos, Math.min(pos+10, textNoTags.length()-1));
+		String upTillPos = text.substring(0, pos);
 
-		textAfter = Html.escapeHtml(textAfter);
+		int newLines = upTillPos.split("\n").length;
 
-
-		Log.d("TEXT_EXPERIMENTS", "some text after: "+textAfter);
-
-		int posInHtml = getText().indexOf(textAfter);
-
-		Log.d("TEXT_EXPERIMENTS", "pos in html: "+posInHtml);
-
-		return posInHtml;
+		return newLines;
 	}
+
+
 
 	/**
 	 * Surround some text with an html tag and save.
-	 * @param start
-	 * @param end
+	 * @param pos
 	 * @param tag
 	 */
 	@Override
-	public void addHtmlTag(int start, int end, String tag){
+	public void addHtmlTag(int pos, String tag){
+		//lines are interpreted as paragraphs in html.
+		//a paragraph is the smallest unit that admits styling.
 
-		//convert the positions that the user sees to html positions
-		int startInHtml = convertPosition(start);
-		int endInHtml = convertPosition(end);
+		int lineNum = getLine(pos);
+		Log.d("LINE_NUM", lineNum+"");
 
-		//if both not found (-1), halt.
-		if(startInHtml ==-1 && endInHtml ==-1){
-			return;
+		//split the html source by end of paragraph tags
+		String[] pars = getText().split("</p>");
+
+		//adjust each paragraph
+		for(int i =0; i<pars.length; i++){
+			pars[i] = pars[i].replaceAll("\n", "");
+			pars[i] = pars[i]+" </p>";
 		}
 
-		//leverage redundancy of start-end
-		if(startInHtml==-1  && endInHtml!=-1){
-			startInHtml = endInHtml- (end-start);
-		}
+		//Log.d("LINE_NUM", "PARAGRAPHS:");
+		//for(int i =0; i<pars.length-1; i++){
+		//	Log.d("LINE_NUM", i+") "+pars[i]);
+		//}
 
-		//leverage redundancy of start-end
-		if(endInHtml==-1  && startInHtml!=-1){
-			endInHtml = startInHtml + (end-start);
-		}
+		//convert the line number to the paragraph number.
+		lineNum = (int)(((double)0.5*lineNum) -0.5);
+
+		Log.d("LINE_NUM", "HEEEEEEEEERE");
+		Log.d("LINE_NUM", pars[lineNum]);
 
 		//make the tags from the inner part
 		String startTag = "<"+tag+">";
 		String endTag = "</"+tag+">";
 
-		//get the current html source
-		String html = getText();
+		//apply the html tag
+		pars[lineNum] = startTag+pars[lineNum]+endTag;
 
-		//add the surrounding tag
-		String editedHtml = html.substring(0, startInHtml-1)+" "+startTag+html.substring(startInHtml, endInHtml)+endTag+" "+html.substring(endInHtml+1, html.length()-1);
 
-		//save the new text.
-		setText(editedHtml);
+		//re-build the html source from the single paragraphs.
+		String newHtml = "";
+		for(String par : pars){
+			newHtml+=par;
+		}
+
+		//save it.
+		setText(newHtml);
 
 	}
+
+
+
+
 
 
 
