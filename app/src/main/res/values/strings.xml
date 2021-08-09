@@ -1,19 +1,11 @@
 <resources>
     <string name="app_name">noadpad</string>
-    <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <string name="credits_eng">
+    <string name="credits">
         
         Thanks for trying out Noadpad! :-) \n
         
@@ -47,5 +39,6 @@
     <string name="pick_file_title">pick file</string>
     <string name="confirm_picking_file_title">confirm</string>
     <string name="total_data_export_title">Export your data</string>
+    <string name="info_fragment_got_it">got it!</string>
 
 </resources>

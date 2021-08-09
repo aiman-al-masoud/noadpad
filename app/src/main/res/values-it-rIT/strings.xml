@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">noadpad</string>
+    <string name="credits">
+        Grazie per aver scelto Noadpad! :-) \n\n
+
+        Per qualsiasi proposta:\n\n
+
+        Contatto: luxlunarislabs@gmail.com  \n
+        Repo: https://github.com/aiman-al-masoud/noadpadlight  \n
+        Licenza: https://github.com/aiman-al-masoud/noadpadlight/blob/master/LICENSE.md  \n
+    </string>
+    <string name="search_icon_title">cerca</string>
+    <string name="new_page_icon_title">nuova pagina</string>
+    <string name="edit_icon_title">modifica</string>
+    <string name="settings_icon_title">impostazioni</string>
+    <string name="import_image_icon_title">importa immagine</string>
+    <string name="switch_edit_mode_icon_title">cambia modalità</string>
+    <string name="shrink_text_icon_title">rimpicciolisci testo</string>
+    <string name="enlarge_text_icon_title">ingrandisci testo</string>
+    <string name="plain_style_icon_title">normale</string>
+    <string name="bold_style_icon_title">grassetto</string>
+    <string name="underlined_style_icon_title">sottolineato</string>
+    <string name="italics_style_icon_title">corsivo</string>
+    <string name="edit_options_delete_title">elimina</string>
+    <string name="edit_options_compact_title">compatta</string>
+    <string name="credits_and_more_info_title">Ulteriori Info</string>
+    <string name="saved_page_changed_toast">salvato</string>
+    <string name="occurrences_found_toast">"Tasto volume su/giù per navigare. Occorrenze trovate: "</string>
+    <string name="auto_launch_to_blank_setting">"Lancia l'app su una pagina vuota:  "</string>
+    <string name="select_app_theme_setting">"Seleziona il tema dell'app: "</string>
+    <string name="import_pages_title">importa</string>
+    <string name="export_pages_title">esporta</string>
+    <string name="pick_file_title">seleziona un file</string>
+    <string name="confirm_picking_file_title">conferma</string>
+    <string name="total_data_export_title">Esporta i tuoi dati:</string>
+    <string name="info_fragment_got_it">ricevuto!</string>
+</resources>

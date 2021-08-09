@@ -31,7 +31,7 @@ public class SettingsActivity extends ColorActivity {
         showInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InfoFragment infoFrag = InfoFragment.newInstance(getResources().getString(R.string.credits_eng));
+                InfoFragment infoFrag = InfoFragment.newInstance(getResources().getString(R.string.credits));
                 infoFrag.show(getSupportFragmentManager(), "");
             }
         });
