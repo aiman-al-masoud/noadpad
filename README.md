@@ -1,4 +1,4 @@
-# noadpadlight
+# noadpad
 
 Android notepad apps fall into 3 general categories:
 
