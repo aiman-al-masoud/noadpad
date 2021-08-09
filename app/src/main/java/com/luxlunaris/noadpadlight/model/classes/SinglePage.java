@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * SinglePage is a persistent implementation of the Page interface.
@@ -52,7 +53,6 @@ public class SinglePage extends File implements Page {
 	Integer[] positionsOfToken;
 	String currentToken;
 	int posIndex = 0;
-
 
 
 	public SinglePage(String pathname) {
@@ -363,7 +363,19 @@ public class SinglePage extends File implements Page {
 	 * @param path
 	 */
 	@Override
-	public void addImage(String path) {
+	public void addImage(String path, int pos) {
+
+		//convert the position in the rendered text to line number
+		int lineNum = getLine(pos);
+
+		Log.d("ADDING_IMAGE", "AT LINE: "+lineNum);
+
+		//get the line number to paragraph number
+		int parNum = lineToParagraph(lineNum);
+		//(add the image as a new paragraph after the one selected, hence: +1)
+		parNum+=1;
+
+		Log.d("ADDING_IMAGE", "AT PARAGRAPH: "+parNum);
 
 		//prepare a new file in this Page's imgDir
 		File imageCopy = new File(imageDir.getPath()+File.separator+System.currentTimeMillis());
@@ -371,17 +383,33 @@ public class SinglePage extends File implements Page {
 		//copy provided image to this Page's imgDir
 		FileIO.copyFile(path, imageCopy.getPath());
 
-		//get this page's raw html code
-		String text = getText();
-
-		//image element
+		//create the image element in html
 		String imgElement = generateImgTag(imageCopy.getPath());
 
-		//append the image element to rest of the html
-		text+=imgElement;
+		//get the paragraphs of this page
+		String[] pars = getParagraphs();
 
-		//overwrite text
-		setText(text);
+		//convert the paragraphs array to a mutable list
+		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
+
+		//add a new image-paragraph at the specified position.
+		parsList.add(parNum, "<p>"+imgElement+"</p>");
+
+		//test log paragraphs
+		//for(int i=0; i<parsList.size(); i++){
+		//	Log.d("ADDING_IMAGE", "PAR "+i+": "+parsList.get(i));
+		//}
+
+		//recompose the html source from the paragraphs' list.
+		String newHtml = "";
+		for(String par : parsList){
+			newHtml+=par;
+		}
+
+		Log.d("ADDING_IMAGE", "NEW HTML: "+newHtml);
+
+		//save the new html source
+		setText(newHtml);
 	}
 
 	/**
@@ -434,7 +462,10 @@ public class SinglePage extends File implements Page {
 
 		Log.d("LINE_NUM", "TEXT: "+text);
 
-		String upTillPos = text.substring(0, pos);
+		String upTillPos;
+
+		upTillPos = text.substring(0, pos);
+
 
 		int newLines = upTillPos.split("\n").length;
 
@@ -568,13 +599,6 @@ public class SinglePage extends File implements Page {
 		//save it.
 		setText(newHtml);
 	}
-
-
-
-
-
-
-
 
 
 }

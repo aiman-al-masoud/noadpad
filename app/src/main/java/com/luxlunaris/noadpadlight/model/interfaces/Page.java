@@ -137,7 +137,7 @@ public interface Page extends Serializable {
 	 * Add an image to this Page.
 	 * @param path
 	 */
-	public void addImage(String path);
+	public void addImage(String path, int pos);
 
 
 	/**
