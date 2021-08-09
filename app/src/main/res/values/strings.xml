@@ -43,6 +43,7 @@
     <string name="editing_html_mode_ON">you\'re editing html source!</string>
     <string name="editing_html_mode_OFF">you\'re back in normal mode.</string>
     <string name="style_menu_title">style</string>
+    <string name="selected_word">selected: </string>
 
 
 </resources>

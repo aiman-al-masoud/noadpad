@@ -38,4 +38,5 @@
     <string name="editing_html_mode_ON">stai modificando il sorgente html!</string>
     <string name="editing_html_mode_OFF">sei tornato in modalità standard.</string>
     <string name="style_menu_title">stile</string>
+    <string name="selected_word">"selezionato: "</string>
 </resources>
