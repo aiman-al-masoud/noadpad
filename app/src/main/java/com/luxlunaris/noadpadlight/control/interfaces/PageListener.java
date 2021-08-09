@@ -16,6 +16,6 @@ public interface PageListener extends Serializable {
 	public void onSelected(Page page);
 	public void onDeleted(Page page);
 	public void onModified(Page page);
-
+	public void onCreated(Page page);
 
 }

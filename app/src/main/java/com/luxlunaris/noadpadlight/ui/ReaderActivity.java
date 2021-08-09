@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
-import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.File;
@@ -120,6 +119,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * Overwrite the page's contents.
      */
     private void saveToPage(){
+        //in case the page got deleted because the user exited the app while the page was empty, re-create the page
+        page.create();
         String edited = getEdited();
         page.setText(edited);
     }
@@ -189,6 +190,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             boolean t = page.delete();
             return;
         }
+
+        //in case the page got deleted because the user exited the app while the page was empty, re-create the page
+        page.create();
 
         //save the current position on the page
         page.savePosition(textView.getSelectionStart());

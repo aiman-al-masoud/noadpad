@@ -175,6 +175,22 @@ public class Notebook implements Pageable, PageListener {
 
 	}
 
+	@Override
+	public void onCreated(Page page) {
+
+		//stop if page is already in the list.
+		if(pagesList.contains(page)){
+			return;
+		}
+
+		pagesList.add(page);
+		try{
+			listener.onCreated(page);
+		}catch (NullPointerException e){
+		}
+
+	}
+
 
 	/**
 	 * Returns the next batch of pages
@@ -337,7 +353,10 @@ public class Notebook implements Pageable, PageListener {
 		}
 	}
 
-
+	/**
+	 * Create a new page that has all of the contents of the selected pages,
+	 * and delete the selected pages.
+	 */
 	public void compactSelection(){
 
 		//create a new blank page

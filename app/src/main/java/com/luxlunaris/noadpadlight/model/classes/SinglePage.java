@@ -124,6 +124,8 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void create() {
+
+
 		mkdir();
 		
 		try {
@@ -135,6 +137,11 @@ public class SinglePage extends File implements Page {
 		}
 
 		Log.d("CREATED_PAGE", "CREATED PAGE: "+getName()+" "+textFile.exists()+" "+imageDir.exists());
+
+		//notify the listeners that this got created
+		for(PageListener listener : listeners){
+			listener.onCreated(this);
+		}
 
 	}
 

@@ -99,6 +99,11 @@ public class PageFragment extends Fragment implements SettingsTagListener {
         ///
 
 
+        //if this fragment's page is selected, set the color to selected
+        if(page.isSelected()){
+            pageButton.setTextColor(SELECTED_TEXT_COLOR);
+        }
+
 
         return view;
     }
