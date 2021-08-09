@@ -31,7 +31,7 @@
 
     <item
         android:id="@+id/styles_menu"
-        android:title="style">
+        android:title="@string/style_menu_title">
 
         <menu>
 

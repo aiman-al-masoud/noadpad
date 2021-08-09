@@ -4,6 +4,7 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +25,17 @@ public class Compacter {
 
         String textBlob = "";
         String head = "";
-        String tail ="--------\n";
 
         //lump all of the text content of the pages together.
         for(Page page : pages){
 
-            head = new Date(page.getLastModifiedTime()).toString()+"\n";
+            //get the date-last-modified string in with locale settings
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
+            String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+
+            head = dateString+"\n";
             textBlob+=head;
-            textBlob+=page.getText();
-            textBlob+=tail;
+            textBlob+=page.getText()+"\n\n";
         }
 
         //replace the name of the other pages in the paths with the name of this page.

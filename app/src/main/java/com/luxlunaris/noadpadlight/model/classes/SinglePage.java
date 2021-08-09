@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -301,12 +300,12 @@ public class SinglePage extends File implements Page {
 
 	/**
 	 * Get a text-based preview of this Page.
-	 * (The first line and the time last-modified)
+	 * (The first line).
 	 * @return
 	 */
 	@Override
 	public String getPreview() {
-		return FileIO.readLine(textFile.getPath())+"\n" +new Date(getLastModifiedTime()).toString();
+		return FileIO.readLine(textFile.getPath())+"\n";
 	}
 
 	/**

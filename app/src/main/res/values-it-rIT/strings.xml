@@ -35,4 +35,7 @@
     <string name="confirm_picking_file_title">conferma</string>
     <string name="total_data_export_title">Esporta i tuoi dati:</string>
     <string name="info_fragment_got_it">ricevuto!</string>
+    <string name="editing_html_mode_ON">stai modificando il sorgente html!</string>
+    <string name="editing_html_mode_OFF">sei tornato in modalità standard.</string>
+    <string name="style_menu_title">stile</string>
 </resources>

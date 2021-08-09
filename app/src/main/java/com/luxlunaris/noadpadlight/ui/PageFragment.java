@@ -4,18 +4,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.fragment.app.Fragment;
-
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PageFragment extends Fragment implements SettingsTagListener {
 
@@ -60,13 +61,11 @@ public class PageFragment extends Fragment implements SettingsTagListener {
 
         View view =inflater.inflate(R.layout.fragment_page, container, false);
 
-
+        //get this fragment's button
         pageButton = view.findViewById(R.id.pageButton);
 
-
-        pageButton.setText(page.getPreview());
-
-
+        //set this fragment's text
+        setText();
 
         //set the button's on-click action
         pageButton.setOnClickListener(new View.OnClickListener() {
@@ -88,22 +87,17 @@ public class PageFragment extends Fragment implements SettingsTagListener {
             }
         });
 
-
-
-
-        ///
+        //get the theme and set the background color
         THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME) );
         pageButton.setBackgroundColor(theme.BG_COLOR);
-        pageButton.setTextColor(theme.FG_COLOR);
-
-        ///
-
 
         //if this fragment's page is selected, set the color to selected
         if(page.isSelected()){
             pageButton.setTextColor(SELECTED_TEXT_COLOR);
+        }else{
+            //else set it to the normal fg theme-color
+            pageButton.setTextColor(theme.FG_COLOR);
         }
-
 
         return view;
     }
@@ -112,12 +106,25 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     @Override
     public void onResume() {
         super.onResume();
-
-        pageButton.setText(Html.fromHtml(page.getPreview()));
-
+        setText();
     }
 
+    /**
+     * Set this fragment's text to a preview of the page
+     * with the date of last modification in locale format.
+     */
+    private void setText(){
 
+        String text  = page.getPreview();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
+        String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+
+        text+="\n"+dateString;
+
+        Spanned spanned = Html.fromHtml(text);
+        pageButton.setText(spanned);
+    }
 
     /**
      * Set this fragment's status as selected
@@ -134,18 +141,14 @@ public class PageFragment extends Fragment implements SettingsTagListener {
 
     }
 
-
     public Page getPage(){
         return page;
     }
 
-
     @Override
     public void onTagUpdated(SETTINGS_TAGS tag) {
-
         THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
         NORMAL_TEXT_COLOR =  newTheme.FG_COLOR;
-
     }
 
 

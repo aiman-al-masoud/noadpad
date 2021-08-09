@@ -277,7 +277,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 break;
             case R.id.switch_edit_mode:
                 switchEditMode();
-                String currentMode = HTML_EDIT_MODE? "you're editing html source!" : "you're back in normal mode.";
+                String currentMode = HTML_EDIT_MODE? getString(R.string.editing_html_mode_ON) :   getString(R.string.editing_html_mode_OFF);
                 Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
                 break;
             case R.id.make_bold:
