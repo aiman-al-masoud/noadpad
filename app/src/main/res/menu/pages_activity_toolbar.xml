@@ -4,7 +4,7 @@
     <item
         android:id="@+id/app_bar_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
+        android:title="@string/search_icon_title"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
 
@@ -12,21 +12,21 @@
     <item
         android:id="@+id/new_page"
         android:icon="@android:drawable/ic_input_add"
-        android:title="new page"
+        android:title="@string/new_page_icon_title"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/edit"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="edit"
+        android:title="@string/edit_icon_title"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/go_to_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:title="settings"
+        android:title="@string/settings_icon_title"
         app:showAsAction="always" />
 
 

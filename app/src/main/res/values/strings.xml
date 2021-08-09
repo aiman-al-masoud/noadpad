@@ -23,6 +23,29 @@
         Repo: https://github.com/aiman-al-masoud/noadpadlight  \n
         License: https://github.com/aiman-al-masoud/noadpadlight/blob/master/LICENSE.md  \n
     </string>
-
+    <string name="search_icon_title">search</string>
+    <string name="new_page_icon_title">new page</string>
+    <string name="edit_icon_title">edit</string>
+    <string name="settings_icon_title">settings</string>
+    <string name="import_image_icon_title">import image</string>
+    <string name="switch_edit_mode_icon_title">switch edit mode</string>
+    <string name="shrink_text_icon_title">shrink text</string>
+    <string name="enlarge_text_icon_title">enlarge text</string>
+    <string name="plain_style_icon_title">plain</string>
+    <string name="bold_style_icon_title">bold</string>
+    <string name="underlined_style_icon_title">underlined</string>
+    <string name="italics_style_icon_title">italics</string>
+    <string name="edit_options_delete_title">delete</string>
+    <string name="edit_options_compact_title">compact</string>
+    <string name="credits_and_more_info_title"><![CDATA[Credits & more Info]]></string>
+    <string name="saved_page_changed_toast">saved</string>
+    <string name="occurrences_found_toast">volume up/down to navigate. Occurrences found: </string>
+    <string name="auto_launch_to_blank_setting">Auto-launch the app to a blank page.</string>
+    <string name="select_app_theme_setting">Select the app-theme: </string>
+    <string name="import_pages_title">import pages</string>
+    <string name="export_pages_title">export pages</string>
+    <string name="pick_file_title">pick file</string>
+    <string name="confirm_picking_file_title">confirm</string>
+    <string name="total_data_export_title">Export your data</string>
 
 </resources>

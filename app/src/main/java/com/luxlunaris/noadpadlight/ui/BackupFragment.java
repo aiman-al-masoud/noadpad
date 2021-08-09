@@ -89,7 +89,7 @@ public class BackupFragment extends Fragment {
             intent.setType("application/zip");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(intent, "Export your data"));
+            startActivity(Intent.createChooser(intent, getString(R.string.total_data_export_title)));
 
         }
     }

@@ -4,10 +4,10 @@
 
     <item
         android:id="@+id/delete"
-        android:title="delete"
+        android:title="@string/edit_options_delete_title"
         />
 
     <item
         android:id="@+id/compact"
-        android:title="compact" />
+        android:title="@string/edit_options_compact_title" />
 </menu>

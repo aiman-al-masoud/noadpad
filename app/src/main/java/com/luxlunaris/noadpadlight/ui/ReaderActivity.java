@@ -200,7 +200,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
         //else save the new text
         saveToPage();
-        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.saved_page_changed_toast, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -230,7 +230,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 jumpToPosition(page.nextPosition());
 
                 //display a toast about the multiplicity of said token
-                Toast.makeText(THIS, "found "+ multiplicity +" occrrs. vol. up/down to nav.", Toast.LENGTH_LONG).show();
+                Toast.makeText(THIS, getString(R.string.occurrences_found_toast)+ multiplicity , Toast.LENGTH_LONG).show();
                 return true;
             }
 

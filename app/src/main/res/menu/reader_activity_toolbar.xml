@@ -5,26 +5,26 @@
     <item
         android:id="@+id/search_token"
         android:icon="@android:drawable/ic_search_category_default"
-        android:title="Search"
+        android:title="@string/search_icon_title"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
     <item
         android:id="@+id/importImage"
-        android:title="import image" />
+        android:title="@string/import_image_icon_title" />
     <item
         android:id="@+id/switch_edit_mode"
-        android:title="switch edit mode" />
+        android:title="@string/switch_edit_mode_icon_title" />
     <item
         android:id="@+id/zoom_out"
         android:icon="@android:drawable/btn_minus"
-        android:title="shrink text"
+        android:title="@string/shrink_text_icon_title"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/zoom_in"
         android:icon="@android:drawable/btn_plus"
-        android:title="enlarge text"
+        android:title="@string/enlarge_text_icon_title"
         app:showAsAction="always" />
 
 
@@ -38,19 +38,19 @@
 
             <item
                 android:id="@+id/make_plain"
-                android:title="plain" />
+                android:title="@string/plain_style_icon_title" />
 
             <item
                 android:id="@+id/make_bold"
-                android:title="bold" />
+                android:title="@string/bold_style_icon_title" />
 
             <item
                 android:id="@+id/make_underlined"
-                android:title="underlined"/>
+                android:title="@string/underlined_style_icon_title"/>
 
             <item
                 android:id="@+id/make_italics"
-                android:title="italics"/>
+                android:title="@string/italics_style_icon_title"/>
 
 
 
