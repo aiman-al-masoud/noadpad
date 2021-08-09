@@ -1,7 +1,6 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
@@ -12,6 +11,7 @@ import com.luxlunaris.noadpadlight.model.services.FileIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -358,7 +358,6 @@ public class SinglePage extends File implements Page {
 	}
 
 
-
 	/**
 	 * Add an image to this Page.
 	 * @param path
@@ -405,8 +404,6 @@ public class SinglePage extends File implements Page {
 		//get the html source
 		String text = getText();
 
-		//Log.d( "IMAGE_DEL", imageDir.listFiles().length+" how many imgs");
-
 		//for each image...
 		for(File imgFile : imageDir.listFiles()){
 
@@ -444,6 +441,43 @@ public class SinglePage extends File implements Page {
 		return newLines;
 	}
 
+	/**
+	 * Given a line number find the paragraph containing it.
+	 * @param lineNum
+	 * @return
+	 */
+	private int lineToParagraph(int lineNum){
+
+		//get the paragraphs in this Page
+		String[] pars = getParagraphs();
+
+		//get the number of lines in each paragraph
+		int[] numLinesPerPar =  new int[pars.length];
+		for(int i =0; i<pars.length; i++){
+			numLinesPerPar[i] = pars[i].split("<br>").length;
+			if(numLinesPerPar[i]==1){
+				numLinesPerPar[i] = 2;
+			}
+		}
+
+		//test log how many lines in each paragraph
+		for(int i =0; i<numLinesPerPar.length; i++){
+			Log.d("LINE_NUM", "par "+i+" has: "+numLinesPerPar[i]+" lines");
+		}
+
+		//convert the lineNum to a paragraph num
+		int accumulLines = 0;
+		for(int i =0; i<numLinesPerPar.length; i++){
+			accumulLines += numLinesPerPar[i];
+			if(lineNum <= accumulLines){
+				Log.d("LINE_NUM", "line "+lineNum+ " is in paragraph: "+i);
+				return i;
+			}
+		}
+
+		return numLinesPerPar.length-1;
+	}
+
 
 	/**
 	 * Get the html source as a list of paragraphs.
@@ -452,6 +486,9 @@ public class SinglePage extends File implements Page {
 	private String[] getParagraphs(){
 		//split the html source by end of paragraph tags
 		String[] pars = getText().split("</p>");
+
+		//remove the last empty "paragraph"
+		pars = Arrays.copyOf(pars, pars.length-1);
 
 		//adjust each paragraph
 		for(int i =0; i<pars.length; i++){
@@ -471,8 +508,6 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void addHtmlTag(int pos, String tag){
-		//lines are interpreted as paragraphs in html.
-		//a paragraph is the smallest unit that admits styling.
 
 		int lineNum = getLine(pos);
 		Log.d("LINE_NUM", lineNum+"");
@@ -480,16 +515,8 @@ public class SinglePage extends File implements Page {
 		//get the paragraphs
 		String[] pars = getParagraphs();
 
-		//Log.d("LINE_NUM", "PARAGRAPHS:");
-		//for(int i =0; i<pars.length-1; i++){
-		//	Log.d("LINE_NUM", i+") "+pars[i]);
-		//}
-
 		//convert the line number to the paragraph number.
-		lineNum = (int)(((double)0.5*lineNum) -0.5);
-
-		Log.d("LINE_NUM", "HEEEEEEEEERE");
-		Log.d("LINE_NUM", pars[lineNum]);
+		lineNum = lineToParagraph(lineNum);
 
 		//make the tags from the inner part
 		String startTag = "<"+tag+">";
@@ -497,7 +524,6 @@ public class SinglePage extends File implements Page {
 
 		//apply the html tag
 		pars[lineNum] = startTag+pars[lineNum]+endTag;
-
 
 		//re-build the html source from the single paragraphs.
 		String newHtml = "";
@@ -523,7 +549,7 @@ public class SinglePage extends File implements Page {
 		String[] pars = getParagraphs();
 
 		//convert the line number to the paragraph number.
-		lineNum = (int)(((double)0.5*lineNum) -0.5);
+		lineNum = lineToParagraph(lineNum);
 
 		String modifiedPar = pars[lineNum];
 
@@ -541,7 +567,6 @@ public class SinglePage extends File implements Page {
 
 		//save it.
 		setText(newHtml);
-
 	}
 
 
