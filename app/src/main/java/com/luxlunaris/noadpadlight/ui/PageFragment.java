@@ -124,6 +124,9 @@ public class PageFragment extends Fragment implements SettingsTagListener {
 
         Spanned spanned = Html.fromHtml(text);
         pageButton.setText(spanned);
+
+        //then decide whether to let user change this size
+        pageButton.setTextSize(20);
     }
 
     /**

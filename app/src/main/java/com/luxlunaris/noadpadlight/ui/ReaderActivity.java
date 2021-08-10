@@ -1,9 +1,6 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -73,7 +70,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private boolean EXITING =  true;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,14 +93,16 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     /**
      * Reload text from current page.
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void reloadText(){
 
         //get the html source code from the Page.
         String text =page.getText();
         Log.d("TEST_IMAGE", "TEXT FROM PAGE-FILE: "+text);
+
         //convert the html source code to a Spanned object
-        Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
+        //Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
+        //using deprecated version for legacy support.
+        Spanned s = Html.fromHtml (text, new ImageGetter(), null);
 
         if(HTML_EDIT_MODE){
             //pass raw html text
@@ -145,7 +143,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * Switch between editing html source directly to
      * editing "text".
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void switchEditMode(){
         saveToPage();
         HTML_EDIT_MODE = !HTML_EDIT_MODE;
@@ -253,7 +250,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * @param item
      * @return
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -305,7 +301,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void applyTag(String tag){
         int currentPos = textView.getSelectionStart();
         saveToPage();
@@ -322,7 +317,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * @param event
      * @return
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode){
@@ -340,7 +334,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * When you obtain an image file to be added to the current page.
      * @param file
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onFileObtained(File file) {
         Toast.makeText(this, "image imported!", Toast.LENGTH_SHORT).show();

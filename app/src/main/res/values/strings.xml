@@ -44,6 +44,7 @@
     <string name="editing_html_mode_OFF">you\'re back in normal mode.</string>
     <string name="style_menu_title">style</string>
     <string name="selected_word">selected: </string>
+    <string name="load_more_pages">load more pages</string>
 
 
 </resources>

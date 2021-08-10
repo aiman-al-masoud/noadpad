@@ -28,7 +28,6 @@
         app:showAsAction="always" />
 
 
-
     <item
         android:id="@+id/styles_menu"
         android:title="@string/style_menu_title">

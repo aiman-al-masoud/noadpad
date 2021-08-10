@@ -29,6 +29,13 @@
         android:title="@string/settings_icon_title"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/load_more_pages"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/load_more_pages"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
 
 
 </menu>

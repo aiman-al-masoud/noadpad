@@ -91,7 +91,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
         //defines what the activity does when scrolling occurs
         ScrollView scrollView = findViewById(R.id.scroll_view_pages);
-        scrollView.setOnScrollChangeListener(new ScrollHandler());
+
+        //scoll listener only compatible with android versions >= marshmallow
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            scrollView.setOnScrollChangeListener(new ScrollHandler());
+        }
 
         //to keep track of changes while in the background
         changes = new ProxyNotebookListener();
@@ -123,8 +127,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
         }
     }
-
-
 
 
 
@@ -257,6 +259,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         //inflate the menu's layout xml
         getMenuInflater().inflate(R.menu.pages_activity_toolbar, menu);
 
+        //if android version < marshmallow, add "load more pages" button as alternative to scrolllistener
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            menu.findItem(R.id.load_more_pages).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
         //make a search view for queries on articles
         SearchView searchView = (SearchView)menu.findItem(R.id.app_bar_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -304,6 +311,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 EditMenu editMenu = new EditMenu(this, findViewById(R.id.edit));
                 editMenu.show();
                 break;
+            case R.id.load_more_pages:
+                loadNextPagesBlock();
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
