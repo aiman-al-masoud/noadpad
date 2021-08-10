@@ -83,7 +83,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         //convert the html source code to a Spanned object
         //Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
         //using deprecated version for legacy support.
-        Spanned s = Html.fromHtml (text, new ImageGetter(), null);
+        Spanned s = Html.fromHtml (text, new ImageGetter(getBaseContext()), null);
 
         if(HTML_EDIT_MODE){
             //pass raw html text
