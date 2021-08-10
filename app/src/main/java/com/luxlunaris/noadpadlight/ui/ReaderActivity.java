@@ -39,21 +39,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * current text size
      * defaults to: 18
      */
-    //String textSizeString = Settings.instance().getString(Settings.TAGS.TEXT_SIZE.toString());
     int TEXT_SIZE = Settings.getInt(SETTINGS_TAGS.TEXT_SIZE);
-
-
-    /**
-     *This instance
-     */
-    ReaderActivity THIS;
-
 
     /**
      * Used to call this activity by an intent.
      */
     public static final String PAGE_EXTRA = "PAGE";
-
 
     /**
      * If this is on, the text edited by the user
@@ -61,22 +52,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private boolean HTML_EDIT_MODE = false;
 
-    /**
-     * True if onPause is getting called
-     * when the activity is being left for good.
-     * (False if the activity is being
-     * temporarily left to choose a file from the file explorer).
-     */
-    private boolean EXITING =  true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
 
-        //reference to this ReaderActivity instance
-        THIS = this;
         //get the text view
         textView = findViewById(R.id.reader_text_view);
         //set the initial text size
@@ -114,11 +95,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
     /**
-     * Overwrite the page's contents.
+     * Overwrite the page's text contents.
      */
     private void saveToPage(){
         //in case the page got deleted because the user exited the app while the page was empty, re-create the page
-        page.create();
+        //page.create();
         String edited = getEdited();
         page.setText(edited);
     }
@@ -150,7 +131,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
 
-
     /**
      * jump to a position in the text
      * @param position
@@ -172,25 +152,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     @Override
     protected void onPause() {
         super.onPause();
+        saveProgress();
+    }
 
-        //if you're not exiting the activity for good don't run the rest of this method.
-        if(!EXITING){
-            EXITING = true;
-            return;
-        }
-        
-        //get the edited text from the edittext view
-        String editedText = getEdited();
-
-        //if the edited text is empty, delete the Page
-        if(editedText.trim().isEmpty()){
-            boolean t = page.delete();
-            return;
-        }
-
-        //in case the page got deleted because the user exited the app while the page was empty, re-create the page
-        page.create();
-
+    /**
+     * Save the text and context of the currently edited page.
+     */
+    private void saveProgress(){
         //save the current position on the page
         page.savePosition(textView.getSelectionStart());
 
@@ -231,7 +199,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 jumpToPosition(page.nextPosition());
 
                 //display a toast about the multiplicity of said token
-                Toast.makeText(THIS, getString(R.string.occurrences_found_toast)+ multiplicity , Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), getString(R.string.occurrences_found_toast)+ multiplicity , Toast.LENGTH_LONG).show();
                 return true;
             }
 
@@ -266,7 +234,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.importImage:
-                EXITING = false;
                 ImportFileFragment frag = ImportFileFragment.newInstance();
                 frag.setFileRequester(this);
                 frag.show(getSupportFragmentManager(), "");
@@ -293,14 +260,16 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 reloadText();
                 jumpToPosition(currentPos);
                 break;
-
-
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * Tell a page to add a tag at the location pointed
+     * to by the user.
+     * @param tag
+     */
     private void applyTag(String tag){
         int currentPos = textView.getSelectionStart();
         saveToPage();
@@ -308,7 +277,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
         jumpToPosition(currentPos);
     }
-
 
 
     /**
@@ -342,10 +310,27 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
     }
 
+    /**
+     * Save progress if page isn't empty.
+     * Delete page if it's empty.
+     */
+    @Override
+    public void onBackPressed() {
 
+        //get the edited text from the edittext view
+        String editedText = getEdited();
 
+        //if the edited text is empty, delete the Page
+        if(editedText.trim().isEmpty()){
+            boolean t = page.delete();
+        }else{
+        //else save the progress
+            saveProgress();
+        }
 
-
+        //return to the previous activity
+        finish();
+    }
 
 
 }
