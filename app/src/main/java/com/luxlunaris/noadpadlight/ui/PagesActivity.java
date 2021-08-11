@@ -519,6 +519,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     protected void onResume() {
         super.onResume();
 
+        //if you're in no more pages added mode postpone updating later.
+        if(!CAN_LOAD_MORE_PAGES){
+            return;
+        }
+
         //put the modified pages back on top
         for(Page page : changes.popJustModified()){
             removeFragment(page);
