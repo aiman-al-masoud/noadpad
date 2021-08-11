@@ -29,6 +29,14 @@
 
 
     <item
+        android:id="@+id/make_doodle"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="add doodle"
+        />
+
+
+
+    <item
         android:id="@+id/styles_menu"
         android:title="@string/style_menu_title">
 

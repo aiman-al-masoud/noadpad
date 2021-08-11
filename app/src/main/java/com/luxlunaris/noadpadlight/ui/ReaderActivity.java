@@ -1,6 +1,11 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -16,6 +21,7 @@ import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 
@@ -253,6 +259,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 String currentMode = HTML_EDIT_MODE? getString(R.string.editing_html_mode_ON) :   getString(R.string.editing_html_mode_OFF);
                 Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
                 break;
+            case R.id.make_doodle:
+
+                Intent intent = new Intent(this, DoodleActivity.class);
+                startActivityForResult(intent, 1);
+
+                break;
+
             case R.id.make_bold:
                 applyTag("b");
                 break;
@@ -320,6 +333,34 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //halt if result code is not "ok"
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        //halt if "data" is null
+        if(data==null){
+            return;
+        }
+
+        switch (requestCode){
+
+            case 1:
+                Uri uri = data.getData();
+                File doodleFile = (File)data.getSerializableExtra("DOODLE_FILE");
+                saveToPage();
+                page.addImage(doodleFile.getPath(), textView.getSelectionStart());
+                reloadText();
+                break;
+
+        }
+
+    }
+
     /**
      * Save progress if page isn't empty.
      * Delete page if it's empty.
@@ -341,6 +382,5 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         //return to the previous activity
         finish();
     }
-
 
 }
