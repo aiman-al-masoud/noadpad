@@ -4,6 +4,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
+import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
@@ -79,6 +80,12 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void setText(String text) {
+
+		if(isInRecycleBin()){
+			return;
+		}
+
+
 		Log.d("TEST_IMAGE", "saving: "+text);
 
 		FileIO.write(textFile.getPath(), text);
@@ -107,12 +114,16 @@ public class SinglePage extends File implements Page {
 	@Override
 	public boolean delete() {
 
-		FileIO.deleteDirectory(this.getPath());
+		//if(isInRecycleBin()){
+		//	return false;
+		//}
 
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
 		}
+
+		FileIO.deleteDirectory(this.getPath());
 
 		//return del;
 		return true;
@@ -295,6 +306,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void addListener(PageListener listener) {
+		Log.d("PAGE_GETS_LISTENER", listener+" started listening to: "+ this);
 		listeners.add(listener);
 	}
 
@@ -604,6 +616,22 @@ public class SinglePage extends File implements Page {
 
 		//save it.
 		setText(newHtml);
+	}
+
+	@Override
+	public boolean isInRecycleBin() {
+
+		try {
+			return metadata.getBoolean("IN_RECYCLE_BIN");
+		} catch (WrongTagTypeException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public void setInRecycleBin(boolean inRecycleBin) {
+		metadata.setTagValue("IN_RECYCLE_BIN", inRecycleBin+"");
 	}
 
 

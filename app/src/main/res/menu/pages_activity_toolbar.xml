@@ -37,5 +37,13 @@
         app:showAsAction="ifRoom" />
 
 
+    <item
+        android:id="@+id/show_recycle_bin"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/recycle_bin"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+
 
 </menu>

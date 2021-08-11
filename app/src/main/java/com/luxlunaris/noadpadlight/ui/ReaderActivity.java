@@ -58,6 +58,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
 
+        setTitle(R.string.reader_activity_title_normal);
+
+
         //get the text view
         textView = findViewById(R.id.reader_text_view);
         //set the initial text size
@@ -128,6 +131,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         saveToPage();
         HTML_EDIT_MODE = !HTML_EDIT_MODE;
         reloadText();
+
+        if(HTML_EDIT_MODE){
+            setTitle(R.string.reader_activity_title_html_editor);
+        }else{
+            setTitle(R.string.reader_activity_title_normal);
+        }
+
     }
 
 

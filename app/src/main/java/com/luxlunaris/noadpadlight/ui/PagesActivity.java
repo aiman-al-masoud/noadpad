@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -62,9 +63,15 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     transient ProxyNotebookListener changes;
 
     /**
-     * True if the user currently wants to see only page results to a query.
+     * True if it makes sense to allow older pages to get loaded.
+     * (False when querying for specific pages or checking out the recycle bin)
      */
-    transient boolean isSearching = false;
+    transient boolean CAN_LOAD_MORE_PAGES = true;
+
+    private Menu optionsMenu;
+
+
+    private static EditMenu editMenu;
 
 
     /**
@@ -102,6 +109,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
         //start listening to notebook
         notebook.setListener(this);
+
+
+
     }
 
 
@@ -118,9 +128,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
             if(!v.canScrollVertically(1)){
 
                 //load no new pages if the user is currently running a query
-                if(isSearching){
-                    return;
-                }
+               // if(!CAN_LOAD_MORE_PAGES){
+                 //   return;
+                //}
 
                 loadNextPagesBlock();
             }
@@ -161,7 +171,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         //the id of the future container of pgFrag
         int containerId = -1;
 
-
         if(!top){
             //add the new page fragment to the bottom of the list layout
             containerId = pagesLinLayout.getId();
@@ -191,6 +200,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
      * Loads an array of pages as page fragments
      */
     private void loadPages(Page[] pages){
+
+        if(!CAN_LOAD_MORE_PAGES){
+            return;
+        }
+
         for(Page page : pages){
             addPage(page, false);
         }
@@ -249,6 +263,47 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
 
     /**
+     * Enter in the mode which shows the deleted pages
+     * in recycle bin.
+     */
+    private void showRecycleBin(){
+        removeAllPages();
+        loadPages(notebook.getRecycleBin());
+        setTitle(R.string.recycle_bin_title);
+        CAN_LOAD_MORE_PAGES = false;
+
+        //in options menu
+        optionsMenu.findItem(R.id.new_page).setVisible(false);
+        optionsMenu.findItem(R.id.app_bar_search).setVisible(false);
+        optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
+        optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
+
+        //in edit menu
+        editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
+        editMenu.getMenu().findItem(R.id.compact).setVisible(false);
+        editMenu.getMenu().findItem(R.id.restore).setVisible(true);
+    }
+
+    /**
+     * Exit from the display-recycle-bin-mode.
+     */
+    private void exitRecycleBin(){
+        //in options menu
+        optionsMenu.findItem(R.id.new_page).setVisible(true);
+        optionsMenu.findItem(R.id.app_bar_search).setVisible(true);
+        optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
+        optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
+
+        //in edit menu
+        editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
+        editMenu.getMenu().findItem(R.id.compact).setVisible(true);
+        editMenu.getMenu().findItem(R.id.restore).setVisible(false);
+    }
+
+
+
+
+    /**
      * Create the toolbar menu for this activity
      * @param menu
      * @return
@@ -256,8 +311,12 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
+
         //inflate the menu's layout xml
         getMenuInflater().inflate(R.menu.pages_activity_toolbar, menu);
+
+        //set option menu to show/hide items from it later
+        optionsMenu = menu;
 
         //if android version < marshmallow, add "load more pages" button as alternative to scrolllistener
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
@@ -269,7 +328,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                isSearching = true;
+                CAN_LOAD_MORE_PAGES = false;
                 removeAllPages();
                 notebook.getByKeywords(query);
                 return true;
@@ -280,7 +339,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 return false;
             }
         });
-
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -308,12 +366,16 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 startActivity(intent);
                 break;
             case R.id.edit:
-                EditMenu editMenu = new EditMenu(this, findViewById(R.id.edit));
+                editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
                 editMenu.show();
                 break;
             case R.id.load_more_pages:
                 loadNextPagesBlock();
                 break;
+            case R.id.show_recycle_bin:
+                showRecycleBin();
+                break;
+
 
         }
 
@@ -327,6 +389,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
      * pages after having selected them.
      */
     class EditMenu extends PopupMenu{
+
 
         public EditMenu(Context context, View anchor) {
             super(context, anchor);
@@ -354,6 +417,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 case R.id.compact:
                     notebook.compactSelection();
                     break;
+                case R.id.restore:
+                    notebook.restoreSelection();
+                    break;
 
             }
 
@@ -368,15 +434,18 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     @Override
     public void onBackPressed() {
 
-        isSearching = false;
+        setTitle(R.string.app_name);
 
-        //on back pressed add all pages to this activity
-        if(notebook.getPagesNum() > pageFragments.size()){
-            removeAllPages();
-            loadNextPagesBlock();
-        }
+        exitRecycleBin();
+
+        //exit any mode that prevents the addition of pages.
+        CAN_LOAD_MORE_PAGES = true;
+
+        //remove all pages present, and restart adding.
+        removeAllPages();
+        loadNextPagesBlock();
+
     }
-
 
 
     /**
@@ -460,6 +529,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         //background and add the appropriate fragments
         for(Page page : changes.popJustCreated()){
             addPage(page, true);
+            Log.d("CREATED_PAGE", "got added to PagesActivity "+page.getName());
         }
 
         //get the pages that were deleted while this activity was in the

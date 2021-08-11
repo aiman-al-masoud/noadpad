@@ -40,4 +40,12 @@
     <string name="style_menu_title">stile</string>
     <string name="selected_word">"selezionato: "</string>
     <string name="load_more_pages">carica più pagine</string>
+    <string name="settings_activity_title">Impostazioni</string>
+    <string name="reader_activity_title_normal">Editor</string>
+    <string name="reader_activity_title_html_editor">Editor Html</string>
+    <string name="restore">ripristina</string>
+    <string name="recycle_bin_title">Cestino</string>
+    <string name="recycle_bin">cestino</string>
+    <string name="empty_recycle_bin">svuota cestino</string>
+    <string name="restore_recycle_bin">ripristina cestino</string>
 </resources>

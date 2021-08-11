@@ -161,5 +161,11 @@ public interface Page extends Serializable {
 	public void removeHtmlTags(int pos);
 
 
+	public boolean isInRecycleBin();
+
+	public void setInRecycleBin(boolean inReycleBin);
+
+
+
 
 	}

@@ -10,7 +10,9 @@ import com.luxlunaris.noadpadlight.model.classes.SinglePage;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
+
 import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,9 +38,14 @@ public class Notebook implements Pageable, PageListener {
 	private static Notebook instance;
 
 	/**
-	 * The path to which all of the pages are stored
+	 * The path to which all of the existing pages are stored
 	 */
-	private static String PAGES_DIR = Paths.PAGES_DIR;
+	private static final String PAGES_DIR = Paths.PAGES_DIR;
+
+	/**
+	 * The path to which deleted pages are stored (recycle bin)
+	 */
+	private static final String PAGES_RECYCLE_BIN = Paths.PAGES_RECYCLE_BIN;
 
 	/**
 	 * List of pages loaded in memory
@@ -49,6 +56,11 @@ public class Notebook implements Pageable, PageListener {
 	 * List of pages selected by the user
 	 */
 	private static ArrayList<Page> selectedPagesList;
+
+	/**
+	 * The list of pages in the recycle bin.
+	 */
+	private static ArrayList<Page> recycleBin;
 
 	/**
 	 * Current page index
@@ -62,11 +74,15 @@ public class Notebook implements Pageable, PageListener {
 	private static NotebookListener listener;
 
 
+
 	private Notebook() {
 		pagesList = new ArrayList<>();
 		selectedPagesList = new ArrayList<>();
+		recycleBin = new ArrayList<>();
 		loadPages();
+		loadRecycleBin();
 		currentPage = 0;
+
 	}
 
 	/**
@@ -99,7 +115,6 @@ public class Notebook implements Pageable, PageListener {
 			addPage(page);
 		}
 
-		Log.d("CREATED_PAGE", "CREATED PAGE: "+page.getName()+" "+page.exists());
 
 		try {
 			listener.onCreated(page);
@@ -119,7 +134,10 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public void onSelected(Page page) {
-		System.out.println(page+" is getting selected..........");
+
+		Log.d("SELECTED_PAGE", " "+page+" selected: "+page.isSelected());
+
+
 		if(page.isSelected()){
 			selectedPagesList.add(page);
 		}else{
@@ -143,6 +161,14 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public void onDeleted(Page page) {
+
+		Log.d("DELETED_PAGE", page+" page is getting deleted");
+
+		if(!page.getText().trim().isEmpty()){
+			putInRecycleBin(page);
+		}
+
+
 
 		//remove the page from the "selected" list
 		if(page.isSelected()){
@@ -332,6 +358,11 @@ public class Notebook implements Pageable, PageListener {
 		return FileIO.zipDir(PAGES_DIR, Paths.PAGES_BACKUP_DIR);
 	}
 
+
+	/**
+	 * Import pages from a zip file.
+	 * @param sourcePath
+	 */
 	public void importPages(String sourcePath){
 		File unzipped = FileIO.unzipDir(sourcePath, sourcePath+"unzipped");
 
@@ -373,6 +404,122 @@ public class Notebook implements Pageable, PageListener {
 		}
 
 	}
+
+
+
+	/**
+	 * Put a page in the recycle bin:
+	 * this creates a copy of the original page
+	 * and places it in an alternate directory
+	 *
+	 * @param page
+	 */
+	private void putInRecycleBin(Page page){
+
+		if(page.isInRecycleBin()){
+			return;
+		}
+
+		SinglePage copy = new SinglePage(PAGES_RECYCLE_BIN+File.separator+page.getName());
+		copy.create();
+		ArrayList<Page> mockList = new ArrayList<>();
+		mockList.add(page);
+		new Compacter(false).compact(mockList, copy);
+		copy.setInRecycleBin(true);
+
+		recycleBin.add(copy);
+		copy.addListener(this);
+
+		Log.d("DELETED_PAGE", page.getName()+" copied to recycle bin as: "+copy.getPath());
+		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
+	}
+
+	/**
+	 * Remove a page from the recycle bin and put
+	 * it back with the existing pages.
+	 * @param page
+	 */
+	private void removeFromRecycleBin(Page page){
+
+		if(!page.isInRecycleBin()){
+			return;
+		}
+
+		recycleBin.remove(page);
+		Page restoredCopy = newPage(page.getName());
+		ArrayList<Page> mockList = new ArrayList<>();
+		mockList.add(page);
+		new Compacter(false).compact(mockList, restoredCopy);
+		restoredCopy.setInRecycleBin(false);
+		page.delete();
+		Log.d("DELETED_PAGE", page.getName()+" restored from recycle bin as: "+restoredCopy.getName());
+		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
+
+	}
+
+	/**
+	 * Permanently delete all of the pages in the recycle bin.
+	 */
+	public void emptyRecycleBin(){
+		for(Page page : getRecycleBin()){
+			FileIO.deleteDirectory(((File)page).getPath() );
+			Log.d("DELETED_PAGE", "deleting forever: "+page.getName());
+		}
+		recycleBin.clear();
+		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
+	}
+
+	/**
+	 * Restore all pages from the recycle bin.
+	 */
+	public void restoreAllFromRecycleBin(){
+		for(Page page : getRecycleBin()){
+			removeFromRecycleBin(page);
+		}
+	}
+
+	/**
+	 * Get the pages in the recycle bin.
+	 * @return
+	 */
+	public Page[] getRecycleBin(){
+		return recycleBin.toArray(new Page[0]);
+	}
+
+	/**
+	 * Load the pages of the recycle bin from disk.
+	 */
+	private void loadRecycleBin(){
+
+		File recycleBinDir = new File(PAGES_RECYCLE_BIN);
+
+		if(! recycleBinDir.exists()){
+			new File(PAGES_RECYCLE_BIN).mkdirs();
+		}
+
+		for(File file : recycleBinDir.listFiles()){
+			SinglePage page = new SinglePage(file.getPath());
+			recycleBin.add(page);
+			page.addListener(this);
+		}
+	}
+
+
+	/**
+	 * Restore the selected pages from the recycle bin.
+	 */
+	public void restoreSelection(){
+		for(Page page : getSelected()){
+			removeFromRecycleBin(page);
+		}
+		unselectAll();
+	}
+
+
+
+
+
+
 
 
 

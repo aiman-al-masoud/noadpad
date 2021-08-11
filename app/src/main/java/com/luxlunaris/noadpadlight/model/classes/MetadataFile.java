@@ -116,6 +116,11 @@ public class MetadataFile extends File implements Metadata {
 
 		String boolString = getString(tagName);
 
+		if(boolString==null){
+			throw  new WrongTagTypeException(tagName+" is not a boolean! It's null!");
+		}
+
+
 		if(boolString.toLowerCase().trim().equals("true")){
 			return true;
 		}

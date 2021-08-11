@@ -45,6 +45,13 @@
     <string name="style_menu_title">style</string>
     <string name="selected_word">selected: </string>
     <string name="load_more_pages">load more pages</string>
-
+    <string name="settings_activity_title">Settings</string>
+    <string name="reader_activity_title_normal">Editor</string>
+    <string name="reader_activity_title_html_editor">Html Editor</string>
+    <string name="restore">restore</string>
+    <string name="recycle_bin_title">Recycle Bin</string>
+    <string name="recycle_bin">recycle bin</string>
+    <string name="empty_recycle_bin">empty recycle bin</string>
+    <string name="restore_recycle_bin">restore recycle bin</string>
 
 </resources>
