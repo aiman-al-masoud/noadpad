@@ -4,24 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.DialogFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
+
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 
 
 public class ImportFileFragment extends DialogFragment {
@@ -148,7 +144,7 @@ public class ImportFileFragment extends DialogFragment {
 
             case IMPORT_CODE:
                 Uri uri = data.getData();
-                selectedFile = getFileFromUri(uri);
+                selectedFile = FileIO.getFileFromUri(getContext(), uri);
                 fileSelectedText.setText(getString(R.string.selected_word)+uri.getPath());
                 break;
 
@@ -156,38 +152,6 @@ public class ImportFileFragment extends DialogFragment {
 
     }
 
-    /**
-     * Given the uri of an external file, make a copy of it
-     * in app-internal storage and return it.
-     * @param contentUri
-     * @return
-     */
-    private File getFileFromUri(Uri contentUri) {
-        //Use content Resolver to get the input stream that it holds the data and copy that in a temp file of your app file directory for your references
-        File selectedFile = new File(getActivity().getFilesDir(), "import"); //your app file dir or cache dir you can use
-
-        try {
-
-            InputStream in = getActivity().getContentResolver().openInputStream(contentUri);
-            OutputStream out = new FileOutputStream(selectedFile);
-
-            byte[] buf = new byte[1024];
-            int len;
-
-            if (in != null) {
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                out.close();
-                in.close();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return selectedFile;
-    }
 
     /**
      * Set a FileRequester listener to whom to pass

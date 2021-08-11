@@ -14,12 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
-import com.luxlunaris.noadpadlight.control.classes.Paths;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Calls SAF (Storage Access Framework) and sharing API
@@ -128,48 +125,15 @@ public class BackupFragment extends Fragment {
 
             case IMPORT_CODE:
                 Uri uri = data.getData();
-                File file = getFileFromUri(uri);
+                File file = FileIO.getFileFromUri(getContext(), uri);
                 Notebook.getInstance().importPages(file.getPath());
                 break;
 
-
         }
 
     }
 
 
-    /**
-     * Given the uri of an external file, make a copy of it
-     * in app-internal storage and return it.
-     * @param contentUri
-     * @return
-     */
-    private File getFileFromUri(Uri contentUri) {
-        //Use content Resolver to get the input stream that it holds the data and copy that in a temp file of your app file directory for your references
-        File selectedFile = new File(getActivity().getFilesDir(), "import.zip"); //your app file dir or cache dir you can use
-
-        try {
-
-           InputStream in = getActivity().getContentResolver().openInputStream(contentUri);
-           OutputStream out = new FileOutputStream(selectedFile);
-
-           byte[] buf = new byte[1024];
-            int len;
-
-            if (in != null) {
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                out.close();
-                in.close();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return selectedFile;
-    }
 
 
 

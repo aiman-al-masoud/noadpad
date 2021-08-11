@@ -1,6 +1,9 @@
 package com.luxlunaris.noadpadlight.model.services;
 
 
+import android.content.Context;
+import android.net.Uri;
+
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -10,9 +13,12 @@ import org.apache.commons.io.FileUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
 public class FileIO {
@@ -196,10 +202,46 @@ public class FileIO {
 		}
 	}
 
+	/**
+	 * Given the uri of an external file, make a copy of it
+	 * in app-internal storage and return it.
+	 * @param contentUri
+	 * @return
+	 */
+	public static File getFileFromUri(Context context, Uri contentUri) {
+		//Use content Resolver to get the input stream that it holds the data and copy that in a temp file of your app file directory for your references
+		File selectedFile = new File(context.getFilesDir(), "import"); //your app file dir or cache dir you can use
+
+		try {
+
+			InputStream in = context.getContentResolver().openInputStream(contentUri);
+			OutputStream out = new FileOutputStream(selectedFile);
+
+			byte[] buf = new byte[1024];
+			int len;
+
+			if (in != null) {
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+				out.close();
+				in.close();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return selectedFile;
+	}
 
 
 
 
-		
-	
+
+
+
+
+
+
 }
