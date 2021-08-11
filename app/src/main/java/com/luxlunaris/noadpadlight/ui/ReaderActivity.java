@@ -1,11 +1,7 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -17,11 +13,12 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 
@@ -58,6 +55,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private boolean HTML_EDIT_MODE = false;
 
+    /**
+     * Code used to request a doodle from DoodleActivity.
+     */
+    private static final int REQUEST_DOODLE =  1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         setContentView(R.layout.activity_reader);
 
         setTitle(R.string.reader_activity_title_normal);
-
 
         //get the text view
         textView = findViewById(R.id.reader_text_view);
@@ -107,12 +108,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * Overwrite the page's text contents.
      */
     private void saveToPage(){
-        //in case the page got deleted because the user exited the app while the page was empty, re-create the page
-        //page.create();
         String edited = getEdited();
         page.setText(edited);
     }
-
 
     /**
      * Get the html source that is currently being rendered.
@@ -127,7 +125,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         return Html.toHtml(textView.getEditableText()).toString();
 
     }
-
 
     /**
      * Switch between editing html source directly to
@@ -146,7 +143,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
     }
 
-
     /**
      * jump to a position in the text
      * @param position
@@ -160,7 +156,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             e.printStackTrace();
         }
     }
-
 
     /**
      * Save the progress when exiting from the activity
@@ -187,7 +182,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         saveToPage();
         Toast.makeText(this, R.string.saved_page_changed_toast, Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * Create the toolbar for this activity
@@ -260,12 +254,10 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 Toast.makeText(this, currentMode, Toast.LENGTH_LONG).show();
                 break;
             case R.id.make_doodle:
-
+                //launch the DoodleActivity requesting a doodle.
                 Intent intent = new Intent(this, DoodleActivity.class);
-                startActivityForResult(intent, 1);
-
+                startActivityForResult(intent, REQUEST_DOODLE);
                 break;
-
             case R.id.make_bold:
                 applyTag("b");
                 break;
@@ -275,7 +267,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             case R.id.make_italics:
                 applyTag("i");
                 break;
-
             case R.id.make_plain:
                 int currentPos = textView.getSelectionStart();
                 saveToPage();
@@ -299,6 +290,17 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         page.addHtmlTag(textView.getSelectionStart(), tag);
         reloadText();
         jumpToPosition(currentPos);
+    }
+
+    /**
+     * Add an image to the current page at the position
+     * pointed to by the cursor.
+     * @param imagePath
+     */
+    private void addImage(String imagePath){
+        saveToPage();
+        page.addImage(imagePath, textView.getSelectionStart());
+        reloadText();
     }
 
 
@@ -328,33 +330,32 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     @Override
     public void onFileObtained(File file) {
         Toast.makeText(this, "image imported!", Toast.LENGTH_SHORT).show();
-        saveToPage();
-        page.addImage(file.getPath(), textView.getSelectionStart());
-        reloadText();
+        addImage(file.getPath());
     }
 
+    /**
+     * Receive requested results from called activities.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //halt if result code is not "ok"
-        if(resultCode != Activity.RESULT_OK){
-            return;
-        }
-
-        //halt if "data" is null
-        if(data==null){
+        //halt if result code is not "ok", or if data is null
+        if(resultCode != Activity.RESULT_OK   || data==null){
             return;
         }
 
         switch (requestCode){
 
-            case 1:
-                Uri uri = data.getData();
-                File doodleFile = (File)data.getSerializableExtra("DOODLE_FILE");
-                saveToPage();
-                page.addImage(doodleFile.getPath(), textView.getSelectionStart());
-                reloadText();
+            //in case a doodle was requested from DoodleActivity
+            case REQUEST_DOODLE:
+                //get the doodle file extra
+                File doodleFile = (File)data.getSerializableExtra(DoodleActivity.DOODLE_FILE_EXTRA);
+                //put this image file in the page
+                addImage(doodleFile.getPath());
                 break;
 
         }

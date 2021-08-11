@@ -48,4 +48,7 @@
     <string name="recycle_bin">cestino</string>
     <string name="empty_recycle_bin">svuota cestino</string>
     <string name="restore_recycle_bin">ripristina cestino</string>
+    <string name="doodle_activity_title">Scarabocchia</string>
+    <string name="done">fatto</string>
+    <string name="add_doodle">aggiungi scarabocchio</string>
 </resources>

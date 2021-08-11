@@ -31,7 +31,7 @@
     <item
         android:id="@+id/make_doodle"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="add doodle"
+        android:title="@string/add_doodle"
         />
 
 

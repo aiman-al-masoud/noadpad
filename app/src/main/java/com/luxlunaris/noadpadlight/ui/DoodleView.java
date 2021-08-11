@@ -14,11 +14,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ *
+ */
 public class DoodleView extends View {
 
-
+    /**
+     * Paint is responsible for the styling.
+     */
     Paint paint;
 
+    /**
+     * Path keeps track of the drawn coordinates.
+     */
     Path path;
 
 
@@ -33,16 +41,27 @@ public class DoodleView extends View {
     }
 
 
-
+    /**
+     * Set the color.
+     * @param color
+     */
     public void setColor(int color){
         paint.setColor(color);
     }
 
+    /**
+     * Set the width of the stroke.
+     * @param width
+     */
     public void setStrokeWidth(int width){
         paint.setStrokeWidth(width);
     }
 
 
+    /**
+     * On draw redraws the background and the Path.
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         setBackgroundColor(Color.WHITE);
@@ -50,6 +69,12 @@ public class DoodleView extends View {
     }
 
 
+    /**
+     * Keeps track of the user's gestures on the screen
+     * and converts them to "pencil"-strokes.
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -77,6 +102,11 @@ public class DoodleView extends View {
     }
 
 
+    /**
+     * Converts the contents of the view (the doodle)
+     * to an image file and returns it.
+     * @return
+     */
     public File getSnapshot(){
 
         File doodleFile = new File(getContext().getFilesDir(), "doodle.png");
@@ -96,17 +126,5 @@ public class DoodleView extends View {
 
         return doodleFile;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -53,5 +53,9 @@
     <string name="recycle_bin">recycle bin</string>
     <string name="empty_recycle_bin">empty recycle bin</string>
     <string name="restore_recycle_bin">restore recycle bin</string>
+    <string name="doodle_activity_title">Doodle</string>
+    <string name="done">done</string>
+    <string name="add_doodle">add doodle</string>
+
 
 </resources>
