@@ -1,16 +1,12 @@
 package com.luxlunaris.noadpadlight.ui;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 
 /**
@@ -21,9 +17,6 @@ public class SettingsActivity extends ColorActivity {
 
     LinearLayout linearLayout;
 
-    Button restoreRecycleBin;
-
-    Button emptyRecycleBin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,37 +50,6 @@ public class SettingsActivity extends ColorActivity {
 
         BackupFragment backupFragment = BackupFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(linearLayout.getId(), backupFragment, "").commit();
-
-
-
-
-
-
-
-        restoreRecycleBin = new Button(this);
-        linearLayout.addView(restoreRecycleBin);
-        restoreRecycleBin.setText(R.string.restore_recycle_bin);
-        restoreRecycleBin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Notebook.getInstance().restoreAllFromRecycleBin();
-            }
-        });
-        restoreRecycleBin.setBackgroundColor(Color.GREEN);
-
-
-        emptyRecycleBin = new Button(this);
-        linearLayout.addView(emptyRecycleBin);
-        emptyRecycleBin.setText(R.string.empty_recycle_bin);
-        emptyRecycleBin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Notebook.getInstance().emptyRecycleBin();
-            }
-        });
-        emptyRecycleBin.setBackgroundColor(Color.RED);
-
-
 
     }
 

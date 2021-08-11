@@ -46,4 +46,15 @@
 
 
 
+    <item
+        android:id="@+id/empty_recycle_bin_from_within"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/empty_recycle_bin"
+        android:visible="false"
+        app:showAsAction="always" />
+
+
+
+
+
 </menu>

@@ -277,6 +277,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         optionsMenu.findItem(R.id.app_bar_search).setVisible(false);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
+        optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(true);
+
 
         //in edit menu
         editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
@@ -293,6 +295,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         optionsMenu.findItem(R.id.app_bar_search).setVisible(true);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
+        optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(false);
 
         //in edit menu
         editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
@@ -374,6 +377,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 break;
             case R.id.show_recycle_bin:
                 showRecycleBin();
+                break;
+            case R.id.empty_recycle_bin_from_within:
+                notebook.emptyRecycleBin();
                 break;
 
 

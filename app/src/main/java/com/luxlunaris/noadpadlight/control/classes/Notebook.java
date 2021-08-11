@@ -406,7 +406,6 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
-
 	/**
 	 * Put a page in the recycle bin:
 	 * this creates a copy of the original page
@@ -459,11 +458,13 @@ public class Notebook implements Pageable, PageListener {
 
 	/**
 	 * Permanently delete all of the pages in the recycle bin.
+	 * And notify the listening UI that they got deleted.
 	 */
 	public void emptyRecycleBin(){
 		for(Page page : getRecycleBin()){
 			FileIO.deleteDirectory(((File)page).getPath() );
 			Log.d("DELETED_PAGE", "deleting forever: "+page.getName());
+			listener.onDeleted(page);
 		}
 		recycleBin.clear();
 		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
