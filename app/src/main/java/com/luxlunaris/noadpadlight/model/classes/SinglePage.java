@@ -482,7 +482,7 @@ public class SinglePage extends File implements Page {
 
 		String upTillPos;
 
-		upTillPos = text.substring(0, pos);
+		upTillPos = text.substring(0, Math.min(pos, text.length()-1));
 
 		int newLines = upTillPos.split("\n").length;
 
