@@ -61,6 +61,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private static final int REQUEST_DOODLE =  1;
 
 
+    private Menu optionsMenu;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,14 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
 
     }
 
@@ -148,6 +159,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * @param position
      */
     private void jumpToPosition(int position){
+
         textView.setFocusable(true);
         textView.requestFocus();
         try{
@@ -155,6 +167,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         }catch (IndexOutOfBoundsException e){
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -183,6 +196,18 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         Toast.makeText(this, R.string.saved_page_changed_toast, Toast.LENGTH_SHORT).show();
     }
 
+
+    /**
+     * Set the page's editability.
+     * @param editable
+     */
+    private void setEditable(boolean editable){
+        textView.setEnabled(editable);
+        optionsMenu.findItem(R.id.importImage).setVisible(editable);
+        optionsMenu.findItem(R.id.make_doodle).setVisible(editable);
+        optionsMenu.findItem(R.id.styles_menu).setVisible(editable);
+    }
+
     /**
      * Create the toolbar for this activity
      * @param menu
@@ -192,6 +217,15 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflate the menu's layout xml
         getMenuInflater().inflate(R.menu.reader_activity_toolbar, menu);
+
+        optionsMenu = menu;
+
+        //if page is in recycle bin, prevent editing.
+        if(page.isInRecycleBin()){
+            setEditable(false);
+        }else{
+            setEditable(true);
+        }
 
         //make a search view for queries on articles
         SearchView searchView = (SearchView)menu.findItem(R.id.search_token).getActionView();
