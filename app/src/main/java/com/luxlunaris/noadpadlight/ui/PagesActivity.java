@@ -31,7 +31,7 @@ import java.util.Random;
  * This activity allows the user to access, delete, modify
  * Pages, presenting them on a PageFragment each.
  */
-public class PagesActivity extends ColorActivity  implements NotebookListener {
+public class PagesActivity extends ColorActivity  implements NotebookListener, YayOrNayDialog.BinaryQuestioner {
 
     /**
      * The Notebook manages the pages.
@@ -70,6 +70,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
 
     private static EditMenu editMenu;
+
+
+    private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
 
 
     /**
@@ -113,6 +116,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     }
 
 
+
     /**
      * Used to add more pages when you scroll all the
      * way down.
@@ -124,12 +128,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
             //if can't scroll vertically anymore: bottom reached
             if(!v.canScrollVertically(1)){
-
-                //load no new pages if the user is currently running a query
-               // if(!CAN_LOAD_MORE_PAGES){
-                 //   return;
-                //}
-
                 loadNextPagesBlock();
             }
 
@@ -199,6 +197,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
      */
     private void loadPages(Page[] pages){
 
+        //don't load any more pages if PageActivity is in a mode that doesn't allow that.
         if(!CAN_LOAD_MORE_PAGES){
             return;
         }
@@ -356,7 +355,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         switch(item.getItemId()){
 
             case R.id.go_to_settings:
-
                 //start the settings activity
                 Intent goToSetIntent = new Intent(this, SettingsActivity.class);
                 startActivity(goToSetIntent);
@@ -377,7 +375,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 showRecycleBin();
                 break;
             case R.id.empty_recycle_bin_from_within:
-                notebook.emptyRecycleBin();
+                YayOrNayDialog yayOrNayDialog = YayOrNayDialog.newInstance(QUESTION_EMPTY_RECYCLE_BIN, getString(R.string.sure_u_empty_recycle_bin));
+                yayOrNayDialog.setListener(this);
+                yayOrNayDialog.show(getSupportFragmentManager(), "");
                 break;
 
 
@@ -385,6 +385,28 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     * Handle User responses to yay or nay dialog box questions.
+     * @param tag: a request code to identify the question on callback
+     * @param result: user response
+     */
+    @Override
+    public void onUserBinaryAnswer(String tag, int result) {
+
+        switch (tag){
+
+            //sure you want to empty recycle bin?
+            case QUESTION_EMPTY_RECYCLE_BIN:
+                if(result==YayOrNayDialog.POSITIVE_RESPONSE){
+                    notebook.emptyRecycleBin();
+                }
+                break;
+
+        }
+    }
+
 
 
     /**

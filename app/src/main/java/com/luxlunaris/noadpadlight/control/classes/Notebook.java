@@ -162,8 +162,7 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public void onDeleted(Page page) {
 
-		Log.d("DELETED_PAGE", page+" page is getting deleted");
-
+		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
 			putInRecycleBin(page);
 		}
@@ -415,7 +414,10 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private void putInRecycleBin(Page page){
 
+		//if page is already in the recycle bin, remove it.
+		//It means it's getting deleted forever.
 		if(page.isInRecycleBin()){
+			recycleBin.remove(page);
 			return;
 		}
 
@@ -429,8 +431,8 @@ public class Notebook implements Pageable, PageListener {
 		recycleBin.add(copy);
 		copy.addListener(this);
 
-		Log.d("DELETED_PAGE", page.getName()+" copied to recycle bin as: "+copy.getPath());
-		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
+		//Log.d("DELETED_PAGE", page.getName()+" copied to recycle bin as: "+copy.getPath());
+		//Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
 	}
 
 	/**
@@ -451,8 +453,8 @@ public class Notebook implements Pageable, PageListener {
 		new Compacter(false).compact(mockList, restoredCopy);
 		restoredCopy.setInRecycleBin(false);
 		page.delete();
-		Log.d("DELETED_PAGE", page.getName()+" restored from recycle bin as: "+restoredCopy.getName());
-		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
+		//Log.d("DELETED_PAGE", page.getName()+" restored from recycle bin as: "+restoredCopy.getName());
+		//Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
 
 	}
 
@@ -463,20 +465,11 @@ public class Notebook implements Pageable, PageListener {
 	public void emptyRecycleBin(){
 		for(Page page : getRecycleBin()){
 			FileIO.deleteDirectory(((File)page).getPath() );
-			Log.d("DELETED_PAGE", "deleting forever: "+page.getName());
+			//Log.d("DELETED_PAGE", "deleting forever: "+page.getName());
 			listener.onDeleted(page);
 		}
 		recycleBin.clear();
-		Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
-	}
-
-	/**
-	 * Restore all pages from the recycle bin.
-	 */
-	public void restoreAllFromRecycleBin(){
-		for(Page page : getRecycleBin()){
-			removeFromRecycleBin(page);
-		}
+		//Log.d("DELETED_PAGE", "recycle bin size: "+ new File(PAGES_RECYCLE_BIN).listFiles().length);
 	}
 
 	/**

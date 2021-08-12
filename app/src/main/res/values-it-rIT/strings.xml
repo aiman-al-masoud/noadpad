@@ -51,4 +51,8 @@
     <string name="doodle_activity_title">Scarabocchia</string>
     <string name="done">fatto</string>
     <string name="add_doodle">aggiungi scarabocchio</string>
+    <string name="sure_u_empty_recycle_bin">Svuotare cestino? Questa operazione NON è reversibile!</string>
+    <string name="confirm">conferma</string>
+    <string name="cancel">cancella</string>
+    <string name="are_you_sure">Sei sicuro?</string>
 </resources>

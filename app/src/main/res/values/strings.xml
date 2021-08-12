@@ -56,6 +56,10 @@
     <string name="doodle_activity_title">Doodle</string>
     <string name="done">done</string>
     <string name="add_doodle">add doodle</string>
+    <string name="sure_u_empty_recycle_bin">Empty recycle bin?\nThis operation is NOT undoable.</string>
+    <string name="confirm">confirm</string>
+    <string name="cancel">cancel</string>
+    <string name="are_you_sure">Are you sure?</string>
 
 
 </resources>
