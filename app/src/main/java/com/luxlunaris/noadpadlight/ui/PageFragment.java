@@ -99,10 +99,6 @@ public class PageFragment extends Fragment implements SettingsTagListener {
             pageButton.setTextColor(theme.FG_COLOR);
         }
 
-        //different color if in recycle bin
-        if(page.isInRecycleBin()){
-            view.setBackgroundColor(Color.YELLOW);
-        }
 
 
         return view;
@@ -113,9 +109,18 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     public void onResume() {
         super.onResume();
         setText();
+
+        //different color if selected
         if (page.isSelected()) {
             pageButton.setTextColor(SELECTED_TEXT_COLOR);
         }
+
+        //different color if in recycle bin
+        if(page.isInRecycleBin()){
+            pageButton.setBackgroundColor(Color.DKGRAY);
+        }
+
+
     }
     /**
      * Set this fragment's text to a preview of the page

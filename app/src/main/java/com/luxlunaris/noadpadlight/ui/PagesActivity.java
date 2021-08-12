@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -25,7 +24,6 @@ import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -461,7 +459,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
     @Override
     public void onCreated(Page page) {
 
-        Log.d("TEST_IMAGE", "page got created, from pagesactivity: "+page+" exists: "+((File)page).exists());
+
 
         //if in foreground, just add the page fragment.
         if(isInForeground()) {
@@ -471,6 +469,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
                 @Override
                 public void run() {
                     addPage(page, true);
+                    Log.d("PAGE_FRAGMENTS", "directly, created: "+page.getName());
                 }
             });
 
@@ -492,6 +491,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         //if in foreground simply remove the page's fragment.
         if(isInForeground()){
             removeFragment(page);
+            Log.d("PAGE_FRAGMENTS", "directly, deleted: "+page.getName());
+            return;
         }
 
         //else you're in background, stash in changes
@@ -509,6 +510,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         if(isInForeground()){
             removeFragment(page);
             addPage(page, true);
+            Log.d("PAGE_FRAGMENTS", "directly, modified: "+page.getName());
+            return;
         }
 
         //else you're in background, stash in changes
@@ -534,19 +537,21 @@ public class PagesActivity extends ColorActivity  implements NotebookListener {
         for(Page page : changes.popJustModified()){
             removeFragment(page);
             addPage(page, true);
+            Log.d("PAGE_FRAGMENTS", "on resume, modified: "+page.getName());
         }
 
         //get the pages that were created while this activity was in the
         //background and add the appropriate fragments
         for(Page page : changes.popJustCreated()){
             addPage(page, true);
-            Log.d("CREATED_PAGE", "got added to PagesActivity "+page.getName());
+            Log.d("PAGE_FRAGMENTS", "on resume, created: "+page.getName());
         }
 
         //get the pages that were deleted while this activity was in the
         //background and remove the relative fragments
         for(Page page : changes.popJustDeleted()){
             removeFragment(page);
+            Log.d("PAGE_FRAGMENTS", "on resume, deleted: "+page.getName());
         }
 
     }
