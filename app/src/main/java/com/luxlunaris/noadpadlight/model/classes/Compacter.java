@@ -26,7 +26,6 @@ public class Compacter {
     }
 
 
-
     /**
      * Takes a blank Page and a list of pages,
      * writes the "aggregate" content of the list of Pages
@@ -42,47 +41,59 @@ public class Compacter {
         //lump all of the text content of the pages together.
         for(Page page : pages){
 
-            //get the date-last-modified string in with locale settings
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
-            String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
 
             if(withHead){
+
+                //get the date-last-modified string in with locale settings
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
+                String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+
                 head = dateString+"\n";
                 textBlob+=head;
             }
+
             textBlob+=page.getText()+"\n\n";
         }
 
-        //replace the name of the other pages in the paths with the name of this page.
+
+        Log.d("COMPACTER", "text blob before: "+textBlob+"\n\n\n");
+
+        //this is the path in the html that will replace the older ones.
+        String blankPagesPath = ((File)blankPage).getPath();
+        //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
+        int start = blankPagesPath.indexOf("com");
+        blankPagesPath = blankPagesPath.substring(start, blankPagesPath.length()-1);
 
 
-        Log.d("PAGE_PATH", "text blob: "+textBlob);
-
-        Log.d("PAGE_PATH", "from blank page: " +((File)blankPage).getPath());
-
-
-        //textBlob = textBlob.replaceAll("/pages/\\d+/images/", "/pages/"+blankPage.getName()+"/images/");
-
-
+        Log.d("COMPACTER", "replacement: " +blankPagesPath);
 
 
         //migrate images from old pages to blank page.
         for(Page page : pages){
             //textBlob = textBlob.replaceAll(((File)page).getPath(), ((File)blankPage).getPath());
-            Log.d("PAGE_PATH", "from old pages: " +((File)page).getPath());
-            textBlob = textBlob.replaceAll(((File)page).getPath(), ((File)blankPage).getPath());
 
+            Log.d("COMPACTER", "to be replaced: "+((File)page).getPath());
+
+            //these are the paths to be replaced
+            String oldPathToBeReplaced = ((File)page).getPath();
+            //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
+            start = oldPathToBeReplaced.indexOf("com");
+            oldPathToBeReplaced = oldPathToBeReplaced.substring(start, oldPathToBeReplaced.length()-1);
+
+            //replace all instances of old path w/ path of new blank page
+            textBlob = textBlob.replaceAll(oldPathToBeReplaced, blankPagesPath);
+
+            //copy the actual image files to the new blank page's directory
             File[] imageFiles = page.getImageDir().listFiles();
             FileIO.copyFilesToDirectory(imageFiles, blankPage.getImageDir().getPath());
 
-            Log.d("PAGE_PATH", "text blob: "+textBlob);
-
         }
+
+        Log.d("COMPACTER", "text blob after: "+textBlob+"\n\n\n");
 
 
         //set the text of the blank page
         blankPage.setText(textBlob);
-
 
 
     }

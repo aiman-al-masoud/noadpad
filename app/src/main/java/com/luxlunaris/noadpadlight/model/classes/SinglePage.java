@@ -478,10 +478,12 @@ public class SinglePage extends File implements Page {
 
 		String text = getTextNoTags();
 
-		Log.d("LINE_NUM", "TEXT: "+text);
+		//if length
+		if(text.length()==0){
+			return 0;
+		}
 
 		String upTillPos;
-
 		upTillPos = text.substring(0, Math.min(pos, text.length()-1));
 
 		int newLines = upTillPos.split("\n").length;
