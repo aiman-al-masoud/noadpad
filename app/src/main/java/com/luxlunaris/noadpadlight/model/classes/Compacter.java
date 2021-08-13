@@ -62,7 +62,7 @@ public class Compacter {
         String blankPagesPath = ((File)blankPage).getPath();
         //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
         int start = blankPagesPath.indexOf("com");
-        blankPagesPath = blankPagesPath.substring(start, blankPagesPath.length()-1);
+        blankPagesPath = blankPagesPath.substring(start, blankPagesPath.length());
 
 
         Log.d("COMPACTER", "replacement: " +blankPagesPath);
@@ -72,13 +72,15 @@ public class Compacter {
         for(Page page : pages){
             //textBlob = textBlob.replaceAll(((File)page).getPath(), ((File)blankPage).getPath());
 
-            Log.d("COMPACTER", "to be replaced: "+((File)page).getPath());
 
             //these are the paths to be replaced
             String oldPathToBeReplaced = ((File)page).getPath();
             //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
             start = oldPathToBeReplaced.indexOf("com");
-            oldPathToBeReplaced = oldPathToBeReplaced.substring(start, oldPathToBeReplaced.length()-1);
+            oldPathToBeReplaced = oldPathToBeReplaced.substring(start, oldPathToBeReplaced.length());
+
+            Log.d("COMPACTER", "to be replaced: "+oldPathToBeReplaced);
+
 
             //replace all instances of old path w/ path of new blank page
             textBlob = textBlob.replaceAll(oldPathToBeReplaced, blankPagesPath);
