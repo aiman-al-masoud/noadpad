@@ -7,13 +7,15 @@
 
     <string name="credits">
         
-        Thanks for trying out Noadpad! :-) \n
+        Thanks for trying out Noadpad! :-) \n\n
         
-        For any suggestions:  \n\n
+        For more info:  \n\n
         
-        Contact: luxlunarislabs@gmail.com  \n
-        Repo: https://github.com/aiman-al-masoud/noadpad \n
-        License: https://github.com/aiman-al-masoud/noadpad/blob/master/LICENSE.md  \n
+        Contact me: luxlunarislabs@gmail.com  \n\n
+        Repo: https://github.com/aiman-al-masoud/noadpad \n\n
+        Quick Start Guide: https://github.com/aiman-al-masoud/noadpad/wiki/Quick-Start-Guide  \n\n
+        License: https://github.com/aiman-al-masoud/noadpad/blob/master/LICENSE.md  \n\n
+
     </string>
     <string name="search_icon_title">search</string>
     <string name="new_page_icon_title">new page</string>

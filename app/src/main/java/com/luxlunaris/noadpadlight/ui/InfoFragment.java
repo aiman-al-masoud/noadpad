@@ -3,8 +3,6 @@ package com.luxlunaris.noadpadlight.ui;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +57,7 @@ public class InfoFragment extends DialogFragment {
         textArea.setBackgroundColor(theme.BG_COLOR);
         textArea.setTextColor(theme.FG_COLOR);
         view.setBackgroundColor(theme.BG_COLOR);
+
         return view;
     }
 
