@@ -19,13 +19,11 @@ You are hereby granted the right to use, modify, and re-distribute This Product,
 
 3. And, You preserve the rights of others to use, modify, and re-distribute any Derived Product.
 
-You are NOT hereby granted the right to sell This Product or any Derived Work for a profit, unless all of the following are met:
+You are NOT hereby granted the right to make a monetary profit off of This Product or any Derived Work, unless the following are met:
 
-1. You explicitly ask for the author's permission,
+1. All of the aforementioned terms for free distribution are met.
 
-2. Your Derived Product contains significant optimizations to the code; or what an average user would deem to be an "additional feature",
-
-3. And, Your Derived Product contains no advertisements.
+2. And, Your Derived Product contains NO ads (in-app advertisement).
 
 # DISCLAIMER
 
