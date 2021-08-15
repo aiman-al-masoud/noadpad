@@ -2,7 +2,7 @@
 
 * This Product/Original Product: the original product and its source-code, as available on this repository:
 
-https://github.com/aiman-al-masoud/noadpadlight
+https://github.com/aiman-al-masoud/noadpad
 
 
 * Derived Product/Modified Version/Derived Work: any product derived from the modification and/or extension of the Original Product's source-code. 
