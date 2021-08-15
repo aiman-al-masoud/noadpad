@@ -16,7 +16,7 @@ You are hereby granted the right to <b>re-distribute</b> This Product or a Deriv
 
 1. You always provide a reference/link to (This) Original Product's repository,
 
-2. You render any changes you make to the Original source-code publicly available, 
+2. You render any changes you make to its source-code publicly available, 
 
 3. You preserve the equal rights of others to use, modify, and re-distribute any Derived Product,
 
