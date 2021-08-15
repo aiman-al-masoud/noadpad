@@ -26,6 +26,12 @@ You are hereby granted the right to <b>re-distribute</b> This Product or a Deriv
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# DEPENDENCIES
+This app makes use of the following dependencies, licensed under the Apache 2.0 License.
+
+* Zip4j: https://github.com/srikanth-lingala/zip4j
+
+* Apache Commons io: https://commons.apache.org/proper/commons-io/apidocs/index.html?org/apache/commons/io/package-summary.html
 
 
 
