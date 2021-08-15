@@ -15,15 +15,11 @@ You are hereby granted the right to use, modify, and re-distribute This Product,
 
 1. You always provide a reference/link to (This) Original Product's repository,
 
-2. You render any changes  you make to the Original source-code public, 
+2. You render any changes you make to the Original source-code public, 
 
-3. And, You preserve the rights of others to use, modify, and re-distribute any Derived Product.
+3. You preserve the rights of others to use, modify, and re-distribute any Derived Product.
 
-You are NOT hereby granted the right to make a monetary profit off of This Product or any Derived Work, unless the following are met:
-
-1. All of the aforementioned terms for free distribution are met.
-
-2. And, Your Derived Product contains NO ads (in-app advertisement).
+4. And, any derived product shall contain NO ads (in-app advertisement) of any kind.
 
 # DISCLAIMER
 
