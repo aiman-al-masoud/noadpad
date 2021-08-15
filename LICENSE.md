@@ -10,7 +10,7 @@ https://github.com/aiman-al-masoud/noadpad
 
 # TERMS
 
-You are hereby granted the right to <b>use and/or modify</b> This Product without conditions. 
+You are hereby granted the right to <b>use and/or modify</b> This Product without restrictions. 
 
 You are hereby granted the right to <b>re-distribute</b> This Product or a Derived Work, provided that:
 
