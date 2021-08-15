@@ -11,7 +11,9 @@ https://github.com/aiman-al-masoud/noadpadlight
 
 # TERMS
 
-You are hereby granted the right to use, modify, and re-distribute This Product, provided that:
+You are hereby granted the right to <b>use and/or modify</b> This Product at no condition. 
+
+You are hereby granted the right to <b>re-distribute</b> This Product, provided that:
 
 1. You always provide a reference/link to (This) Original Product's repository,
 
