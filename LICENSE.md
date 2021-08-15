@@ -12,7 +12,7 @@ https://github.com/aiman-al-masoud/noadpad
 
 You are hereby granted the right to <b>use and/or modify</b> This Product at no condition. 
 
-You are hereby granted the right to <b>re-distribute</b> This Product, provided that:
+You are hereby granted the right to <b>re-distribute</b> This Product or a Derived Work, provided that:
 
 1. You always provide a reference/link to (This) Original Product's repository,
 
