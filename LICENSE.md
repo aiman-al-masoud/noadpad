@@ -1,7 +1,6 @@
 # DEFINITIONS:
 
 * This Product/Original Product: the original product and its source-code, as available on this repository:
-
 https://github.com/aiman-al-masoud/noadpad
 
 
