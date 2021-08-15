@@ -18,7 +18,7 @@ You are hereby granted the right to <b>re-distribute</b> This Product or a Deriv
 
 2. You render any changes you make to the Original source-code publicly available, 
 
-3. You preserve the equal rights of others to use, modify, and re-distribute any Derived Product.
+3. You preserve the equal rights of others to use, modify, and re-distribute any Derived Product,
 
 4. And, any derived product shall contain NO ads (in-app advertisement) of any kind.
 
