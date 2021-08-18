@@ -9,6 +9,8 @@ Android notepad apps fall into 3 general categories:
 This app (aims) to be free, awesome, open-source, and totally devoid of ads!
 
 
+<a href="https://play.google.com/store/apps/details?id=com.luxlunaris.noadpadlight">Now available on Google Play!</a>
+
 
 
 [![Noadpad](https://github.com/aiman-al-masoud/noadpadlight/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png
