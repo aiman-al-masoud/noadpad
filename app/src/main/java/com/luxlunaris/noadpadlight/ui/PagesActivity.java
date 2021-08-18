@@ -130,7 +130,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     }
 
 
-
     /**
      * Ensures that there is ONE and only ONE fragment for each Page in the fragments list.
      * @param page
@@ -147,7 +146,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //create a new fragment
         return PageFragment.newInstance(page);
     }
-
 
 
     /**
@@ -184,7 +182,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //add the page fragment to the fragment's list
         pageFragments.add(pgFrag);
     }
-
 
 
     /**

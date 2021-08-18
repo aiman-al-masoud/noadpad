@@ -114,10 +114,6 @@ public class SinglePage extends File implements Page {
 	@Override
 	public boolean delete() {
 
-		//if(isInRecycleBin()){
-		//	return false;
-		//}
-
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
@@ -634,6 +630,7 @@ public class SinglePage extends File implements Page {
 	public void setInRecycleBin(boolean inRecycleBin) {
 		metadata.setTagValue("IN_RECYCLE_BIN", inRecycleBin+"");
 	}
+
 
 
 }

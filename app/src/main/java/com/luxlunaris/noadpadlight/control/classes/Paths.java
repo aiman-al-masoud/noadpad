@@ -1,9 +1,5 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-
 import com.luxlunaris.noadpadlight.ui.MainActivity;
 
 import java.io.File;
@@ -24,12 +20,15 @@ public class Paths {
     public static String PAGES_DIR = Paths.APP_DIR_PATH+File.separator+"pages";
 
     /**
+     * The subdirectory tasked with storing "deleted" pages.
+     */
+    public static String PAGES_RECYCLE_BIN_DIR = APP_DIR_PATH+File.separator+"pages_recycle_bin";
+
+    /**
      * Tmp stores the backup file containing all of the pages.
      */
     public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
 
-
-    public static String PAGES_RECYCLE_BIN = APP_DIR_PATH+File.separator+"pages_recycle_bin";
 
 
 

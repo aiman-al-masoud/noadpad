@@ -45,11 +45,6 @@
     </item>
 
 
-
-
-
-
-
     <item
         android:id="@+id/go_to_settings"
         android:icon="@android:drawable/ic_menu_preferences"
