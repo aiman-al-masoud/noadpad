@@ -1,6 +1,5 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 
@@ -67,9 +65,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     transient boolean CAN_LOAD_MORE_PAGES = true;
 
     private Menu optionsMenu;
-
-
-    private static EditMenu editMenu;
 
 
     private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
@@ -275,12 +270,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(true);
+        optionsMenu.findItem(R.id.restore).setVisible(true);
+        optionsMenu.findItem(R.id.compact).setVisible(false);
 
 
-        //in edit menu
-        editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
-        editMenu.getMenu().findItem(R.id.compact).setVisible(false);
-        editMenu.getMenu().findItem(R.id.restore).setVisible(true);
     }
 
     /**
@@ -293,11 +286,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(false);
+        optionsMenu.findItem(R.id.restore).setVisible(false);
+        optionsMenu.findItem(R.id.compact).setVisible(true);
 
-        //in edit menu
-        editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
-        editMenu.getMenu().findItem(R.id.compact).setVisible(true);
-        editMenu.getMenu().findItem(R.id.restore).setVisible(false);
+
     }
 
 
@@ -364,10 +356,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 intent.putExtra(ReaderActivity.PAGE_EXTRA,notebook.newPage());
                 startActivity(intent);
                 break;
-            case R.id.edit:
-                editMenu = editMenu==null? new EditMenu(this, findViewById(R.id.edit)) : editMenu;
-                editMenu.show();
-                break;
             case R.id.load_more_pages:
                 loadNextPagesBlock();
                 break;
@@ -379,7 +367,17 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 yayOrNayDialog.setListener(this);
                 yayOrNayDialog.show(getSupportFragmentManager(), "");
                 break;
-
+            case R.id.delete:
+                for(Page page : notebook.getSelected()){
+                    page.delete();
+                }
+                break;
+            case R.id.compact:
+                notebook.compactSelection();
+                break;
+            case R.id.restore:
+                notebook.restoreSelection();
+                break;
 
         }
 
@@ -408,52 +406,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     }
 
 
-
-    /**
-     * This menu appears on the Pages activity and
-     * allows the user to do stuff with multiple
-     * pages after having selected them.
-     */
-    class EditMenu extends PopupMenu{
-
-
-        public EditMenu(Context context, View anchor) {
-            super(context, anchor);
-            getMenuInflater().inflate(R.menu.edit_menu, this.getMenu());
-            setOnMenuItemClickListener(new EditMenuHandler());
-        }
-
-    }
-
-    /**
-     * This is the EditMenu's brain.
-     */
-    class EditMenuHandler implements PopupMenu.OnMenuItemClickListener{
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()){
-                case R.id.delete:
-
-                    for(Page page : notebook.getSelected()){
-                        //delete the page (the fragment will automatically be removed too through the callback method "onDeleted")
-                        page.delete();
-                    }
-                    break;
-                case R.id.compact:
-                    notebook.compactSelection();
-                    break;
-                case R.id.restore:
-                    notebook.restoreSelection();
-                    break;
-
-            }
-
-            return true;
-        }
-    }
-
-
     /**
      * Action when the back button is pressed
      */
@@ -473,15 +425,12 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
 
     }
 
-
     /**
      * Called by Notebook when a new page gets created.
      * @param page
      */
     @Override
     public void onCreated(Page page) {
-
-
 
         //if in foreground, just add the page fragment.
         if(isInForeground()) {

@@ -16,11 +16,38 @@
         app:showAsAction="always" />
 
 
+
     <item
-        android:id="@+id/edit"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:id="@+id/edit_menu"
         android:title="@string/edit_icon_title"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_edit"
+        >
+
+        <menu>
+
+            <item
+                android:id="@+id/delete"
+                android:title="@string/edit_options_delete_title" />
+
+            <item
+                android:id="@+id/compact"
+                android:title="@string/edit_options_compact_title" />
+
+
+            <item
+                android:id="@+id/restore"
+                android:title="@string/restore"
+                android:visible="false"/>
+
+        </menu>
+
+    </item>
+
+
+
+
+
 
 
     <item
