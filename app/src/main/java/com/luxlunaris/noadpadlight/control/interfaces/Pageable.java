@@ -9,6 +9,8 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
  */
 public interface Pageable {
 	
-	public Page[] getNext(int amount);
+	Page[] getNext(int amount);
+
+	void rewind();
 
 }

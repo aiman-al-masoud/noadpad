@@ -2,18 +2,30 @@ package com.luxlunaris.noadpadlight.model.classes;
 
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
+import com.luxlunaris.noadpadlight.model.interfaces.Booklet;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RecycleBin implements Serializable {
+/**
+ * Manages the unlucky pages that got deleted.
+ */
+public class RecycleBin implements Booklet {
 
+    /**
+     * Recycle bin directory's path on disk.
+     */
     public final String RECYCLE_BIN_DIR;
 
+    /**
+     * List of pages in the recycle bin.
+     */
     private ArrayList<Page> pages;
 
+    /**
+     * The page listener that created this recycle bin.
+     */
     private PageListener pageListener;
 
     public RecycleBin(String recycleBinDir, PageListener pageListener){
@@ -23,6 +35,15 @@ public class RecycleBin implements Serializable {
     }
 
 
+    @Override
+    public Page createPage(String name) {
+        return null;
+    }
+
+    /**
+     * Put a page in the recycle bin.
+     * @param page
+     */
     public void put(Page page){
 
         //if page is already in the recycle bin, remove it.
@@ -44,13 +65,17 @@ public class RecycleBin implements Serializable {
 
         copy.addListener(pageListener);
 
-        //return copy;
-
-
-        //copy.addListener(this);
     }
 
+    @Override
+    public void remove(Page page) {
 
+    }
+
+    /**
+     * Remove a page from the recycle bin and put it back in the main container.
+     * @param deletedPage
+     */
     public void restore(Page deletedPage){
 
         if(!deletedPage.isInRecycleBin()){
@@ -64,11 +89,11 @@ public class RecycleBin implements Serializable {
         new Compacter(false).compact(mockList, restoredCopy);
         restoredCopy.setInRecycleBin(false);
         deletedPage.delete();
-
-        //return restoredCopy;
     }
 
-
+    /**
+     * Clear the recycle bin (destroys all data permanently).
+     */
     public void clear(){
         for(Page page : pages){
             //FileIO.deleteDirectory(((File)page).getPath() );
@@ -78,14 +103,19 @@ public class RecycleBin implements Serializable {
         pages.clear();
     }
 
-
+    /**
+     * Get all of the pages in the recycle bin.
+     * @return
+     */
     public Page[] get(){
         return pages.toArray(new Page[0]);
     }
 
-
+    /**
+     * Load the pages from disk.
+     * (To be called once after constructor).
+     */
     public void load(){
-
 
         File recycleBinDir = new File(RECYCLE_BIN_DIR);
 
@@ -101,17 +131,26 @@ public class RecycleBin implements Serializable {
 
     }
 
+    @Override
+    public void resort() {
+
+    }
+
+    @Override
+    public void getByKeywords(String query) {
+
+    }
 
 
+    @Override
+    public Page[] getNext(int amount) {
+        return new Page[0];
+    }
 
+    @Override
+    public void rewind() {
 
-
-
-
-
-
-
-
+    }
 
 
 

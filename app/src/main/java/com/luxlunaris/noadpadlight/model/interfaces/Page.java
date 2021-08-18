@@ -166,7 +166,5 @@ public interface Page extends Serializable {
 	public void setInRecycleBin(boolean inReycleBin);
 
 
-	//void deleteForever();
-
 
 }
