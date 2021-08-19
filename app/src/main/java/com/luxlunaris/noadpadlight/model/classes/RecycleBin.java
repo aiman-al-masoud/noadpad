@@ -4,6 +4,7 @@ import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Booklet;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,7 +63,6 @@ public class RecycleBin implements Booklet {
         copy.setInRecycleBin(true);
 
         pages.add(copy);
-
         copy.addListener(pageListener);
 
     }
@@ -96,9 +96,8 @@ public class RecycleBin implements Booklet {
      */
     public void clear(){
         for(Page page : pages){
-            //FileIO.deleteDirectory(((File)page).getPath() );
-            //listener.onDeleted(page);
-            page.delete();
+            FileIO.deleteDirectory(((File)page).getPath());
+            pageListener.onDeleted(page);
         }
         pages.clear();
     }

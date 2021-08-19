@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * SinglePage is a persistent implementation of the Page interface.
@@ -159,6 +160,8 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public int numOfTokens(String token) {
+		//escape the token's special chars (just in case)
+		token = escapeRegex(token);
 		return getTextNoTags().toUpperCase().split(token.toUpperCase()).length-1;
 	}
 
@@ -202,6 +205,17 @@ public class SinglePage extends File implements Page {
 	}
 
 	/**
+	 * Returns the escaped version of string.
+	 * @param string
+	 * @return
+	 */
+	private String escapeRegex(String string){
+		Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
+		return SPECIAL_REGEX_CHARS.matcher(string).replaceAll("\\\\$0");
+	}
+
+
+	/**
 	 * Find all of the positions of a token in this Page
 	 * @param token
 	 * @return
@@ -213,6 +227,9 @@ public class SinglePage extends File implements Page {
 
 		//convert token and text to upper case
 		token = token.toUpperCase();
+
+		//escape the token's special chars (just in case)
+		token = escapeRegex(token);
 
 		//get the text (w/out tags, as displayed on screen) and convert it to upper case
 		String text = getTextNoTags().toUpperCase();

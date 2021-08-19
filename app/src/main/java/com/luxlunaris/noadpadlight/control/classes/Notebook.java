@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
@@ -53,7 +55,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * Manages the recycle bin's dir.
 	 */
-	private RecycleBin recycleBin;
+	private static RecycleBin recycleBin;
 
 	/**
 	 * Current page index
@@ -68,6 +70,7 @@ public class Notebook implements Pageable, PageListener {
 
 
 	private Notebook() {
+		Log.d("CREATING_NOTEBOOK", this.toString());
 		pagesList = new ArrayList<>();
 		selectedPagesList = new ArrayList<>();
 		loadPages();
@@ -150,7 +153,8 @@ public class Notebook implements Pageable, PageListener {
 
 		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
-			putInRecycleBin(page);
+			//putInRecycleBin(page);
+			recycleBin.put(page);
 		}
 
 		//remove the page from the "selected" list
@@ -389,9 +393,12 @@ public class Notebook implements Pageable, PageListener {
 	 *
 	 * @param page
 	 */
+	/*
 	private void putInRecycleBin(Page page){
 		recycleBin.put(page);
 	}
+
+	 */
 
 	/**
 	 * Permanently delete all of the pages in the recycle bin.
