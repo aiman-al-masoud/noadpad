@@ -42,7 +42,9 @@ public class RecycleBin implements Booklet {
     }
 
     /**
-     * Put a page in the recycle bin.
+     * Put a page in the recycle bin:
+     * this creates a copy of the original page
+     * and places it in an alternate directory
      * @param page
      */
     public void put(Page page){

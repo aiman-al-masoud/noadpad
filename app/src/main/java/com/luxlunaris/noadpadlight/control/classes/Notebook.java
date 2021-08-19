@@ -118,8 +118,6 @@ public class Notebook implements Pageable, PageListener {
 		return page;
 	}
 
-
-
 	/**
 	 * Called by a Page when it gets selected.
 	 * Notebook adds it to the list of selected pages
@@ -135,14 +133,12 @@ public class Notebook implements Pageable, PageListener {
 		}
 	}
 
-
 	/**
 	 * Returns an array of the selected pages
 	 */
 	public Page[] getSelected(){
 		return selectedPagesList.toArray(new Page[0]);
 	}
-
 
 	/**
 	 * When a page is deleted, it informs the Notebook
@@ -279,7 +275,6 @@ public class Notebook implements Pageable, PageListener {
 		Collections.sort(pagesList, new LastModifiedComparator());
 	}
 
-
 	/**
 	 * Add a page to the list and start listening to it
 	 * @param page
@@ -290,16 +285,6 @@ public class Notebook implements Pageable, PageListener {
 		//add the page at beginning (list sorted newest first)
 		pagesList.add(0, page);
 	}
-
-
-	/**
-	 * Get the number of loaded pages
-	 * @return
-	 */
-	public int getPagesNum(){
-		return pagesList.size();
-	}
-
 
 	/**
 	 * Mark all Pages as selected
@@ -385,20 +370,6 @@ public class Notebook implements Pageable, PageListener {
 		}
 
 	}
-
-	/**
-	 * Put a page in the recycle bin:
-	 * this creates a copy of the original page
-	 * and places it in an alternate directory
-	 *
-	 * @param page
-	 */
-	/*
-	private void putInRecycleBin(Page page){
-		recycleBin.put(page);
-	}
-
-	 */
 
 	/**
 	 * Permanently delete all of the pages in the recycle bin.
