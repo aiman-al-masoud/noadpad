@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.text.SimpleDateFormat;
@@ -47,6 +48,7 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     public static PageFragment newInstance(Page page) {
         PageFragment fragment = new PageFragment();
         fragment.page = page;
+        //page.addListener(fragment);
         Settings.listenToTag(SETTINGS_TAGS.THEME, fragment);
         return fragment;
     }
@@ -166,6 +168,40 @@ public class PageFragment extends Fragment implements SettingsTagListener {
         THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
         NORMAL_TEXT_COLOR =  newTheme.FG_COLOR;
     }
+
+
+
+
+    /*
+    @Override
+    public void onSelected(Page page) {
+
+
+        //if(page.isSelected()){
+        //    pageButton.setTextColor(this.SELECTED_TEXT_COLOR);
+        //}else{
+        //    pageButton.setTextColor(this.NORMAL_TEXT_COLOR);
+        //}
+
+
+    }
+
+    @Override
+    public void onDeleted(Page page) {
+
+    }
+
+    @Override
+    public void onModified(Page page) {
+
+    }
+
+    @Override
+    public void onCreated(Page page) {
+
+    }
+
+     */
 
 
 }

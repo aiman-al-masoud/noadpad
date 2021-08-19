@@ -11,17 +11,13 @@ import java.util.ArrayList;
 public interface Booklet extends Pageable, Serializable, PageListener {
 
 
-    //void getSelected();
 
     Page createPage(String name);
 
-    void remove(Page page);
 
     void load();
 
     Page[] getSelected();
-
-
 
     /**
      * Mark all Pages as selected
@@ -41,9 +37,6 @@ public interface Booklet extends Pageable, Serializable, PageListener {
      */
     public void compactSelection();
 
-
-
-
     void getByKeywords(String query);
 
 
@@ -52,8 +45,9 @@ public interface Booklet extends Pageable, Serializable, PageListener {
     void importPages(String sourcePath);
 
 
+    void exitSearch();
 
-
+    void deleteSelection();
 
 
 }

@@ -32,7 +32,7 @@ public class Notebook implements Pageable, PageListener {
 	/**
 	 * Manages the storage of the active existing pages.
 	 */
-	private static Booklet booklet;
+	private static Booklet mainBooklet;
 
 	/**
 	 * Manages the recycle bin's dir.
@@ -45,14 +45,21 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	private static NotebookListener listener;
 
+	/**
+	 * The booklet that is currently set to provide
+	 * pages when Notebook's getNext() is called.
+	 */
+	private static Booklet currentBooklet;
+
 
 	private Notebook() {
 		Log.d("CREATING_NOTEBOOK", this.toString());
-		booklet = new BasicBooklet(this,  Paths.PAGES_DIR);
-		booklet.load();
-		rewind();
+		mainBooklet = new BasicBooklet(this,  Paths.PAGES_DIR);
+		mainBooklet.load();
 		recycleBin = new RecycleBin(Paths.PAGES_RECYCLE_BIN_DIR, this);
 		recycleBin.load();
+		seePages();
+		rewind();
 	}
 
 	/**
@@ -68,8 +75,6 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public Page newPage(){
-
-		Log.d("NEW_PAGE", "newPage() called");
 		return newPage(System.currentTimeMillis()+"");
 	}
 
@@ -79,8 +84,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public Page newPage(String name) {
-		Page page = booklet.createPage(name);
-		return page;
+		return mainBooklet.createPage(name);
 	}
 
 	/**
@@ -95,9 +99,7 @@ public class Notebook implements Pageable, PageListener {
 	 * Returns an array of the selected pages
 	 */
 	public Page[] getSelected(){
-		Page[] pages = booklet.getSelected();
-		Log.d("DELETE", " notebook pages selected: "+ pages.length);
-		return pages;
+		return  mainBooklet.getSelected();
 	}
 
 	/**
@@ -109,7 +111,6 @@ public class Notebook implements Pageable, PageListener {
 
 		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
-			//putInRecycleBin(page);
 			recycleBin.put(page);
 		}
 
@@ -146,7 +147,7 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public Page[] getNext(int amount) {
-		return booklet.getNext(amount);
+		return currentBooklet.getNext(amount);
 	}
 
 	/**
@@ -155,21 +156,21 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public void getByKeywords(String query) {
-		booklet.getByKeywords(query);
+		currentBooklet.getByKeywords(query);
 	}
 
 	/**
 	 * Mark all Pages as selected
 	 */
 	public void selectAll(){
-		booklet.selectAll();
+		currentBooklet.selectAll();
 	}
 
 	/**
 	 * Mark all pages as unselected
 	 */
 	public void unselectAll(){
-		booklet.unselectAll();
+		mainBooklet.unselectAll();
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class Notebook implements Pageable, PageListener {
 	 * The next batch of pages to deliver is reset to the initial one.
 	 */
 	public void rewind(){
-		booklet.rewind();
+		currentBooklet.rewind();
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public File generateBackupFile(){
-		return booklet.exportPages();
+		return mainBooklet.exportPages();
 	}
 
 	/**
@@ -201,7 +202,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @param sourcePath
 	 */
 	public void importPages(String sourcePath){
-		booklet.importPages(sourcePath);
+		mainBooklet.importPages(sourcePath);
 	}
 
 	/**
@@ -209,7 +210,7 @@ public class Notebook implements Pageable, PageListener {
 	 * and delete the selected pages.
 	 */
 	public void compactSelection(){
-		booklet.compactSelection();
+		mainBooklet.compactSelection();
 	}
 
 	/**
@@ -221,23 +222,45 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 	/**
-	 * Get the pages in the recycle bin.
-	 * @return
-	 */
-	public Page[] getRecycleBin(){
-		return recycleBin.get();
-	}
-
-	/**
 	 * Restore the selected pages from the recycle bin.
 	 */
 	public void restoreSelection(){
 		for(Page page : recycleBin.getSelected()){
 			recycleBin.restore(page);
-			Log.d("RESTORING", page.toString());
 		}
 		recycleBin.unselectAll();
 	}
+
+	/**
+	 * Set the  recycle bin as the booklet whose pages
+	 * will be sent to the GUI.
+	 */
+	public void seeRecycleBin(){
+		currentBooklet = recycleBin;
+		currentBooklet.rewind();
+	}
+
+	/**
+	 * Set the normal pages booklet as the booklet
+	 * whose pages will be sent to the GUI.
+	 */
+	public void seePages(){
+		currentBooklet = mainBooklet;
+		currentBooklet.rewind();
+	}
+
+
+	public void exitSearch(){
+		currentBooklet.exitSearch();
+	}
+
+	public void deleteSelection(){
+		currentBooklet.deleteSelection();
+	}
+
+
+
+
 
 
 

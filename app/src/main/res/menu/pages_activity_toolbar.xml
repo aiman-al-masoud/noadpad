@@ -40,6 +40,12 @@
                 android:title="@string/restore"
                 android:visible="false"/>
 
+            <item
+                android:id="@+id/select_all"
+                android:title="Select All"
+                />
+
+
         </menu>
 
     </item>

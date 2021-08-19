@@ -2,12 +2,10 @@ package com.luxlunaris.noadpadlight.model.classes;
 
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
-import com.luxlunaris.noadpadlight.model.interfaces.Booklet;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -21,11 +19,6 @@ public class RecycleBin extends BasicBooklet  {
     public final String RECYCLE_BIN_DIR;
 
     /**
-     * List of pages in the recycle bin.
-     */
-    private ArrayList<Page> pages;
-
-    /**
      * The page listener that created this recycle bin.
      */
     private PageListener pageListener;
@@ -33,7 +26,6 @@ public class RecycleBin extends BasicBooklet  {
     public RecycleBin(String recycleBinDir, PageListener pageListener){
         super((Notebook) pageListener, recycleBinDir);
         this.RECYCLE_BIN_DIR = recycleBinDir;
-        pages = new ArrayList<>();
         this.pageListener = pageListener;
     }
 
@@ -48,9 +40,8 @@ public class RecycleBin extends BasicBooklet  {
 
         //if page is already in the recycle bin, remove it.
         //It means it's getting deleted forever.
-
         if(page.isInRecycleBin()){
-            pages.remove(page);
+            pagesList.remove(page);
             return;
         }
 
@@ -61,9 +52,7 @@ public class RecycleBin extends BasicBooklet  {
         new Compacter(false).compact(mockList, copy);
         copy.setInRecycleBin(true);
 
-        pages.add(copy);
-        //copy.addListener(pageListener);
-        copy.addListener(this);
+        addPage(page);
     }
 
     /**
@@ -76,7 +65,7 @@ public class RecycleBin extends BasicBooklet  {
             return;
         }
 
-        pages.remove(deletedPage);
+        pagesList.remove(deletedPage);
         Page restoredCopy = Notebook.getInstance().newPage(deletedPage.getName());
         ArrayList<Page> mockList = new ArrayList<>();
         mockList.add(deletedPage);
@@ -89,11 +78,11 @@ public class RecycleBin extends BasicBooklet  {
      * Clear the recycle bin (destroys all data permanently).
      */
     public void clear(){
-        for(Page page : pages){
+        for(Page page : pagesList){
             FileIO.deleteDirectory(((File)page).getPath());
             pageListener.onDeleted(page);
         }
-        pages.clear();
+        pagesList.clear();
     }
 
     /**
@@ -101,7 +90,7 @@ public class RecycleBin extends BasicBooklet  {
      * @return
      */
     public Page[] get(){
-        return pages.toArray(new Page[0]);
+        return pagesList.toArray(new Page[0]);
     }
 
     /**
@@ -118,9 +107,7 @@ public class RecycleBin extends BasicBooklet  {
 
         for(File file : recycleBinDir.listFiles()){
             SinglePage page = new SinglePage(file.getPath());
-            pages.add(page);
-            //page.addListener(pageListener);
-            page.addListener(this);
+            addPage(page);
         }
 
     }

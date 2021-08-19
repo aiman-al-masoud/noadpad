@@ -64,9 +64,14 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     transient boolean CAN_LOAD_MORE_PAGES = true;
 
+    /**
+     * The option (toolbar) menu.
+     */
     private Menu optionsMenu;
 
-
+    /**
+     * A callback code.
+     */
     private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
 
 
@@ -95,7 +100,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //defines what the activity does when scrolling occurs
         ScrollView scrollView = findViewById(R.id.scroll_view_pages);
 
-        //scoll listener only compatible with android versions >= marshmallow
+        //scroll listener only compatible with android versions >= marshmallow
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             scrollView.setOnScrollChangeListener(new ScrollHandler());
         }
@@ -257,17 +262,14 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     private void showRecycleBin(){
         removeAllPages();
-        loadPages(notebook.getRecycleBin());
-        CAN_LOAD_MORE_PAGES = false;
 
-
-
-
+        notebook.seeRecycleBin();
+        loadNextPagesBlock();
 
         setTitle(R.string.recycle_bin_title);
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(false);
-        optionsMenu.findItem(R.id.app_bar_search).setVisible(false);
+        //optionsMenu.findItem(R.id.app_bar_search).setVisible(false);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(true);
@@ -283,13 +285,15 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void exitRecycleBin(){
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(true);
-        optionsMenu.findItem(R.id.app_bar_search).setVisible(true);
+        //optionsMenu.findItem(R.id.app_bar_search).setVisible(true);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(false);
         optionsMenu.findItem(R.id.restore).setVisible(false);
         optionsMenu.findItem(R.id.compact).setVisible(true);
 
+        setTitle(R.string.app_name);
+        notebook.seePages();
 
     }
 
@@ -303,7 +307,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
 
         //inflate the menu's layout xml
         getMenuInflater().inflate(R.menu.pages_activity_toolbar, menu);
@@ -321,9 +324,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                CAN_LOAD_MORE_PAGES = false;
+                //CAN_LOAD_MORE_PAGES = false;
                 removeAllPages();
                 notebook.getByKeywords(query);
+                loadNextPagesBlock();
                 return true;
             }
 
@@ -369,9 +373,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 yayOrNayDialog.show(getSupportFragmentManager(), "");
                 break;
             case R.id.delete:
-                for(Page page : notebook.getSelected()){
-                    page.delete();
-                }
+                notebook.deleteSelection();
                 break;
             case R.id.compact:
                 notebook.compactSelection();
@@ -379,6 +381,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             case R.id.restore:
                 notebook.restoreSelection();
                 break;
+            case R.id.select_all:
+                notebook.selectAll();
+                break;
+
 
         }
 
@@ -413,16 +419,17 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     @Override
     public void onBackPressed() {
 
-        setTitle(R.string.app_name);
+        notebook.exitSearch();
+
 
         exitRecycleBin();
 
-        //exit any mode that prevents the addition of pages.
-        CAN_LOAD_MORE_PAGES = true;
+        //CAN_LOAD_MORE_PAGES = true;
 
         //remove all pages present, and restart adding.
         removeAllPages();
         loadNextPagesBlock();
+
 
     }
 
@@ -447,7 +454,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
 
             return;
         }
-
 
         //else you're in background, stash in changes
         changes.onCreated(page);
@@ -501,9 +507,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         super.onResume();
 
         //if you're in no more pages added mode postpone updating later.
-        if(!CAN_LOAD_MORE_PAGES){
-            return;
-        }
+        //if(!CAN_LOAD_MORE_PAGES){
+        //    return;
+        //}
 
         //put the modified pages back on top
         for(Page page : changes.popJustModified()){

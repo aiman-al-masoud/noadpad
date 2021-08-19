@@ -14,9 +14,13 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A booklet manages a set of pages stored on a folder on disk.
+ */
 public class BasicBooklet implements Booklet {
 
     /**
@@ -27,22 +31,36 @@ public class BasicBooklet implements Booklet {
     /**
      * List of pages loaded in memory
      */
-    private ArrayList<Page> pagesList;
+    protected ArrayList<Page> pagesList;
+
+
+
+
+
+
+    protected ArrayList<Page> listOnDisplay;
+
+
+
+
+
+
+
 
     /**
      * List of pages selected by the user
      */
-    static private ArrayList<Page> selectedPagesList;
+    static protected ArrayList<Page> selectedPagesList;
 
     /**
      * Current page index
      */
-    private int currentPage;
+    protected int currentPage;
 
     /**
      * The Notebook observes a BasicBooklet from above.
      */
-    private static Notebook listener;
+    protected static Notebook listener;
 
 
     public BasicBooklet(Notebook listener, String pagesDir){
@@ -51,27 +69,32 @@ public class BasicBooklet implements Booklet {
         pagesList = new ArrayList<>();
         selectedPagesList = new ArrayList<>();
         rewind();
+
+
+        listOnDisplay = pagesList;
     }
 
 
+    /**
+     * Add a page to the list and start listening to it.
+     * @param page
+     */
     protected void addPage(Page page){
         page.addListener(this);
         pagesList.add(page);
     }
 
-
+    /**
+     * Create a new page in this Booklet's directory.
+     * @param name
+     * @return
+     */
     @Override
     public Page createPage(String name) {
         SinglePage page = new SinglePage(PAGES_DIR+ File.separator+name);
         addPage(page);
         page.create();
-        Log.d("NEW_PAGE", "createPage(str) called"+ page.toString()+" listeners"+page.listeners.get(0) );
         return page;
-    }
-
-    @Override
-    public void remove(Page page) {
-
     }
 
     @Override
@@ -103,12 +126,29 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public void getByKeywords(String query) {
+
+
+        ArrayList<Page> results = new ArrayList<>();
+
+        String[] keywords = query.split("\\s+");
+
+        for (Page page : pagesList) {
+            if(page.contains(keywords)){
+                results.add(page);
+            }
+        }
+
+        listOnDisplay = results;
+        rewind();
+
+
+
+        /*
         Thread t = new Thread() {
             @Override
             public void run() {
 
                 String[] keywords = query.split("\\s+");
-                ArrayList<Page> result = new ArrayList<>(pagesList);
 
                 for (Page page : pagesList) {
                     if (page.contains(keywords)) {
@@ -124,6 +164,13 @@ public class BasicBooklet implements Booklet {
         };
 
         t.start();
+
+         */
+
+
+
+
+
     }
 
     @Override
@@ -150,6 +197,19 @@ public class BasicBooklet implements Booklet {
             }
 
             Collections.sort(pagesList, new LastModifiedComparator());
+        }
+    }
+
+    @Override
+    public void exitSearch() {
+        listOnDisplay = pagesList;
+        rewind();
+    }
+
+    @Override
+    public void deleteSelection() {
+        for(Page page : getSelected()){
+            page.delete();
         }
     }
 
@@ -198,12 +258,12 @@ public class BasicBooklet implements Booklet {
     @Override
     public Page[] getNext(int amount) {
         //calculating the amount of pages left to deliver
-        amount = Math.min(amount, pagesList.size() -currentPage );
+        amount = Math.min(amount, listOnDisplay.size() -currentPage );
 
         List<Page> result = new ArrayList<>();
 
         try{
-            result = pagesList.subList(currentPage, currentPage+amount);
+            result = listOnDisplay.subList(currentPage, currentPage+amount);
             currentPage+=amount;
         }catch (Exception e){
 
@@ -222,7 +282,15 @@ public class BasicBooklet implements Booklet {
      * Mark all Pages as selected
      */
     public void selectAll(){
-        selectedPagesList = new ArrayList<>(pagesList);
+        //selectedPagesList = new ArrayList<>(listOnDisplay);
+
+       // for(Page page : selectedPagesList){
+         //   page.setSelected(true);
+        //}
+
+        for(Page page : listOnDisplay){
+            page.setSelected(true);
+        }
     }
 
 
