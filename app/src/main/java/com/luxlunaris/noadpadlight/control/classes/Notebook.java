@@ -5,20 +5,12 @@ import android.util.Log;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.Pageable;
-import com.luxlunaris.noadpadlight.model.classes.Compacter;
+import com.luxlunaris.noadpadlight.model.classes.BasicBooklet;
 import com.luxlunaris.noadpadlight.model.classes.RecycleBin;
-import com.luxlunaris.noadpadlight.model.classes.SinglePage;
-import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
+import com.luxlunaris.noadpadlight.model.interfaces.Booklet;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
-
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * This is a facade controller that maintains a list of all of the user's pages,
@@ -38,29 +30,14 @@ public class Notebook implements Pageable, PageListener {
 	private static Notebook instance;
 
 	/**
-	 * The path to which all of the existing pages are stored
+	 * Manages the storage of the active existing pages.
 	 */
-	private static final String PAGES_DIR = Paths.PAGES_DIR;
-
-	/**
-	 * List of pages loaded in memory
-	 */
-	private static ArrayList<Page> pagesList;
-
-	/**
-	 * List of pages selected by the user
-	 */
-	private static ArrayList<Page> selectedPagesList;
+	private static Booklet booklet;
 
 	/**
 	 * Manages the recycle bin's dir.
 	 */
 	private static RecycleBin recycleBin;
-
-	/**
-	 * Current page index
-	 */
-	static int currentPage;
 
 	/**
 	 * Listens to this Notebook to receive updates on the status
@@ -71,13 +48,11 @@ public class Notebook implements Pageable, PageListener {
 
 	private Notebook() {
 		Log.d("CREATING_NOTEBOOK", this.toString());
-		pagesList = new ArrayList<>();
-		selectedPagesList = new ArrayList<>();
-		loadPages();
+		booklet = new BasicBooklet(this,  Paths.PAGES_DIR);
+		booklet.load();
 		rewind();
 		recycleBin = new RecycleBin(Paths.PAGES_RECYCLE_BIN_DIR, this);
 		recycleBin.load();
-
 	}
 
 	/**
@@ -88,12 +63,13 @@ public class Notebook implements Pageable, PageListener {
 		return instance!=null? instance : (instance = new Notebook());
 	}
 
-
 	/**
 	 * Create and return a new page with a default name: the unix-time of is creation
 	 * @return
 	 */
 	public Page newPage(){
+
+		Log.d("NEW_PAGE", "newPage() called");
 		return newPage(System.currentTimeMillis()+"");
 	}
 
@@ -103,18 +79,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public Page newPage(String name) {
-		SinglePage page = new SinglePage(PAGES_DIR+File.separator+name);
-		if(!page.exists()) {
-			page.create();
-			addPage(page);
-		}
-
-		try {
-			listener.onCreated(page);
-		}catch (NullPointerException e){
-			e.printStackTrace();
-		}
-
+		Page page = booklet.createPage(name);
 		return page;
 	}
 
@@ -124,20 +89,15 @@ public class Notebook implements Pageable, PageListener {
 	 * @param page
 	 */
 	@Override
-	public void onSelected(Page page) {
-
-		if(page.isSelected()){
-			selectedPagesList.add(page);
-		}else{
-			selectedPagesList.remove(page);
-		}
-	}
+	public void onSelected(Page page) { }
 
 	/**
 	 * Returns an array of the selected pages
 	 */
 	public Page[] getSelected(){
-		return selectedPagesList.toArray(new Page[0]);
+		Page[] pages = booklet.getSelected();
+		Log.d("DELETE", " notebook pages selected: "+ pages.length);
+		return pages;
 	}
 
 	/**
@@ -152,14 +112,6 @@ public class Notebook implements Pageable, PageListener {
 			//putInRecycleBin(page);
 			recycleBin.put(page);
 		}
-
-		//remove the page from the "selected" list
-		if(page.isSelected()){
-			selectedPagesList.remove(page);
-		}
-
-		//remove the page from the pages list
-		pagesList.remove(page);
 
 		try {
 			listener.onDeleted(page);
@@ -176,27 +128,15 @@ public class Notebook implements Pageable, PageListener {
 			listener.onModified(page);
 		}catch (NullPointerException e){
 		}
-
-
-		//re-sort the list of pages.
-		Collections.sort(pagesList, new LastModifiedComparator());
-
 	}
 
 	@Override
 	public void onCreated(Page page) {
 
-		//stop if page is already in the list.
-		if(pagesList.contains(page)){
-			return;
-		}
-
-		pagesList.add(page);
 		try{
 			listener.onCreated(page);
 		}catch (NullPointerException e){
 		}
-
 	}
 
 	/**
@@ -206,21 +146,7 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	@Override
 	public Page[] getNext(int amount) {
-
-		//calculating the amount of pages left to deliver
-		amount = Math.min(amount, pagesList.size() -currentPage );
-
-		List<Page> result = new ArrayList<>();
-
-		try{
-			result = pagesList.subList(currentPage, currentPage+amount);
-			currentPage+=amount;
-		}catch (Exception e){
-
-		}
-
-		return result.toArray(new Page[0]);
-
+		return booklet.getNext(amount);
 	}
 
 	/**
@@ -229,77 +155,22 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public void getByKeywords(String query) {
-
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-
-				String[] keywords = query.split("\\s+");
-				ArrayList<Page> result = new ArrayList<>(pagesList);
-
-				for (Page page : pagesList) {
-					if (page.contains(keywords)) {
-
-						//as soon as you find a page that fits the keywords tell the
-						//listener to display it.
-						listener.onCreated(page);
-
-					}
-				}
-
-			}
-		};
-
-		t.start();
-	}
-
-
-	/**
-	 * Load pages to memory from their directory
-	 */
-	public void loadPages() {
-
-		//create the pages dir if it doesn't exist yet
-		File pagesDir = new File(PAGES_DIR);
-		if(!pagesDir.exists()){
-			pagesDir.mkdirs();
-		}
-
-		//list and load all of the folders in there
-		for(File file : pagesDir.listFiles()) {
-			Page page = new SinglePage(file.getPath());
-			addPage(page);
-		}
-
-		//sort the pages by time of creation
-		Collections.sort(pagesList, new LastModifiedComparator());
-	}
-
-	/**
-	 * Add a page to the list and start listening to it
-	 * @param page
-	 */
-	private void addPage(Page page){
-		//start listening to the new page
-		page.addListener(this);
-		//add the page at beginning (list sorted newest first)
-		pagesList.add(0, page);
+		booklet.getByKeywords(query);
 	}
 
 	/**
 	 * Mark all Pages as selected
 	 */
 	public void selectAll(){
-		selectedPagesList = new ArrayList<>(pagesList);
+		booklet.selectAll();
 	}
 
 	/**
 	 * Mark all pages as unselected
 	 */
 	public void unselectAll(){
-		selectedPagesList.clear();
+		booklet.unselectAll();
 	}
-
 
 	/**
 	 * Add a NotebookListener to this Notebook.
@@ -313,7 +184,7 @@ public class Notebook implements Pageable, PageListener {
 	 * The next batch of pages to deliver is reset to the initial one.
 	 */
 	public void rewind(){
-		currentPage = 0;
+		booklet.rewind();
 	}
 
 	/**
@@ -322,7 +193,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public File generateBackupFile(){
-		return FileIO.zipDir(PAGES_DIR, Paths.PAGES_BACKUP_DIR);
+		return booklet.exportPages();
 	}
 
 	/**
@@ -330,24 +201,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @param sourcePath
 	 */
 	public void importPages(String sourcePath){
-		File unzipped = FileIO.unzipDir(sourcePath, sourcePath+"unzipped");
-
-		File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
-
-		for(File file : pagesFolder.listFiles()){
-
-			//copy each file from the unzipped file
-			try {
-				FileUtils.copyDirectory(file, new File(PAGES_DIR+File.separator+file.getName()));
-				Page page = new SinglePage(file.getPath());
-				addPage(page);
-				listener.onCreated(page);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			Collections.sort(pagesList, new LastModifiedComparator());
-		}
+		booklet.importPages(sourcePath);
 	}
 
 	/**
@@ -355,20 +209,7 @@ public class Notebook implements Pageable, PageListener {
 	 * and delete the selected pages.
 	 */
 	public void compactSelection(){
-
-		//create a new blank page
-		Page page = newPage();
-
-		//write the contents of the selected pages onto the blank page
-		new Compacter().compact(selectedPagesList, page);
-
-		//copy due to concurrent modification exception
-		ArrayList<Page> copy = new ArrayList<>(selectedPagesList);
-		//delete the old pages
-		for(int i=0; i<copy.size(); i++){
-			copy.get(i).delete();
-		}
-
+		booklet.compactSelection();
 	}
 
 	/**
@@ -391,10 +232,11 @@ public class Notebook implements Pageable, PageListener {
 	 * Restore the selected pages from the recycle bin.
 	 */
 	public void restoreSelection(){
-		for(Page page : getSelected()){
+		for(Page page : recycleBin.getSelected()){
 			recycleBin.restore(page);
+			Log.d("RESTORING", page.toString());
 		}
-		unselectAll();
+		recycleBin.unselectAll();
 	}
 
 

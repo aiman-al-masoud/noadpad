@@ -7,12 +7,13 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Manages the unlucky pages that got deleted.
  */
-public class RecycleBin implements Booklet {
+public class RecycleBin extends BasicBooklet  {
 
     /**
      * Recycle bin directory's path on disk.
@@ -30,16 +31,12 @@ public class RecycleBin implements Booklet {
     private PageListener pageListener;
 
     public RecycleBin(String recycleBinDir, PageListener pageListener){
+        super((Notebook) pageListener, recycleBinDir);
         this.RECYCLE_BIN_DIR = recycleBinDir;
         pages = new ArrayList<>();
         this.pageListener = pageListener;
     }
 
-
-    @Override
-    public Page createPage(String name) {
-        return null;
-    }
 
     /**
      * Put a page in the recycle bin:
@@ -65,13 +62,8 @@ public class RecycleBin implements Booklet {
         copy.setInRecycleBin(true);
 
         pages.add(copy);
-        copy.addListener(pageListener);
-
-    }
-
-    @Override
-    public void remove(Page page) {
-
+        //copy.addListener(pageListener);
+        copy.addListener(this);
     }
 
     /**
@@ -127,31 +119,20 @@ public class RecycleBin implements Booklet {
         for(File file : recycleBinDir.listFiles()){
             SinglePage page = new SinglePage(file.getPath());
             pages.add(page);
-            page.addListener(pageListener);
+            //page.addListener(pageListener);
+            page.addListener(this);
         }
 
     }
 
-    @Override
-    public void resort() {
-
-    }
-
-    @Override
-    public void getByKeywords(String query) {
-
-    }
 
 
-    @Override
-    public Page[] getNext(int amount) {
-        return new Page[0];
-    }
 
-    @Override
-    public void rewind() {
 
-    }
+
+
+
+
 
 
 

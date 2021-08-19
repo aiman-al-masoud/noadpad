@@ -258,9 +258,13 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void showRecycleBin(){
         removeAllPages();
         loadPages(notebook.getRecycleBin());
-        setTitle(R.string.recycle_bin_title);
         CAN_LOAD_MORE_PAGES = false;
 
+
+
+
+
+        setTitle(R.string.recycle_bin_title);
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(false);
         optionsMenu.findItem(R.id.app_bar_search).setVisible(false);

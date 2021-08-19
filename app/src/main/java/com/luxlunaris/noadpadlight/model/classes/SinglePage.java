@@ -115,6 +115,8 @@ public class SinglePage extends File implements Page {
 	@Override
 	public boolean delete() {
 
+		Log.d("NOTEBOOK_DELETED_PAGE", "from single page itself "+ this.toString());
+
 		//notify the listeners that this got deleted
 		for(PageListener listener : listeners){
 			listener.onDeleted(this);
