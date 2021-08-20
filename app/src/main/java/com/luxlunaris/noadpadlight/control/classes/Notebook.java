@@ -118,9 +118,6 @@ public class Notebook implements Pageable, PageListener {
 			recycleBin.put(page);
 		}
 
-
-
-
 		try {
 			listener.onDeleted(page);
 		}catch (NullPointerException e){
@@ -144,8 +141,6 @@ public class Notebook implements Pageable, PageListener {
 	public void onCreated(Page page) {
 
 		Log.d("BLANK_ON_START", "on create "+ page);
-
-
 		try{
 			listener.onCreated(page);
 		}catch (NullPointerException e){
@@ -233,7 +228,6 @@ public class Notebook implements Pageable, PageListener {
 		mainBooklet.compactSelection();
 	}
 
-
 	/**
 	 * Restore the selected pages from the recycle bin.
 	 */
@@ -276,6 +270,10 @@ public class Notebook implements Pageable, PageListener {
 	public void seePages(){
 		currentBooklet = mainBooklet;
 		currentBooklet.rewind();
+	}
+
+	public void onSearchResults(){
+		listener.onSearchResults();
 	}
 
 

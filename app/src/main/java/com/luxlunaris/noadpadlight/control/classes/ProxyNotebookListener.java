@@ -62,6 +62,11 @@ public class ProxyNotebookListener implements NotebookListener {
 
     }
 
+    @Override
+    public void onSearchResults() {
+        ////////////////
+    }
+
 
     /**
      * Returns just deleted pages, forgetting about them.

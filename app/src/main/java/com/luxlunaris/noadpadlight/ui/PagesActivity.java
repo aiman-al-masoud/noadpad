@@ -186,6 +186,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void loadPages(Page[] pages){
 
         for(Page page : pages){
+            Log.d("FIRST_IN_LIST", page.getPreview());
             addPage(page, false);
         }
 
@@ -473,6 +474,19 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //else you're in background, stash in changes
         changes.onModified(page);
     }
+
+
+    @Override
+    public void onSearchResults() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadNextPagesBlock();
+            }
+        });
+    }
+
 
     /**
      * On resume, this activity checks if there have been

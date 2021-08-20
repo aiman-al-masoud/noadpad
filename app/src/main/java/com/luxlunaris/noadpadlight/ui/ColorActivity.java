@@ -36,6 +36,8 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        try{
+
         //totally unrelated to THEMES
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
@@ -49,6 +51,11 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
 
 
         super.onCreate(savedInstanceState);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -59,6 +66,8 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
     protected void onResume() {
         super.onResume();
 
+        try{
+
         if(justCreatedFlag){
             repaintViews();
             justCreatedFlag = false;
@@ -68,6 +77,10 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
         if(currentTheme!=newTheme){
             currentTheme = newTheme;
             repaintViews();
+        }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }

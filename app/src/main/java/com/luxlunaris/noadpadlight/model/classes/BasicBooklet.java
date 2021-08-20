@@ -30,7 +30,7 @@ public class BasicBooklet implements Booklet {
     /**
      * List of pages loaded in memory
      */
-    protected ArrayList<Page> pagesList;
+    protected volatile ArrayList<Page> pagesList;
 
     /**
      * The list of pages that is currently gonna be
@@ -56,7 +56,6 @@ public class BasicBooklet implements Booklet {
 
 
 
-    private Page seventiesTest;
 
 
     public BasicBooklet(Notebook listener, String pagesDir){
@@ -126,51 +125,32 @@ public class BasicBooklet implements Booklet {
     @Override
     public void searchByKeywords(String query) {
 
+        new Thread(){
 
-        //TODO: put this back into a thread.
+            public void run(){
 
-        ArrayList<Page> results = new ArrayList<>();
+                ArrayList<Page> results = new ArrayList<>();
 
-        String[] keywords = query.split("\\s+");
-
-        for (Page page : pagesList) {
-            if(page.contains(keywords)){
-                results.add(page);
-            }
-        }
-
-        listOnDisplay = results;
-        rewind();
-
-
-
-        /*
-        Thread t = new Thread() {
-            @Override
-            public void run() {
+                listOnDisplay = results;
+                rewind();
 
                 String[] keywords = query.split("\\s+");
 
-                for (Page page : pagesList) {
-                    if (page.contains(keywords)) {
+                for (Page page : new ArrayList<>(pagesList)) {
+                    if(page.contains(keywords)){
+                        results.add(page);
 
-                        //as soon as you find a page that fits the keywords tell the
-                        //listener to display it.
-                        listener.onCreated(page);
+                       if(results.size() >=10){
+                            listener.onSearchResults();
+                       }
 
                     }
                 }
 
+                listener.onSearchResults();
             }
-        };
 
-        t.start();
-
-         */
-
-
-
-
+        }.start();
 
     }
 
@@ -227,22 +207,33 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onDeleted(Page page) {
 
-        seventiesTest = page;
+        //remove deleted page from pagesList
+        for(Page p : new ArrayList<>(pagesList)){
+            if(p.getName().equals(page.getName())){
+                pagesList.remove(p);
+            }
+        }
 
-        //TODO: figure out why this stupid Page isn't getting out of the way, despite getting removed.
-        Log.d("70s", "from basic booklet, on deleted page: "+page.toString());
+        //remove deleted page from selectedPagesList
+        for(Page p : new ArrayList<>(selectedPagesList)){
+            if(p.getName().equals(page.getName())){
+                selectedPagesList.remove(p);
+            }
+        }
+
+
         listener.onDeleted(page);
-        pagesList.remove(page);
-        selectedPagesList.remove(page);
+        //pagesList.remove(page);
+        //selectedPagesList.remove(page);
         listOnDisplay.remove(page);
-        Log.d("70s", "contained "+pagesList.contains(page)+" "+listOnDisplay.contains(page)+" "+selectedPagesList.contains(page));
-
     }
 
     @Override
     public void onModified(Page page) {
 
         Collections.sort(pagesList, new LastModifiedComparator());
+        Log.d("FIRST_IN_LIST", pagesList.get(0).getPreview());
+        Log.d("FIRST_IN_LIST", listOnDisplay.get(0).getPreview());
         listener.onModified(page);
 
     }
@@ -260,16 +251,8 @@ public class BasicBooklet implements Booklet {
     @Override
     public Page[] getNext(int amount) {
 
-
-        Log.d("70s", "contains: "+listOnDisplay.contains(seventiesTest));
-
-        //TODO: this is expensive!!! And it's not a permanent fix
-        for(int i =0; i<listOnDisplay.size(); i++){
-            if(listOnDisplay.get(i).getPreview().trim().isEmpty()){
-                listOnDisplay.remove(i);
-            }
-        }
-
+        //TODO: why does this have to be called here, if it's already been called in onModified?????!
+        Collections.sort(pagesList, new LastModifiedComparator());
 
         //calculating the amount of pages left to deliver
         amount = Math.min(amount, listOnDisplay.size() -currentPage );
@@ -291,7 +274,6 @@ public class BasicBooklet implements Booklet {
         currentPage = 0;
     }
 
-
     /**
      * Mark all Pages as selected
      */
@@ -300,7 +282,6 @@ public class BasicBooklet implements Booklet {
             page.setSelected(true);
         }
     }
-
 
     /**
      * Mark all pages as unselected
