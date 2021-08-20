@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
         Intent goToPagesIntent = new Intent(this, PagesActivity.class);
         startActivity(goToPagesIntent);
 
+
+        notebook.setListener(PagesActivity.changes);
+
+
         Log.d("SPEED_TEST", "CREATED PAGESACTIVITY!");
 
 

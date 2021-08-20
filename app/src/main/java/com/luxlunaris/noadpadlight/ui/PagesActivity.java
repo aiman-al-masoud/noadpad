@@ -56,7 +56,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      * this activity is in the background, so that
      * onResume can know what fragments to add/remove/modify.
      */
-    transient ProxyNotebookListener changes;
+    transient static ProxyNotebookListener changes = new ProxyNotebookListener();
 
     /**
      * True if it makes sense to allow older pages to get loaded.
@@ -75,6 +75,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
 
 
+
     /**
      * On create.
      * @param savedInstanceState
@@ -82,6 +83,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d("BLANK_ON_START", "CREATING PAGES ACTIVITY");
 
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
@@ -110,7 +113,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
 
         //start listening to notebook
         notebook.setListener(this);
-
 
 
     }
@@ -195,13 +197,16 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void loadPages(Page[] pages){
 
         //don't load any more pages if PageActivity is in a mode that doesn't allow that.
-        if(!CAN_LOAD_MORE_PAGES){
-            return;
-        }
+        //if(!CAN_LOAD_MORE_PAGES){
+        //    return;
+        //}
 
         for(Page page : pages){
+            Log.d("70s", "prev: "+page.getPreview());
             addPage(page, false);
         }
+
+
     }
 
     /**
@@ -261,6 +266,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      * in recycle bin.
      */
     private void showRecycleBin(){
+
         removeAllPages();
 
         notebook.seeRecycleBin();
@@ -326,7 +332,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             public boolean onQueryTextSubmit(String query) {
                 //CAN_LOAD_MORE_PAGES = false;
                 removeAllPages();
-                notebook.getByKeywords(query);
+                notebook.searchByKeywords(query);
                 loadNextPagesBlock();
                 return true;
             }
@@ -383,6 +389,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 break;
             case R.id.select_all:
                 notebook.selectAll();
+                break;
+            case R.id.unselect_all:
+                notebook.unselectAll();
                 break;
 
 

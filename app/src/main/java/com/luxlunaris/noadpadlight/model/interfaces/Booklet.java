@@ -37,7 +37,7 @@ public interface Booklet extends Pageable, Serializable, PageListener {
      */
     public void compactSelection();
 
-    void getByKeywords(String query);
+    void searchByKeywords(String query);
 
 
     File exportPages();

@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,19 +32,11 @@ public class BasicBooklet implements Booklet {
      */
     protected ArrayList<Page> pagesList;
 
-
-
-
-
-
+    /**
+     * The list of pages that is currently gonna be
+     * used by getNext() to procure pages for who's asking.
+     */
     protected ArrayList<Page> listOnDisplay;
-
-
-
-
-
-
-
 
     /**
      * List of pages selected by the user
@@ -70,7 +61,6 @@ public class BasicBooklet implements Booklet {
         selectedPagesList = new ArrayList<>();
         rewind();
 
-
         listOnDisplay = pagesList;
     }
 
@@ -81,7 +71,7 @@ public class BasicBooklet implements Booklet {
      */
     protected void addPage(Page page){
         page.addListener(this);
-        pagesList.add(page);
+        pagesList.add(0, page);
     }
 
     /**
@@ -97,6 +87,10 @@ public class BasicBooklet implements Booklet {
         return page;
     }
 
+    /**
+     * Load pages from disk.
+     * (To be called once after constructor).
+     */
     @Override
     public void load() {
 
@@ -125,7 +119,7 @@ public class BasicBooklet implements Booklet {
 
 
     @Override
-    public void getByKeywords(String query) {
+    public void searchByKeywords(String query) {
 
 
         ArrayList<Page> results = new ArrayList<>();
@@ -226,27 +220,22 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onDeleted(Page page) {
 
-        Log.d("NOTEBOOK_DELETED_PAGE", "from basic booklet: "+page.toString());
-
+        Log.d("70s", "from basic booklet: "+page.toString());
         listener.onDeleted(page);
-
         pagesList.remove(page);
         selectedPagesList.remove(page);
-
     }
 
     @Override
     public void onModified(Page page) {
 
         Collections.sort(pagesList, new LastModifiedComparator());
-
         listener.onModified(page);
 
     }
 
     @Override
     public void onCreated(Page page) {
-
 
         if(!pagesList.contains(page)){
             pagesList.add(page);
@@ -282,12 +271,6 @@ public class BasicBooklet implements Booklet {
      * Mark all Pages as selected
      */
     public void selectAll(){
-        //selectedPagesList = new ArrayList<>(listOnDisplay);
-
-       // for(Page page : selectedPagesList){
-         //   page.setSelected(true);
-        //}
-
         for(Page page : listOnDisplay){
             page.setSelected(true);
         }
@@ -298,7 +281,9 @@ public class BasicBooklet implements Booklet {
      * Mark all pages as unselected
      */
     public void unselectAll(){
-        selectedPagesList.clear();
+        for(Page page : listOnDisplay){
+            page.setSelected(false);
+        }
     }
 
     /**

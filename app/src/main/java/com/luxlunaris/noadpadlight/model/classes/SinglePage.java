@@ -8,11 +8,13 @@ import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.ui.PageFragment;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -118,9 +120,18 @@ public class SinglePage extends File implements Page {
 		Log.d("NOTEBOOK_DELETED_PAGE", "from single page itself "+ this.toString());
 
 		//notify the listeners that this got deleted
-		for(PageListener listener : listeners){
-			listener.onDeleted(this);
+		try{
+			for(PageListener listener : listeners){
+				listener.onDeleted(this);
+			}
+		}catch (ConcurrentModificationException e){
+
 		}
+
+
+
+
+
 
 		FileIO.deleteDirectory(this.getPath());
 

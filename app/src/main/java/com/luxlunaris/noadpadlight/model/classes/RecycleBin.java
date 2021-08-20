@@ -52,7 +52,7 @@ public class RecycleBin extends BasicBooklet  {
         new Compacter(false).compact(mockList, copy);
         copy.setInRecycleBin(true);
 
-        addPage(page);
+        addPage(copy);
     }
 
     /**
@@ -93,24 +93,6 @@ public class RecycleBin extends BasicBooklet  {
         return pagesList.toArray(new Page[0]);
     }
 
-    /**
-     * Load the pages from disk.
-     * (To be called once after constructor).
-     */
-    public void load(){
-
-        File recycleBinDir = new File(RECYCLE_BIN_DIR);
-
-        if(! recycleBinDir.exists()){
-            recycleBinDir.mkdirs();
-        }
-
-        for(File file : recycleBinDir.listFiles()){
-            SinglePage page = new SinglePage(file.getPath());
-            addPage(page);
-        }
-
-    }
 
 
 

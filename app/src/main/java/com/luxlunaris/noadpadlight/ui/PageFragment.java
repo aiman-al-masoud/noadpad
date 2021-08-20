@@ -19,7 +19,7 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PageFragment extends Fragment implements SettingsTagListener {
+public class PageFragment extends Fragment implements SettingsTagListener, PageListener{
 
     /**
      * The Page that this fragment represents
@@ -48,7 +48,7 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     public static PageFragment newInstance(Page page) {
         PageFragment fragment = new PageFragment();
         fragment.page = page;
-        //page.addListener(fragment);
+        page.addListener(fragment);
         Settings.listenToTag(SETTINGS_TAGS.THEME, fragment);
         return fragment;
     }
@@ -170,18 +170,19 @@ public class PageFragment extends Fragment implements SettingsTagListener {
     }
 
 
-
-
-    /*
     @Override
     public void onSelected(Page page) {
 
 
-        //if(page.isSelected()){
-        //    pageButton.setTextColor(this.SELECTED_TEXT_COLOR);
-        //}else{
-        //    pageButton.setTextColor(this.NORMAL_TEXT_COLOR);
-        //}
+        if(pageButton==null){
+            return;
+        }
+
+        if(page.isSelected()){
+            pageButton.setTextColor(this.SELECTED_TEXT_COLOR);
+        }else{
+            pageButton.setTextColor(this.NORMAL_TEXT_COLOR);
+        }
 
 
     }
@@ -201,7 +202,7 @@ public class PageFragment extends Fragment implements SettingsTagListener {
 
     }
 
-     */
+
 
 
 }

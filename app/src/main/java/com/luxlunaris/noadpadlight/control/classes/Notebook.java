@@ -84,7 +84,9 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public Page newPage(String name) {
-		return mainBooklet.createPage(name);
+		Page p = mainBooklet.createPage(name);
+		Log.d("BLANK_ON_START", "created page "+ p);
+		return p;
 	}
 
 	/**
@@ -134,9 +136,13 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public void onCreated(Page page) {
 
+		Log.d("BLANK_ON_START", "on create "+ page);
+
+
 		try{
 			listener.onCreated(page);
 		}catch (NullPointerException e){
+			Log.d("BLANK_ON_START", "notebook listener is NULL!!! ");
 		}
 	}
 
@@ -155,8 +161,15 @@ public class Notebook implements Pageable, PageListener {
 	 * @param query
 	 * @return
 	 */
-	public void getByKeywords(String query) {
-		currentBooklet.getByKeywords(query);
+	public void searchByKeywords(String query) {
+		currentBooklet.searchByKeywords(query);
+	}
+
+	/**
+	 * Exit search mode.
+	 */
+	public void exitSearch(){
+		currentBooklet.exitSearch();
 	}
 
 	/**
@@ -170,7 +183,7 @@ public class Notebook implements Pageable, PageListener {
 	 * Mark all pages as unselected
 	 */
 	public void unselectAll(){
-		mainBooklet.unselectAll();
+		currentBooklet.unselectAll();
 	}
 
 	/**
@@ -213,13 +226,6 @@ public class Notebook implements Pageable, PageListener {
 		mainBooklet.compactSelection();
 	}
 
-	/**
-	 * Permanently delete all of the pages in the recycle bin.
-	 * And notify the listening UI that they got deleted.
-	 */
-	public void emptyRecycleBin(){
-		recycleBin.clear();
-	}
 
 	/**
 	 * Restore the selected pages from the recycle bin.
@@ -230,6 +236,22 @@ public class Notebook implements Pageable, PageListener {
 		}
 		recycleBin.unselectAll();
 	}
+
+	/**
+	 * Delete selected pages.
+	 */
+	public void deleteSelection(){
+		currentBooklet.deleteSelection();
+	}
+
+	/**
+	 * Permanently delete all of the pages in the recycle bin.
+	 * And notify the listening UI that they got deleted.
+	 */
+	public void emptyRecycleBin(){
+		recycleBin.clear();
+	}
+
 
 	/**
 	 * Set the  recycle bin as the booklet whose pages
@@ -250,13 +272,7 @@ public class Notebook implements Pageable, PageListener {
 	}
 
 
-	public void exitSearch(){
-		currentBooklet.exitSearch();
-	}
 
-	public void deleteSelection(){
-		currentBooklet.deleteSelection();
-	}
 
 
 
