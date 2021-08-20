@@ -481,6 +481,24 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     }
 
 
+    /**
+     * If any page is selected toggle the edit menu's visibility to on.
+     * Else if nothing is selected turn it off.
+     * @param something
+     */
+    @Override
+    public void onSelected(boolean something) {
+        if(something){
+            optionsMenu.findItem(R.id.edit_menu).setVisible(true);
+        }else{
+            optionsMenu.findItem(R.id.edit_menu).setVisible(false);
+        }
+    }
+
+
+    /**
+     * When search results are ready, load pages.
+     */
     @Override
     public void onSearchResults() {
 

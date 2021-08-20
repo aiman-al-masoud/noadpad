@@ -13,12 +13,12 @@ import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.io.File;
 
 /**
- * This is a facade controller that maintains a list of all of the user's pages,
- * and provides methods to create a new page, get a batch of pages of a specified size,
- * and more...
+ * This is a facade controller that organizes pages,
+ * providing methods to create a new page, get a batch of
+ * old pages, and more...
  *
- * It listens to all Pages, and it's listened to by a
- * NotebookListener.
+ * Notebook listens to Booklet(s), which listen to Pages.
+ * Notebook is listened to by NotebookListener.
  *
  *
  */
@@ -85,17 +85,23 @@ public class Notebook implements Pageable, PageListener {
 	 */
 	public Page newPage(String name) {
 		Page p = mainBooklet.createPage(name);
-		Log.d("BLANK_ON_START", "created page "+ p);
 		return p;
 	}
 
 	/**
-	 * Called by a Page when it gets selected.
-	 * Notebook adds it to the list of selected pages
+	 * Called by a Booklet, which is called by a page when it gets selected.
 	 * @param page
 	 */
 	@Override
-	public void onSelected(Page page) { }
+	public void onSelected(Page page) {
+
+		//tell my listener if something at all is selected
+		if(currentBooklet.getSelected().length>0){
+			listener.onSelected(true);
+		}else{
+			listener.onSelected(false);
+		}
+	}
 
 	/**
 	 * Returns an array of the selected pages
@@ -111,8 +117,6 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public void onDeleted(Page page) {
 
-		Log.d("70s", "deleted is empty: " +page.getText().trim().isEmpty()+" page: "+page.toString());
-
 		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
 			recycleBin.put(page);
@@ -122,9 +126,6 @@ public class Notebook implements Pageable, PageListener {
 			listener.onDeleted(page);
 		}catch (NullPointerException e){
 		}
-
-		Log.d("70s", "told gui about deletion of page:  "+page.toString());
-
 
 	}
 
@@ -139,12 +140,9 @@ public class Notebook implements Pageable, PageListener {
 
 	@Override
 	public void onCreated(Page page) {
-
-		Log.d("BLANK_ON_START", "on create "+ page);
 		try{
 			listener.onCreated(page);
 		}catch (NullPointerException e){
-			Log.d("BLANK_ON_START", "notebook listener is NULL!!! ");
 		}
 	}
 
@@ -253,7 +251,6 @@ public class Notebook implements Pageable, PageListener {
 		recycleBin.clear();
 	}
 
-
 	/**
 	 * Set the  recycle bin as the booklet whose pages
 	 * will be sent to the GUI.
@@ -272,10 +269,18 @@ public class Notebook implements Pageable, PageListener {
 		currentBooklet.rewind();
 	}
 
+	/**
+	 * Called by Booklet when search results are ready.
+	 */
 	public void onSearchResults(){
+		//calls NotebookListener telling it search results are ready.
 		listener.onSearchResults();
 	}
 
+	/**
+	 * Export only the selected files from the current Booklet.
+	 * @return
+	 */
 	public File exportSelected(){
 		return currentBooklet.exportSelected();
 	}

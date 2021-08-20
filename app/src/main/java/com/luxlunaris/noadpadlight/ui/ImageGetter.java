@@ -29,6 +29,8 @@ public class ImageGetter implements Html.ImageGetter {
         Drawable d = Drawable.createFromPath(source);
         Log.d("GETTING_IMAGE", d.getIntrinsicWidth()+"");
 
+
+
         //get the screen size
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int maxWidth = metrics.widthPixels;

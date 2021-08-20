@@ -222,12 +222,15 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public void onSelected(Page page) {
-        Log.d("SELECTED", page.toString()+"got selected");
+
+
         if(page.isSelected()){
             selectedPagesList.add(page);
         }else{
             selectedPagesList.remove(page);
         }
+
+        listener.onSelected(page);
     }
 
     @Override

@@ -21,6 +21,7 @@
         android:id="@+id/edit_menu"
         android:title="@string/edit_icon_title"
         app:showAsAction="always"
+        android:visible="false"
         android:icon="@android:drawable/ic_menu_edit"
         >
 

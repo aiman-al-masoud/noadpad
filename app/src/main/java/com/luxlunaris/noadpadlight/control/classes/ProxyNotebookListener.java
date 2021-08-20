@@ -63,6 +63,11 @@ public class ProxyNotebookListener implements NotebookListener {
     }
 
     @Override
+    public void onSelected(boolean something) {
+
+    }
+
+    @Override
     public void onSearchResults() {
         ////////////////
     }
