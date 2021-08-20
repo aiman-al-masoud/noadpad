@@ -64,6 +64,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="select_all">Select All</string>
     <string name="unselect_all">Unselect All</string>
+    <string name="export">Export</string>
 
 
 </resources>

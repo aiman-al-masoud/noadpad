@@ -209,7 +209,7 @@ public class Notebook implements Pageable, PageListener {
 	 * @return
 	 */
 	public File generateBackupFile(){
-		return mainBooklet.exportPages();
+		return mainBooklet.exportAllPages();
 	}
 
 	/**
@@ -274,6 +274,10 @@ public class Notebook implements Pageable, PageListener {
 
 	public void onSearchResults(){
 		listener.onSearchResults();
+	}
+
+	public File exportSelected(){
+		return currentBooklet.exportSelected();
 	}
 
 

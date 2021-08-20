@@ -30,6 +30,15 @@ public class Paths {
     public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
 
 
+    /**
+     * Tmp stores the backup file containing all of the pages.
+     */
+    public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
+
+
+
+
+
 
 
 

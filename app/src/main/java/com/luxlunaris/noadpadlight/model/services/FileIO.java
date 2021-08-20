@@ -2,7 +2,13 @@ package com.luxlunaris.noadpadlight.model.services;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
+
+import androidx.core.content.FileProvider;
+
+import com.luxlunaris.noadpadlight.R;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -193,11 +199,25 @@ public class FileIO {
 	 */
 	public static void copyFilesToDirectory(File[] files, String destDirPath){
 		File destDir = new File(destDirPath);
+
+		if(!destDir.exists()){
+			destDir.mkdirs();
+		}
+
 		for(File file : files){
 			try {
-				FileUtils.copyFileToDirectory(file, destDir);
+
+				if(file.isFile()){
+					FileUtils.copyFileToDirectory(file, destDir);
+				}
+
+				if(file.isDirectory()){
+					FileUtils.copyDirectoryToDirectory(file, destDir);
+				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
+				Log.d("exporting", "exception " +e.getMessage());
 			}
 		}
 	}
@@ -234,6 +254,40 @@ public class FileIO {
 
 		return selectedFile;
 	}
+
+
+	public static void exportFile(Context context, File file, String mimeType){
+		Uri uri = FileProvider.getUriForFile(context, "com.luxlunaris.fileprovider", file);
+
+		//create an intent to share the backup file with another app
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		//intent.setType("application/zip");
+		intent.setType(mimeType);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		context.startActivity(Intent.createChooser(intent, context.getString(R.string.export)));
+
+	}
+
+	/**
+	 * Clear the contents of a directory w/out
+	 * deleting the directory itself.
+	 * @param path
+	 */
+	/*
+	public static void clearDirectory(String path){
+		for(File file : new File(path).listFiles()){
+			if(file.isDirectory()){
+				deleteDirectory(file.getPath());
+			}else{
+				file.delete();
+			}
+		}
+	}
+
+	 */
+
+
 
 
 

@@ -21,6 +21,7 @@ import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -367,6 +368,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 break;
             case R.id.unselect_all:
                 notebook.unselectAll();
+                break;
+            case R.id.export_selected:
+                File file = notebook.exportSelected();
+                FileIO.exportFile(this,file, "application/zip");
                 break;
 
 

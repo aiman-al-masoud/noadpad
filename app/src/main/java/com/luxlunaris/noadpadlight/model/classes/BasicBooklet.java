@@ -155,9 +155,35 @@ public class BasicBooklet implements Booklet {
     }
 
     @Override
-    public File exportPages() {
+    public File exportAllPages() {
         return FileIO.zipDir(PAGES_DIR, Paths.PAGES_BACKUP_DIR);
     }
+
+
+
+    @Override
+    public File exportSelected() {
+
+        Page[] pages = getSelected();
+
+        File[] files = new File[pages.length];
+
+        for(int i =0; i<pages.length; i++){
+            files[i] = (File)pages[i];
+        }
+
+        FileIO.deleteDirectory(Paths.TMP_DIR);
+        String dir = new File(Paths.TMP_DIR+File.separator+"pages").getPath();
+
+        FileIO.copyFilesToDirectory(files,dir );
+
+        return FileIO.zipDir(Paths.TMP_DIR+File.separator+"pages", Paths.PAGES_BACKUP_DIR);
+    }
+
+
+
+
+
 
     @Override
     public void importPages(String sourcePath) {

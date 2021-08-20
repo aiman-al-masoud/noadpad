@@ -92,9 +92,16 @@ public class SinglePage extends File implements Page {
 		Log.d("TEST_IMAGE", "saving: "+text);
 
 		FileIO.write(textFile.getPath(), text);
-		for(PageListener listener : listeners){
-			listener.onModified(this);
+
+		try{
+			for(PageListener listener : listeners){
+				listener.onModified(this);
+			}
+		}catch (ConcurrentModificationException e){
+			e.printStackTrace();
 		}
+
+
 
 		//delete any non-used image files.
 		checkDeleteImages();
@@ -427,8 +434,11 @@ public class SinglePage extends File implements Page {
 		//copy provided image to this Page's imgDir
 		FileIO.copyFile(path, imageCopy.getPath());
 
+
 		//create the image element in html
 		String imgElement = generateImgTag(imageCopy.getPath());
+
+
 
 		//get the paragraphs of this page
 		String[] pars = getParagraphs();

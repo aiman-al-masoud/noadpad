@@ -58,4 +58,7 @@
     <string name="are_you_sure">Sei sicuro?</string>
     <string name="select_all">Seleziona Tutto</string>
     <string name="unselect_all">Deseleziona Tutto</string>
+    <string name="export">Esporta</string>
+
+
 </resources>

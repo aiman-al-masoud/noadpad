@@ -40,7 +40,10 @@ public interface Booklet extends Pageable, Serializable, PageListener {
     void searchByKeywords(String query);
 
 
-    File exportPages();
+    File exportAllPages();
+
+    File exportSelected();
+
 
     void importPages(String sourcePath);
 
