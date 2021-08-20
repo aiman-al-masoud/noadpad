@@ -111,15 +111,17 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public void onDeleted(Page page) {
 
+		Log.d("70s", "deleted is empty: " +page.getText().trim().isEmpty());
+
 		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
 			recycleBin.put(page);
 		}
 
+
 		try {
 			listener.onDeleted(page);
 		}catch (NullPointerException e){
-
 		}
 
 	}

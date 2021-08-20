@@ -122,6 +122,8 @@ public class BasicBooklet implements Booklet {
     public void searchByKeywords(String query) {
 
 
+        //TODO: put this back into a thread.
+
         ArrayList<Page> results = new ArrayList<>();
 
         String[] keywords = query.split("\\s+");
@@ -220,10 +222,14 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onDeleted(Page page) {
 
-        Log.d("70s", "from basic booklet: "+page.toString());
+        //TODO: figure out why this stupid Page isn't getting out of the way, despite getting removed.
+        Log.d("70s", "from basic booklet, on deleted page: "+page.toString());
         listener.onDeleted(page);
         pagesList.remove(page);
         selectedPagesList.remove(page);
+        listOnDisplay.remove(page);
+        Log.d("70s", "contained "+pagesList.contains(page)+" "+listOnDisplay.contains(page)+" "+selectedPagesList.contains(page));
+
     }
 
     @Override

@@ -59,12 +59,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     transient static ProxyNotebookListener changes = new ProxyNotebookListener();
 
     /**
-     * True if it makes sense to allow older pages to get loaded.
-     * (False when querying for specific pages or checking out the recycle bin)
-     */
-    transient boolean CAN_LOAD_MORE_PAGES = true;
-
-    /**
      * The option (toolbar) menu.
      */
     private Menu optionsMenu;
@@ -73,7 +67,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      * A callback code.
      */
     private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
-
 
 
     /**
@@ -114,10 +107,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //start listening to notebook
         notebook.setListener(this);
 
-
     }
-
-
 
     /**
      * Used to add more pages when you scroll all the
@@ -136,7 +126,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         }
     }
 
-
     /**
      * Ensures that there is ONE and only ONE fragment for each Page in the fragments list.
      * @param page
@@ -153,7 +142,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //create a new fragment
         return PageFragment.newInstance(page);
     }
-
 
     /**
      * Add a page fragment to the list
@@ -196,16 +184,9 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     private void loadPages(Page[] pages){
 
-        //don't load any more pages if PageActivity is in a mode that doesn't allow that.
-        //if(!CAN_LOAD_MORE_PAGES){
-        //    return;
-        //}
-
         for(Page page : pages){
-            Log.d("70s", "prev: "+page.getPreview());
             addPage(page, false);
         }
-
 
     }
 
@@ -236,7 +217,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         notebook.rewind();
     }
 
-
     /**
      * Removes a fragment without deleting its page
      * @param page
@@ -246,7 +226,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         pageFragments.remove(frag);
         removeFragment(frag);
     }
-
 
     /**
      * Removes a fragment.
@@ -259,7 +238,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             e.printStackTrace();
         }
     }
-
 
     /**
      * Enter in the mode which shows the deleted pages
@@ -275,13 +253,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         setTitle(R.string.recycle_bin_title);
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(false);
-        //optionsMenu.findItem(R.id.app_bar_search).setVisible(false);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(true);
         optionsMenu.findItem(R.id.restore).setVisible(true);
         optionsMenu.findItem(R.id.compact).setVisible(false);
-
 
     }
 
@@ -291,7 +267,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void exitRecycleBin(){
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(true);
-        //optionsMenu.findItem(R.id.app_bar_search).setVisible(true);
         optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(false);
@@ -302,8 +277,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         notebook.seePages();
 
     }
-
-
 
 
     /**
@@ -330,7 +303,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //CAN_LOAD_MORE_PAGES = false;
                 removeAllPages();
                 notebook.searchByKeywords(query);
                 loadNextPagesBlock();
@@ -429,16 +401,10 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     public void onBackPressed() {
 
         notebook.exitSearch();
-
-
         exitRecycleBin();
-
-        //CAN_LOAD_MORE_PAGES = true;
-
         //remove all pages present, and restart adding.
         removeAllPages();
         loadNextPagesBlock();
-
 
     }
 
@@ -505,7 +471,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         changes.onModified(page);
     }
 
-
     /**
      * On resume, this activity checks if there have been
      * changes to the Pages displayed, and eventually
@@ -514,11 +479,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     @Override
     protected void onResume() {
         super.onResume();
-
-        //if you're in no more pages added mode postpone updating later.
-        //if(!CAN_LOAD_MORE_PAGES){
-        //    return;
-        //}
 
         //put the modified pages back on top
         for(Page page : changes.popJustModified()){
