@@ -111,7 +111,7 @@ public class Notebook implements Pageable, PageListener {
 	@Override
 	public void onDeleted(Page page) {
 
-		Log.d("70s", "deleted is empty: " +page.getText().trim().isEmpty());
+		Log.d("70s", "deleted is empty: " +page.getText().trim().isEmpty()+" page: "+page.toString());
 
 		//if deleted page is not empty, add it to recycle bin
 		if(!page.getText().trim().isEmpty()){
@@ -119,10 +119,15 @@ public class Notebook implements Pageable, PageListener {
 		}
 
 
+
+
 		try {
 			listener.onDeleted(page);
 		}catch (NullPointerException e){
 		}
+
+		Log.d("70s", "told gui about deletion of page:  "+page.toString());
+
 
 	}
 

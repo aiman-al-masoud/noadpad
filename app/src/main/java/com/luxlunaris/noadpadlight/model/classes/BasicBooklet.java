@@ -54,6 +54,11 @@ public class BasicBooklet implements Booklet {
     protected static Notebook listener;
 
 
+
+
+    private Page seventiesTest;
+
+
     public BasicBooklet(Notebook listener, String pagesDir){
         this.listener = listener;
         this.PAGES_DIR = pagesDir;
@@ -222,6 +227,8 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onDeleted(Page page) {
 
+        seventiesTest = page;
+
         //TODO: figure out why this stupid Page isn't getting out of the way, despite getting removed.
         Log.d("70s", "from basic booklet, on deleted page: "+page.toString());
         listener.onDeleted(page);
@@ -252,6 +259,18 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public Page[] getNext(int amount) {
+
+
+        Log.d("70s", "contains: "+listOnDisplay.contains(seventiesTest));
+
+        //TODO: this is expensive!!! And it's not a permanent fix
+        for(int i =0; i<listOnDisplay.size(); i++){
+            if(listOnDisplay.get(i).getPreview().trim().isEmpty()){
+                listOnDisplay.remove(i);
+            }
+        }
+
+
         //calculating the amount of pages left to deliver
         amount = Math.min(amount, listOnDisplay.size() -currentPage );
 

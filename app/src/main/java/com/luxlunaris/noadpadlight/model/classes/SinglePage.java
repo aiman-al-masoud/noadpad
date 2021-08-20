@@ -117,21 +117,21 @@ public class SinglePage extends File implements Page {
 	@Override
 	public boolean delete() {
 
-		Log.d("NOTEBOOK_DELETED_PAGE", "from single page itself "+ this.toString());
+
+		Log.d("70s", this.getName()+" gettting deleted");
 
 		//notify the listeners that this got deleted
 		try{
 			for(PageListener listener : listeners){
 				listener.onDeleted(this);
+				Log.d("70s", "notified "+listener);
+
 			}
 		}catch (ConcurrentModificationException e){
+			e.printStackTrace();
+			Log.d("70s", "concurrent modification");
 
 		}
-
-
-
-
-
 
 		FileIO.deleteDirectory(this.getPath());
 

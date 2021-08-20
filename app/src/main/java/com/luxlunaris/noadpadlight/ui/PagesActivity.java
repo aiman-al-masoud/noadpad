@@ -22,6 +22,7 @@ import com.luxlunaris.noadpadlight.control.classes.ProxyNotebookListener;
 import com.luxlunaris.noadpadlight.control.interfaces.NotebookListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -223,6 +224,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     private void removeFragment(Page page){
         PageFragment frag = getFragment(page);
+
         pageFragments.remove(frag);
         removeFragment(frag);
     }
@@ -405,6 +407,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //remove all pages present, and restart adding.
         removeAllPages();
         loadNextPagesBlock();
+        notebook.unselectAll();
 
     }
 

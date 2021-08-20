@@ -189,7 +189,6 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
 
     @Override
     public void onDeleted(Page page) {
-
     }
 
     @Override
