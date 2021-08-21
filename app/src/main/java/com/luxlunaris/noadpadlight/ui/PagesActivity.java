@@ -36,7 +36,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     /**
      * The Notebook manages the pages.
      */
-    Notebook notebook = Notebook.getInstance();
+    //Notebook notebook = Notebook.getInstance();
 
     /**
      * The layout that hosts the page fragments.
@@ -79,6 +79,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+
         Log.d("BLANK_ON_START", "CREATING PAGES ACTIVITY");
 
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
@@ -107,7 +109,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         changes = new ProxyNotebookListener();
 
         //start listening to notebook
-        notebook.setListener(this);
+        Notebook.getInstance().setListener(this);
 
     }
 
@@ -197,7 +199,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      * Loads the next block of page fragments
      */
     private void loadNextPagesBlock(){
-       loadPages(notebook.getNext(PAGES_IN_A_BATCH));
+       loadPages(Notebook.getInstance().getNext(PAGES_IN_A_BATCH));
     }
 
     /**
@@ -217,7 +219,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         pageFragments.clear();
 
         //tell the notebook that you want to start over cycling through pages.
-        notebook.rewind();
+        Notebook.getInstance().rewind();
     }
 
     /**
@@ -251,7 +253,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
 
         removeAllPages();
 
-        notebook.seeRecycleBin();
+        Notebook.getInstance().seeRecycleBin();
         loadNextPagesBlock();
 
         setTitle(R.string.recycle_bin_title);
@@ -278,7 +280,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         optionsMenu.findItem(R.id.compact).setVisible(true);
 
         setTitle(R.string.app_name);
-        notebook.seePages();
+        Notebook.getInstance().seePages();
 
     }
 
@@ -308,7 +310,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             @Override
             public boolean onQueryTextSubmit(String query) {
                 removeAllPages();
-                notebook.searchByKeywords(query);
+                Notebook.getInstance().searchByKeywords(query);
                 loadNextPagesBlock();
                 return true;
             }
@@ -340,7 +342,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 break;
             case R.id.new_page:
                 Intent intent = new Intent(this, ReaderActivity.class);
-                intent.putExtra(ReaderActivity.PAGE_EXTRA,notebook.newPage());
+                intent.putExtra(ReaderActivity.PAGE_EXTRA,Notebook.getInstance().newPage());
                 startActivity(intent);
                 break;
             case R.id.load_more_pages:
@@ -355,22 +357,22 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
                 yayOrNayDialog.show(getSupportFragmentManager(), "");
                 break;
             case R.id.delete:
-                notebook.deleteSelection();
+                Notebook.getInstance().deleteSelection();
                 break;
             case R.id.compact:
-                notebook.compactSelection();
+                Notebook.getInstance().compactSelection();
                 break;
             case R.id.restore:
-                notebook.restoreSelection();
+                Notebook.getInstance().restoreSelection();
                 break;
             case R.id.select_all:
-                notebook.selectAll();
+                Notebook.getInstance().selectAll();
                 break;
             case R.id.unselect_all:
-                notebook.unselectAll();
+                Notebook.getInstance().unselectAll();
                 break;
             case R.id.export_selected:
-                File file = notebook.exportSelected();
+                File file = Notebook.getInstance().exportSelected();
                 FileIO.exportFile(this,file, "application/zip");
                 break;
 
@@ -394,7 +396,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             //sure you want to empty recycle bin?
             case QUESTION_EMPTY_RECYCLE_BIN:
                 if(result==YayOrNayDialog.POSITIVE_RESPONSE){
-                    notebook.emptyRecycleBin();
+                    Notebook.getInstance().emptyRecycleBin();
                 }
                 break;
 
@@ -408,12 +410,12 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     @Override
     public void onBackPressed() {
 
-        notebook.exitSearch();
+        Notebook.getInstance().exitSearch();
         exitRecycleBin();
         //remove all pages present, and restart adding.
         removeAllPages();
         loadNextPagesBlock();
-        notebook.unselectAll();
+        Notebook.getInstance().unselectAll();
 
     }
 

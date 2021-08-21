@@ -55,9 +55,6 @@ public class BasicBooklet implements Booklet {
 
 
 
-
-
-
     public BasicBooklet(Notebook listener, String pagesDir){
         this.listener = listener;
         this.PAGES_DIR = pagesDir;
