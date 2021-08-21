@@ -31,12 +31,8 @@ import java.util.Random;
  * This activity allows the user to access, delete, modify
  * Pages, presenting them on a PageFragment each.
  */
-public class PagesActivity extends ColorActivity  implements NotebookListener, YayOrNayDialog.BinaryQuestioner {
+public class PagesActivity extends ColorActivity  implements NotebookListener, YayOrNayDialog.BinaryQuestioner, NullEmergency {
 
-    /**
-     * The Notebook manages the pages.
-     */
-    //Notebook notebook = Notebook.getInstance();
 
     /**
      * The layout that hosts the page fragments.
@@ -71,6 +67,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private final String QUESTION_EMPTY_RECYCLE_BIN = "EMPTY_RECYCLE_BIN";
 
 
+
     /**
      * On create.
      * @param savedInstanceState
@@ -80,12 +77,11 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
-        Log.d("BLANK_ON_START", "CREATING PAGES ACTIVITY");
-
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_pages);
 
         //get the lin layout that will hold the fragments
@@ -111,6 +107,23 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //start listening to notebook
         Notebook.getInstance().setListener(this);
 
+    }
+
+    /**
+     * If a page is null, remove all
+     * fragments and re-create them before they
+     * make a mess out of null-Page references.
+     */
+    boolean called  = false;
+    @Override
+    public void onNullPage() {
+
+        if(called){
+            return;
+        }
+        called = true;
+        removeAllPages();
+        loadNextPagesBlock();
     }
 
     /**
@@ -155,6 +168,8 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
 
         //get the appropriate page fragment
         PageFragment pgFrag = getFragment(page);
+
+
 
         //the id of the future container of pgFrag
         int containerId = -1;
@@ -213,7 +228,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         }
 
         //make sure they're all removed
-        getSupportFragmentManager().executePendingTransactions();
+        //getSupportFragmentManager().executePendingTransactions();
 
         //forget about all fragments
         pageFragments.clear();
@@ -228,7 +243,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
      */
     private void removeFragment(Page page){
         PageFragment frag = getFragment(page);
-
         pageFragments.remove(frag);
         removeFragment(frag);
     }
@@ -544,6 +558,13 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         }
 
     }
+
+
+
+
+
+
+
 
 
 }

@@ -18,6 +18,8 @@ import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.luxlunaris.noadpadlight.ui.NullEmergency;
+
 
 public class PageFragment extends Fragment implements SettingsTagListener, PageListener{
 
@@ -31,19 +33,15 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
      */
     transient Button pageButton;
 
-
     /**
      * Text color when unselected
      */
     private static int NORMAL_TEXT_COLOR = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)).FG_COLOR;
 
-
     /**
      * Text color when selected
      */
     private int SELECTED_TEXT_COLOR = Color.RED;
-
-
 
     public static PageFragment newInstance(Page page) {
         PageFragment fragment = new PageFragment();
@@ -54,14 +52,22 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view =inflater.inflate(R.layout.fragment_page, container, false);
+
+        //if this fragment's page is null, it calls the supporting activity.
+        if(page==null){
+
+            try{
+                NullEmergency emergency = (NullEmergency)getActivity();
+                emergency.onNullPage();
+            }catch (ClassCastException e){
+                e.printStackTrace();
+            }
+
+            return view;
+        }
 
         //get this fragment's button
         pageButton = view.findViewById(R.id.pageButton);
@@ -101,15 +107,13 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
             pageButton.setTextColor(theme.FG_COLOR);
         }
 
-
-
         return view;
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
+
         setText();
 
         //different color if selected
@@ -121,8 +125,6 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         if(page.isInRecycleBin()){
             pageButton.setBackgroundColor(Color.DKGRAY);
         }
-
-
     }
     /**
      * Set this fragment's text to a preview of the page
@@ -130,18 +132,24 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
      */
     private void setText(){
 
-        String text  = page.getPreview();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
-        String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+        try{
+            String text  = page.getPreview();
 
-        text+="\n"+dateString;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
+            String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
 
-        Spanned spanned = Html.fromHtml(text);
-        pageButton.setText(spanned);
+            text+="\n"+dateString;
 
-        //then decide whether to let user change this size
-        pageButton.setTextSize(20);
+            Spanned spanned = Html.fromHtml(text);
+            pageButton.setText(spanned);
+
+            //then decide whether to let user change this size
+            pageButton.setTextSize(20);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -169,10 +177,8 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         NORMAL_TEXT_COLOR =  newTheme.FG_COLOR;
     }
 
-
     @Override
     public void onSelected(Page page) {
-
 
         if(pageButton==null){
             return;
@@ -183,23 +189,15 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         }else{
             pageButton.setTextColor(this.NORMAL_TEXT_COLOR);
         }
-
-
     }
 
     @Override
-    public void onDeleted(Page page) {
-    }
-
+    public void onDeleted(Page page) { }
     @Override
-    public void onModified(Page page) {
-
-    }
-
+    public void onModified(Page page) { }
     @Override
-    public void onCreated(Page page) {
+    public void onCreated(Page page) { }
 
-    }
 
 
 
