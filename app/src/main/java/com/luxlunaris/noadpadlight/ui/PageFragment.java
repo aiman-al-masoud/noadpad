@@ -132,7 +132,6 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
      */
     private void setText(){
 
-
         try{
             String text  = page.getPreview();
 

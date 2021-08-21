@@ -81,6 +81,10 @@ public class DoodleActivity extends AppCompatActivity {
                 //return to caller activity.
                 finish();
                 break;
+            case R.id.undo:
+                doodleView.undo();
+                break;
+
 
         }
 

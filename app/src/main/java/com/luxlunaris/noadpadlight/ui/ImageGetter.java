@@ -25,9 +25,14 @@ public class ImageGetter implements Html.ImageGetter {
         //height of every single image.
         //OR (less orthodox) maybe put the size in the name of the image file.
 
+        Log.d("GETTING_IMAGE", "pathname: "+source);
+
+
         Log.d("GETTING_IMAGE", source);
         Drawable d = Drawable.createFromPath(source);
         Log.d("GETTING_IMAGE", d.getIntrinsicWidth()+"");
+
+
 
 
 

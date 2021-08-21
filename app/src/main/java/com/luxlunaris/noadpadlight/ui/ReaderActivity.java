@@ -60,7 +60,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private static final int REQUEST_DOODLE =  1;
 
-
+    /**
+     * The toolbar menu.
+     */
     private Menu optionsMenu;
 
 
@@ -68,6 +70,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
+
 
         setTitle(R.string.reader_activity_title_normal);
 
@@ -77,6 +80,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         textView.setTextSize(TEXT_SIZE);
         //retrieve the page that you were called to display
         page = (Page)getIntent().getSerializableExtra(PAGE_EXTRA);
+
+        //Log.d("RESTART_READER", page.toString());
+
+
+
         //set the view's initial text to the Page's text
         reloadText();
         //jump to the last-saved position of the page
@@ -87,8 +95,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
     @Override
     protected void onResume() {
-        super.onResume();
 
+        super.onResume();
 
     }
 
@@ -97,6 +105,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private void reloadText(){
 
+
         //get the html source code from the Page.
         String text =page.getText();
         Log.d("TEST_IMAGE", "TEXT FROM PAGE-FILE: "+text);
@@ -104,7 +113,10 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         //convert the html source code to a Spanned object
         //Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
         //using deprecated version for legacy support.
-        Spanned s = Html.fromHtml (text, new ImageGetter(getBaseContext()), null);
+
+        //TODO: Solve: when the activity starts back after being killed in the bg, html source's image tags are ok, but span doesn't contain images.
+        Spanned s = Html.fromHtml (text, new ImageGetter(this), null);
+
 
         if(HTML_EDIT_MODE){
             //pass raw html text
@@ -178,6 +190,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         super.onPause();
         saveProgress();
     }
+
 
     /**
      * Save the text and context of the currently edited page.
@@ -337,7 +350,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
     }
 
-
     /**
      * Uses volume keys to navigate up and down between token positions.
      * @param keyCode
@@ -408,7 +420,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
         //if the edited text is empty, delete the Page
         if(editedText.trim().isEmpty()){
-            boolean t = page.delete();
+            page.delete();
         }else{
         //else save the progress
             saveProgress();

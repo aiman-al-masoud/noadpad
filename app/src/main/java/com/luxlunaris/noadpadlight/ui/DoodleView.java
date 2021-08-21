@@ -13,6 +13,7 @@ import android.view.View;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,9 +26,10 @@ public class DoodleView extends View {
     Paint paint;
 
     /**
-     * Path keeps track of the drawn coordinates.
+     * Each path corresponds to a streak of continuously drawn coordinates.
      */
-    Path path;
+    ArrayList<Path> paths;
+
 
 
     public DoodleView(Context context) {
@@ -37,7 +39,7 @@ public class DoodleView extends View {
         setStrokeWidth(20);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        path =new Path();
+        paths = new ArrayList<>();
     }
 
 
@@ -65,7 +67,10 @@ public class DoodleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         setBackgroundColor(Color.WHITE);
-        canvas.drawPath(path, paint);
+        //canvas.drawPath(path, paint);
+        for(Path path : paths){
+            canvas.drawPath(path, paint);
+        }
     }
 
 
@@ -86,10 +91,16 @@ public class DoodleView extends View {
         switch(event.getAction()){
 
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(x, y);
+                //path.lineTo(x, y);
+                paths.get(paths.size()-1).lineTo(x,y);
+
                 break;
             case MotionEvent.ACTION_DOWN:
+                //path.moveTo(x, y);
+                Path path = new Path();
                 path.moveTo(x, y);
+                paths.add(path);
+
                 break;
 
         }
@@ -126,5 +137,19 @@ public class DoodleView extends View {
 
         return doodleFile;
     }
+
+    /**
+     * Remove the last continuous stroke (ie the last path).
+     */
+    public void undo(){
+
+        try{
+            paths.remove(paths.size()-1);
+        }catch (IndexOutOfBoundsException e){}
+
+        invalidate();
+    }
+
+
 
 }
