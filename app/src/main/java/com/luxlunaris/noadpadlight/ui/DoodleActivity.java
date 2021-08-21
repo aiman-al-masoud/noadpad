@@ -16,7 +16,7 @@ import java.io.File;
 /**
  *
  */
-public class DoodleActivity extends AppCompatActivity {
+public class DoodleActivity extends AppCompatActivity implements YayOrNayDialog.BinaryQuestioner {
 
 
     /**
@@ -28,6 +28,13 @@ public class DoodleActivity extends AppCompatActivity {
      * Name of the doodle file extra.
      */
     public static final String DOODLE_FILE_EXTRA = "DOODLE_FILE";
+
+
+    /**
+     * Exit without saving code for BinaryQuestioner callback.
+     */
+    public static final String EXIT_WITHOUT_SAVING = "EXIT_W_OUT_SAVING";
+
 
 
     @Override
@@ -84,12 +91,37 @@ public class DoodleActivity extends AppCompatActivity {
             case R.id.undo:
                 doodleView.undo();
                 break;
-
+            case R.id.pick_color:
+                doodleView.showColorPickerDialog();
+                break;
 
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        YayOrNayDialog exitDialog = YayOrNayDialog.newInstance(EXIT_WITHOUT_SAVING, getString(R.string.exit_doodle_no_save));
+        exitDialog.setListener(this);
+        exitDialog.show(getSupportFragmentManager(), "");
+    }
+
+
+    @Override
+    public void onUserBinaryAnswer(String tag, int result) {
+
+        switch (tag){
+            case EXIT_WITHOUT_SAVING:
+                if(result==YayOrNayDialog.POSITIVE_RESPONSE){
+                    finish();
+                }
+                break;
+        }
+    }
+
+
 
 
 }

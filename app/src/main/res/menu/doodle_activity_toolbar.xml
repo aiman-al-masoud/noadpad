@@ -6,14 +6,26 @@
     <item
         android:id="@+id/undo"
         android:icon="@android:drawable/ic_menu_revert"
-        android:title="undo"
+        android:title="@string/undo_stroke"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/pick_color"
+        android:icon="@android:drawable/presence_online"
+        android:title="@string/color_palette"
+        app:showAsAction="always" />
+
+
+
 
     <item
         android:id="@+id/done_doodling"
         android:icon="@android:drawable/checkbox_on_background"
         android:title="@string/done"
         app:showAsAction="always" />
+
+
+
 
 
 

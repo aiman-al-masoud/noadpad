@@ -65,6 +65,9 @@
     <string name="select_all">Select All</string>
     <string name="unselect_all">Unselect All</string>
     <string name="export">Export</string>
+    <string name="undo_stroke">undo</string>
+    <string name="color_palette">color palette</string>
+    <string name="exit_doodle_no_save">Exit? Your (gorgeous) drawing will be lost!</string>
 
 
 </resources>
