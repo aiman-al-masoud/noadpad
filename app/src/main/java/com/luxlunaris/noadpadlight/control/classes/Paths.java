@@ -27,13 +27,18 @@ public class Paths {
     /**
      * Tmp stores the backup file containing all of the pages.
      */
-    public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
+    //public static String PAGES_BACKUP_DIR = Paths.APP_DIR_PATH+File.separator+"pages_backup";
+
+    public static String PAGES_BACKUP_DIR = MainActivity.CONTEXT.getCacheDir()+File.separator+"pages_backup";
+
+
 
 
     /**
      * Tmp stores the backup file containing all of the pages.
      */
-    public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
+    //public static String TMP_DIR = Paths.APP_DIR_PATH+File.separator+"tmp";
+    public static String TMP_DIR = MainActivity.CONTEXT.getCacheDir()+File.separator+"tmp";
 
 
 

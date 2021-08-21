@@ -78,18 +78,6 @@ public class BackupFragment extends Fragment {
             //get the backup file from the Notebook
             File backupFile = Notebook.getInstance().generateBackupFile();
 
-            /*
-            //get the backup file's uri from the FileProvider (needed for android permissions and useless ostentation of security)
-            Uri uri = FileProvider.getUriForFile(getContext(), "com.luxlunaris.fileprovider", backupFile);
-
-            //create an intent to share the backup file with another app
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("application/zip");
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(intent, getString(R.string.total_data_export_title)));
-             */
-
             FileIO.exportFile(getContext(), backupFile, "application/zip");
 
         }

@@ -187,24 +187,106 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public void importPages(String sourcePath) {
-        File unzipped = FileIO.unzipDir(sourcePath, sourcePath+"unzipped");
 
-        File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
+        new Thread(){
 
-        for(File file : pagesFolder.listFiles()){
+            public void run(){
 
-            //copy each file from the unzipped file
-            try {
-                FileUtils.copyDirectory(file, new File(PAGES_DIR+File.separator+file.getName()));
-                Page page = new SinglePage(file.getPath());
-                addPage(page);
-                listener.onCreated(page);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+                Log.d("EXTERNAL_INTENT", sourcePath);
+
+                File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
+
+                Log.d("EXTERNAL_INTENT", "unzipped: "+unzipped.exists());
+
+
+                File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
+
+                Log.d("EXTERNAL_INTENT", "pages folder: "+pagesFolder.exists());
+
+                Log.d("EXTERNAL_INTENT", "pages num: "+pagesFolder.listFiles().length);
+
+
+                for(File file : pagesFolder.listFiles()){
+
+                    Log.d("EXTERNAL_INTENT", "page file: "+file.exists());
+
+
+                    //copy each file from the unzipped file
+                    try {
+                        File copy =  new File(PAGES_DIR+File.separator+file.getName());
+                        FileUtils.copyDirectory(file, copy);
+
+                        //Page page = new SinglePage(file.getPath());
+                        Page page = new SinglePage(copy.getPath());
+                        addPage(page);
+                        listener.onCreated(page);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Collections.sort(pagesList, new LastModifiedComparator());
+
+
+                }
+
+
+
             }
 
-            Collections.sort(pagesList, new LastModifiedComparator());
-        }
+
+
+        }.start();
+
+
+        /**
+         *
+         Log.d("EXTERNAL_INTENT", sourcePath);
+
+         File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
+
+         Log.d("EXTERNAL_INTENT", "unzipped: "+unzipped.exists());
+
+
+         File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
+
+         Log.d("EXTERNAL_INTENT", "pages folder: "+pagesFolder.exists());
+
+         Log.d("EXTERNAL_INTENT", "pages num: "+pagesFolder.listFiles().length);
+
+
+         for(File file : pagesFolder.listFiles()){
+
+         Log.d("EXTERNAL_INTENT", "page file: "+file.exists());
+
+
+         //copy each file from the unzipped file
+         try {
+         File copy =  new File(PAGES_DIR+File.separator+file.getName());
+         FileUtils.copyDirectory(file, copy);
+
+         //Page page = new SinglePage(file.getPath());
+         Page page = new SinglePage(copy.getPath());
+         addPage(page);
+         //listener.onCreated(page);
+         } catch (Exception e) {
+         e.printStackTrace();
+         }
+
+         Collections.sort(pagesList, new LastModifiedComparator());
+
+
+         for(Page page : pagesList){
+         listener.onCreated(page);
+         }
+
+         }
+         */
+
+
+
+
+
     }
 
     @Override
@@ -289,7 +371,11 @@ public class BasicBooklet implements Booklet {
         List<Page> result = new ArrayList<>();
 
         try{
+            Log.d("CURRENT_PAGE", "current page: "+currentPage);
+
             result = listOnDisplay.subList(currentPage, currentPage+amount);
+            Log.d("CURRENT_PAGE", "result size: "+result.size());
+
             currentPage+=amount;
         }catch (Exception e){
 

@@ -230,7 +230,15 @@ public class FileIO {
 	 */
 	public static File getFileFromUri(Context context, Uri contentUri) {
 		//Use content Resolver to get the input stream that it holds the data and copy that in a temp file of your app file directory for your references
-		File selectedFile = new File(context.getFilesDir(), "import"); //your app file dir or cache dir you can use
+		File selectedFile = new File(context.getCacheDir(), "import"); //your app file dir or cache dir you can use
+
+
+		Log.d("EXTERNAL_INTENT", selectedFile.exists()+" "+selectedFile.isFile());
+
+		selectedFile.delete();
+		deleteDirectory(selectedFile.getPath());
+
+		Log.d("EXTERNAL_INTENT", "after deletion: "+selectedFile.exists()+" "+selectedFile.isFile());
 
 		try {
 
