@@ -54,7 +54,6 @@ public class BasicBooklet implements Booklet {
     protected static Notebook listener;
 
 
-
     public BasicBooklet(Notebook listener, String pagesDir){
         this.listener = listener;
         this.PAGES_DIR = pagesDir;
@@ -177,11 +176,6 @@ public class BasicBooklet implements Booklet {
         return FileIO.zipDir(Paths.TMP_DIR+File.separator+"pages", Paths.PAGES_BACKUP_DIR);
     }
 
-
-
-
-
-
     @Override
     public void importPages(String sourcePath) {
 
@@ -189,25 +183,11 @@ public class BasicBooklet implements Booklet {
 
             public void run(){
 
-
-                Log.d("EXTERNAL_INTENT", sourcePath);
-
                 File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
-
-                Log.d("EXTERNAL_INTENT", "unzipped: "+unzipped.exists());
-
-
                 File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
-
-                Log.d("EXTERNAL_INTENT", "pages folder: "+pagesFolder.exists());
-
-                Log.d("EXTERNAL_INTENT", "pages num: "+pagesFolder.listFiles().length);
 
 
                 for(File file : pagesFolder.listFiles()){
-
-                    Log.d("EXTERNAL_INTENT", "page file: "+file.exists());
-
 
                     //copy each file from the unzipped file
                     try {
@@ -224,65 +204,12 @@ public class BasicBooklet implements Booklet {
 
                     Collections.sort(pagesList, new LastModifiedComparator());
 
-
                 }
-
-
-
             }
 
 
 
         }.start();
-
-
-        /**
-         *
-         Log.d("EXTERNAL_INTENT", sourcePath);
-
-         File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
-
-         Log.d("EXTERNAL_INTENT", "unzipped: "+unzipped.exists());
-
-
-         File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
-
-         Log.d("EXTERNAL_INTENT", "pages folder: "+pagesFolder.exists());
-
-         Log.d("EXTERNAL_INTENT", "pages num: "+pagesFolder.listFiles().length);
-
-
-         for(File file : pagesFolder.listFiles()){
-
-         Log.d("EXTERNAL_INTENT", "page file: "+file.exists());
-
-
-         //copy each file from the unzipped file
-         try {
-         File copy =  new File(PAGES_DIR+File.separator+file.getName());
-         FileUtils.copyDirectory(file, copy);
-
-         //Page page = new SinglePage(file.getPath());
-         Page page = new SinglePage(copy.getPath());
-         addPage(page);
-         //listener.onCreated(page);
-         } catch (Exception e) {
-         e.printStackTrace();
-         }
-
-         Collections.sort(pagesList, new LastModifiedComparator());
-
-
-         for(Page page : pagesList){
-         listener.onCreated(page);
-         }
-
-         }
-         */
-
-
-
-
 
     }
 
@@ -302,7 +229,6 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onSelected(Page page) {
 
-
         if(page.isSelected()){
             selectedPagesList.add(page);
         }else{
@@ -314,6 +240,8 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public void onDeleted(Page page) {
+
+        //TODO: why doesn't .remove work? Why is the object's id not the same?
 
         //remove deleted page from pagesList
         for(Page p : new ArrayList<>(pagesList)){
@@ -329,10 +257,7 @@ public class BasicBooklet implements Booklet {
             }
         }
 
-
         listener.onDeleted(page);
-        //pagesList.remove(page);
-        //selectedPagesList.remove(page);
         listOnDisplay.remove(page);
     }
 
@@ -340,8 +265,6 @@ public class BasicBooklet implements Booklet {
     public void onModified(Page page) {
 
         Collections.sort(pagesList, new LastModifiedComparator());
-        Log.d("FIRST_IN_LIST", pagesList.get(0).getPreview());
-        Log.d("FIRST_IN_LIST", listOnDisplay.get(0).getPreview());
         listener.onModified(page);
 
     }
