@@ -68,8 +68,7 @@
     <string name="undo_stroke">Undo</string>
     <string name="color_palette">Color Palette</string>
     <string name="exit_doodle_no_save">Exit? Your (gorgeous) drawing will be lost!</string>
-
-
+    <string name="image_imported">Image imported!</string>
 
 
 </resources>

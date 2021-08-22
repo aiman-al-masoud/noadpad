@@ -366,7 +366,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     @Override
     public void onFileObtained(File file) {
-        //Toast.makeText(this, "image imported!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.image_imported, Toast.LENGTH_SHORT).show();
         addImage(file.getPath());
     }
 
