@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- *
+ * Have fun doodling with this activity!
  */
 public class DoodleView extends View   {
 
@@ -75,15 +75,10 @@ public class DoodleView extends View   {
                 styledPaths.get(styledPaths.size()-1).lineTo(x,y);
                 break;
             case MotionEvent.ACTION_DOWN:
-                StyledPath styledPath;
-                try{
-                    styledPath = new StyledPath(styledPaths.get(styledPaths.size()-1).paint.getColor(),   styledPaths.get(styledPaths.size()-1).paint.getStrokeWidth());
-                }catch (IndexOutOfBoundsException e){
-                    styledPath = new StyledPath(DEFAULT_COLOR, DEFAULT_WIDTH);
-                }
 
+                StyledPath styledPath = addPath(null, null);
                 styledPath.moveTo(x,y);
-                styledPaths.add(styledPath);
+
                 break;
 
         }
@@ -143,17 +138,7 @@ public class DoodleView extends View   {
                         new ColorEnvelopeListener() {
                             @Override
                             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-
-                                StyledPath styledPath;
-                                try{
-                                    styledPath = new StyledPath(envelope.getColor(), styledPaths.get(styledPaths.size()-1).paint.getStrokeWidth() );
-                                }catch (IndexOutOfBoundsException e){
-                                    styledPath = new StyledPath(envelope.getColor(), DEFAULT_WIDTH);
-                                }
-
-
-                                styledPaths.add(styledPath);
-
+                                addPath(envelope.getColor(), null);
                             }
                         })
                 .setNegativeButton(this.getContext().getString(R.string.cancel),
@@ -171,6 +156,9 @@ public class DoodleView extends View   {
     }
 
 
+    /**
+     * A Path that "encapsulates" a Paint object.
+     */
     private class StyledPath extends Path{
         public Paint paint;
 
@@ -180,6 +168,50 @@ public class DoodleView extends View   {
             paint.setStrokeWidth(width);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeCap(Paint.Cap.ROUND);
+        }
+
+    }
+
+
+    /**
+     * Add a new styled path to the list.
+     * null parameters will trigger default values.
+     * @param color
+     * @param width
+     * @return
+     */
+    private StyledPath addPath(Integer color, Float width){
+
+        int chosenColor = color==null? getCurrentColor() : color;
+        float chosenWidth = width==null? getCurrentWidth() : width;
+
+        StyledPath styledPath = new StyledPath(chosenColor, chosenWidth);
+        styledPaths.add(styledPath);
+        return styledPath;
+    }
+
+
+    /**
+     * Get the color of the last path in the list.
+     * @return
+     */
+    private int getCurrentColor(){
+       try{
+           return styledPaths.get(styledPaths.size()-1).paint.getColor();
+       }catch (IndexOutOfBoundsException e){
+           return DEFAULT_COLOR;
+       }
+    }
+
+    /**
+     * Get the width of the last path in the list.
+     * @return
+     */
+    private float getCurrentWidth(){
+        try{
+            return styledPaths.get(styledPaths.size()-1).paint.getStrokeWidth();
+        }catch (IndexOutOfBoundsException e){
+            return DEFAULT_WIDTH;
         }
     }
 
