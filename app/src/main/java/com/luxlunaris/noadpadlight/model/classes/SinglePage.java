@@ -8,7 +8,6 @@ import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.model.services.FileIO;
-import com.luxlunaris.noadpadlight.ui.PageFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -431,14 +430,11 @@ public class SinglePage extends File implements Page {
 		//prepare a new file in this Page's imgDir
 		File imageCopy = new File(imageDir.getPath()+File.separator+System.currentTimeMillis());
 
-		//copy provided image to this Page's imgDir
-		FileIO.copyFile(path, imageCopy.getPath());
-
+		//move provided image to this Page's imgDir
+		FileIO.moveFile(path, imageCopy.getPath());
 
 		//create the image element in html
 		String imgElement = generateImgTag(imageCopy.getPath());
-
-
 
 		//get the paragraphs of this page
 		String[] pars = getParagraphs();
@@ -448,11 +444,6 @@ public class SinglePage extends File implements Page {
 
 		//add a new image-paragraph at the specified position.
 		parsList.add(parNum, "<p>"+imgElement+"</p>");
-
-		//test log paragraphs
-		//for(int i=0; i<parsList.size(); i++){
-		//	Log.d("ADDING_IMAGE", "PAR "+i+": "+parsList.get(i));
-		//}
 
 		//recompose the html source from the paragraphs' list.
 		String newHtml = "";

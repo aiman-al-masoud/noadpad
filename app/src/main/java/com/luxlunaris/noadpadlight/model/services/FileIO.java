@@ -232,13 +232,8 @@ public class FileIO {
 		//Use content Resolver to get the input stream that it holds the data and copy that in a temp file of your app file directory for your references
 		File selectedFile = new File(context.getCacheDir(), "import"); //your app file dir or cache dir you can use
 
-
-		Log.d("EXTERNAL_INTENT", selectedFile.exists()+" "+selectedFile.isFile());
-
 		selectedFile.delete();
 		deleteDirectory(selectedFile.getPath());
-
-		Log.d("EXTERNAL_INTENT", "after deletion: "+selectedFile.exists()+" "+selectedFile.isFile());
 
 		try {
 
@@ -277,19 +272,46 @@ public class FileIO {
 
 	}
 
-	/**
-	 * Clear the contents of a directory w/out
-	 * deleting the directory itself.
-	 * @param path
-	 */
+
+
+
 	/*
-	public static void clearDirectory(String path){
-		for(File file : new File(path).listFiles()){
-			if(file.isDirectory()){
-				deleteDirectory(file.getPath());
-			}else{
-				file.delete();
-			}
+	public byte[] getBytes(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+		int bufferSize = 1024;
+		byte[] buffer = new byte[bufferSize];
+
+		int len = 0;
+		while ((len = inputStream.read(buffer)) != -1) {
+			byteBuffer.write(buffer, 0, len);
+		}
+		return byteBuffer.toByteArray();
+	}
+
+
+
+	public byte[] uriToBytes(Context context, Uri contentUri){
+
+		byte[] bytes = new byte[0];
+
+		try {
+			InputStream in = context.getContentResolver().openInputStream(contentUri);
+			bytes = getBytes(in);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return bytes;
+	}
+
+
+
+	public void writeByteArrayToFile(String filepath, byte[] bytes){
+		try {
+			FileUtils.writeByteArrayToFile(new File(filepath), bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -297,6 +319,13 @@ public class FileIO {
 
 
 
+	public static void moveFile(String oldPath, String newPath){
+		try {
+			FileUtils.moveFile(new File(oldPath), new File(newPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 

@@ -339,16 +339,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         jumpToPosition(currentPos);
     }
 
-    /**
-     * Add an image to the current page at the position
-     * pointed to by the cursor.
-     * @param imagePath
-     */
-    private void addImage(String imagePath){
-        saveToPage();
-        page.addImage(imagePath, textView.getSelectionStart());
-        reloadText();
-    }
+
 
     /**
      * Uses volume keys to navigate up and down between token positions.
@@ -375,8 +366,19 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     @Override
     public void onFileObtained(File file) {
-        Toast.makeText(this, "image imported!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "image imported!", Toast.LENGTH_SHORT).show();
         addImage(file.getPath());
+    }
+
+    /**
+     * Add an image to the current page at the position
+     * pointed to by the cursor.
+     * @param imagePath
+     */
+    private void addImage(String imagePath){
+        saveToPage();
+        page.addImage(imagePath, textView.getSelectionStart());
+        reloadText();
     }
 
     /**
