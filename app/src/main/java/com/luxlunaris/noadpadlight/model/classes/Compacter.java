@@ -45,6 +45,7 @@ public class Compacter {
             if(withHead){
 
                 //get the date-last-modified string in with locale settings
+                //TODO figure out a cheap* way to get context in here t.b.a.t. call unitTimeToString
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
                 String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
 

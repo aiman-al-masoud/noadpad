@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.timepicker.TimeFormat;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
@@ -17,7 +20,10 @@ import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import com.luxlunaris.noadpadlight.model.services.TimeServices;
 import com.luxlunaris.noadpadlight.ui.NullEmergency;
 
 
@@ -135,15 +141,14 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         try{
             String text  = page.getPreview();
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
-            String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+            String dateTimeString = "<small>"+ TimeServices.unixTimeToString(page.getLastModifiedTime(), getContext())+"</small>";
 
-            text+="\n"+dateString;
+            text+="\n"+dateTimeString;
 
             Spanned spanned = Html.fromHtml(text);
             pageButton.setText(spanned);
 
-            //then decide whether to let user change this size
+            //TODO: then decide whether to let user change this size
             pageButton.setTextSize(20);
         }catch (NullPointerException e){
             e.printStackTrace();
