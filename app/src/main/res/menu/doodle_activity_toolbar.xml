@@ -16,6 +16,14 @@
         app:showAsAction="always" />
 
 
+    <item
+        android:id="@+id/pick_width"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="pick width"
+        app:showAsAction="always" />
+
+
+
 
 
     <item

@@ -1,5 +1,6 @@
 package com.luxlunaris.noadpadlight.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.luxlunaris.noadpadlight.R;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
@@ -19,12 +22,13 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  * Have fun doodling with this activity!
  */
-public class DoodleView extends View   {
+public class DoodleView extends View implements SliderFragment.SliderListener {
 
     /**
      * List of styled paths. Each StyledPath is a continuously
@@ -33,9 +37,19 @@ public class DoodleView extends View   {
      */
     ArrayList<StyledPath> styledPaths;
 
-
+    /**
+     * Constants
+     */
     int DEFAULT_COLOR = Color.BLACK;
-    int DEFAULT_WIDTH = 15;
+    float DEFAULT_WIDTH = 15;
+    final float MAX_WIDTH = 200;
+
+    /**
+     * Callback tags.
+     */
+    final String TAG_PICK_WIDTH = "width";
+
+
 
 
     public DoodleView(Context context) {
@@ -138,6 +152,7 @@ public class DoodleView extends View   {
                         new ColorEnvelopeListener() {
                             @Override
                             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                                Log.d("CRETINO_COLORE", "color: "+ envelope.getColor());
                                 addPath(envelope.getColor(), null);
                             }
                         })
@@ -154,6 +169,12 @@ public class DoodleView extends View   {
                 .show();
 
     }
+
+
+    public void showWidthPickerDialog(){
+        SliderFragment.newInstance().setTag(TAG_PICK_WIDTH).setListener(this).setText("Pick a new width: ").setStartProgress( (int)(100*(getCurrentWidth()/MAX_WIDTH)) ).show(((AppCompatActivity)getContext()).getSupportFragmentManager(), "");
+    }
+
 
 
     /**
@@ -214,6 +235,23 @@ public class DoodleView extends View   {
             return DEFAULT_WIDTH;
         }
     }
+
+
+    @Override
+    public void onSliderReleased(String tag, int newProgressLevel) {
+
+        switch (tag){
+
+            case TAG_PICK_WIDTH:
+                addPath(null,  ((float)newProgressLevel/100)*MAX_WIDTH );
+                break;
+
+        }
+
+    }
+
+
+
 
 
 

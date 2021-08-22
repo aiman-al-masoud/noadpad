@@ -94,6 +94,10 @@ public class DoodleActivity extends AppCompatActivity implements YayOrNayDialog.
             case R.id.pick_color:
                 doodleView.showColorPickerDialog();
                 break;
+            case R.id.pick_width:
+                doodleView.showWidthPickerDialog();
+                break;
+
 
         }
 
