@@ -136,8 +136,8 @@ public class DoodleView extends View   {
     public void showColorPickerDialog(){
 
         new ColorPickerDialog.Builder(this.getContext())
-                .setTitle("ColorPicker Dialog")
-                .setPreferenceName("MyColorPickerDialog")
+                .setTitle(R.string.color_palette)
+                .setPreferenceName(getContext().getString(R.string.color_palette))
                 .setPositiveButton(this.getContext().getString(R.string.confirm),
 
                         new ColorEnvelopeListener() {

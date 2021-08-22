@@ -59,8 +59,8 @@
     <string name="select_all">Seleziona Tutto</string>
     <string name="unselect_all">Deseleziona Tutto</string>
     <string name="export">Esporta</string>
-    <string name="undo_stroke">annulla</string>
-    <string name="color_palette">scegli colore</string>
+    <string name="undo_stroke">Annulla</string>
+    <string name="color_palette">Scegli Colore</string>
     <string name="exit_doodle_no_save">Vuoi davvero uscire? Il tuo (bellissimo) disegno non sarà salvato!</string>
 
 
