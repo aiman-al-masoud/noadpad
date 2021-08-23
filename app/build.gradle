@@ -11,7 +11,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,8 +41,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     compile 'net.lingala.zip4j:zip4j:2.9.0'
     implementation group: 'commons-io', name: 'commons-io', version: '1.4'
-
-
     implementation "com.github.skydoves:colorpickerview:2.2.3"
 
 }
