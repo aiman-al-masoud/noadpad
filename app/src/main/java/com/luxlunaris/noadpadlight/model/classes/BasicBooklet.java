@@ -186,6 +186,11 @@ public class BasicBooklet implements Booklet {
                 File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
                 File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
 
+                //protect against zip files that are not pertinent.
+                if(!pagesFolder.exists()){
+                    return;
+                }
+
 
                 for(File file : pagesFolder.listFiles()){
 
