@@ -379,6 +379,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         saveToPage();
         page.addImage(imagePath, textView.getSelectionStart());
         reloadText();
+        jumpToPosition(page.getLastPosition());
     }
 
     /**
