@@ -1,6 +1,5 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -22,7 +21,6 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -48,7 +46,6 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
      * Callback tags.
      */
     final String TAG_PICK_WIDTH = "width";
-
 
 
 
