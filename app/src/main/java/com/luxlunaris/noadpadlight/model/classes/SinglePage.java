@@ -38,6 +38,9 @@ public class SinglePage extends File implements Page {
 	 */
 	private File imageDir;
 
+
+	private File audioDir;
+
 	/**
 	 * this Page's listeners (Notebook)
 	 */
@@ -62,6 +65,7 @@ public class SinglePage extends File implements Page {
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
 		textFile = new File(getPath()+File.separator+"text");
 		imageDir = new File(getPath()+File.separator+"images");
+		audioDir = new File(getPath()+File.separator+"audios");
 		listeners = new ArrayList<>();
 	}
 
@@ -158,6 +162,7 @@ public class SinglePage extends File implements Page {
 			((MetadataFile)metadata).createNewFile();
 			textFile.createNewFile();
 			imageDir.mkdir();
+			audioDir.mkdir();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -661,6 +666,69 @@ public class SinglePage extends File implements Page {
 	public void setInRecycleBin(boolean inRecycleBin) {
 		metadata.setTagValue("IN_RECYCLE_BIN", inRecycleBin+"");
 	}
+
+	@Override
+	public void addAudioClip(File audioFile, int pos) {
+
+		//move the audio file to this page's audioDir
+		File copy = new File(audioDir+File.separator+System.currentTimeMillis()+".3gp");
+		FileIO.moveFile(audioFile.getPath(), copy.getPath());
+
+		Log.d("PAR_AUDIO_?", copy.getPath()+" "+copy.exists());
+
+		//find paragraph from position
+		int parNum = lineToParagraph( getLine(pos));
+		//(add the audio "element" as a new paragraph after the one selected, hence: +1)
+		parNum+=1;
+
+		//get the paragraphs of this page
+		String[] pars = getParagraphs();
+		//convert the paragraphs array to a mutable list
+		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
+		//add a new audio "element" at the specified position.
+		parsList.add(parNum, "<p>"+"AUDIO_"+copy.getName()+"</p>");
+		//recompose the html source from the paragraphs' list.
+		String newHtml = "";
+		for(String par : parsList){
+			newHtml+=par;
+		}
+		//save the new html source
+		setText(newHtml);
+	}
+
+	@Override
+	public File getAudioFile(int pos) {
+
+		String[] pars =  getParagraphs();
+
+		if(pars.length==0){
+			return null;
+		}
+
+		String paragraph = pars[lineToParagraph(getLine(pos))];
+		Log.d("PAR_AUDIO_?", paragraph);
+
+		//strip the paragraph
+		paragraph = paragraph.replace("<p>", "").replace("</p>", "").replaceAll("<.*>", "").replace("AUDIO_", "");
+
+		Log.d("PAR_AUDIO_?", paragraph);
+
+		paragraph = paragraph.trim();
+
+		File audioFile = new File(audioDir+File.separator+paragraph);
+
+		Log.d("PAR_AUDIO_?", audioFile.getPath());
+
+
+		if(audioFile.exists()){
+			return audioFile;
+		}
+
+		return null;
+	}
+
+
+
 
 
 

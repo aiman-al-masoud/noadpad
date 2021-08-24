@@ -7,10 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.luxlunaris.noadpadlight.R;
@@ -149,7 +151,6 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
                         new ColorEnvelopeListener() {
                             @Override
                             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                                Log.d("CRETINO_COLORE", "color: "+ envelope.getColor());
                                 addPath(envelope.getColor(), null);
                             }
                         })
@@ -162,7 +163,7 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
                         })
                 .attachAlphaSlideBar(true) // the default value is true.
                 .attachBrightnessSlideBar(true)  // the default value is true.
-                .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+                .setBottomSpace(12)// set a bottom space between the last slidebar and buttons.
                 .show();
 
     }

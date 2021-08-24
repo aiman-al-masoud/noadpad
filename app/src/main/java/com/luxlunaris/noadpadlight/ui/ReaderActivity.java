@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -26,7 +28,7 @@ import java.io.File;
  * The activity responsible for displaying and editing a Page.
  */
 
-public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester {
+public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester, AudioFragment.AudioActivity {
 
     /**
      * The currently displayed Page
@@ -91,14 +93,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         jumpToPosition(page.getLastPosition());
 
 
-    }
 
-    @Override
-    protected void onResume() {
+        textView.setOnClickListener(new ParaClickHandler());
 
-        super.onResume();
+
 
     }
+
 
     /**
      * Reload text from current page.
@@ -321,6 +322,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 reloadText();
                 jumpToPosition(currentPos);
                 break;
+            case R.id.record_audio:
+                AudioFragment audioFragment = new AudioFragment();
+                audioFragment.setListener(this);
+                audioFragment.show(getSupportFragmentManager(), "");
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -338,8 +345,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
         jumpToPosition(currentPos);
     }
-
-
 
     /**
      * Uses volume keys to navigate up and down between token positions.
@@ -432,5 +437,45 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         //return to the previous activity
         finish();
     }
+
+
+
+
+    class ParaClickHandler implements View.OnClickListener {
+
+            public void onClick(View v) {
+                File audioFile = page.getAudioFile(textView.getSelectionStart());
+
+                if(audioFile==null){
+                    return;
+                }
+
+                Log.d("PAR_AUDIO_?", "sdkdkskd"+audioFile);
+                AudioFragment audioFragment = new AudioFragment();
+                //audioFragment.setListener(this);
+                audioFragment.setAudioPlaybackFile(audioFile);
+                audioFragment.show(getSupportFragmentManager(), "");
+
+
+            }
+
+    }
+
+
+    @Override
+    public void onRecordingReady(File audioFile) {
+        page.addAudioClip(audioFile, textView.getSelectionStart());
+        reloadText();
+    }
+
+
+
+
+
+
+
+
+
+
 
 }

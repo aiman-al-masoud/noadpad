@@ -70,6 +70,8 @@
     <string name="exit_doodle_no_save">Exit? Your (gorgeous) drawing will be lost!</string>
     <string name="image_imported">Image imported!</string>
     <string name="pick_width">brush size</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

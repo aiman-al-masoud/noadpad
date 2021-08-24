@@ -167,4 +167,12 @@ public interface Page extends Serializable {
 
 
 
+	void addAudioClip(File audioFile, int pos);
+
+	File getAudioFile(int pos);
+
+
+
+
+
 }

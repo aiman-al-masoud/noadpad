@@ -37,6 +37,15 @@
 
 
     <item
+        android:id="@+id/record_audio"
+        android:icon="@android:drawable/presence_audio_online"
+        android:title="record audio"
+        />
+
+
+
+
+    <item
         android:id="@+id/styles_menu"
         android:title="@string/style_menu_title">
 
