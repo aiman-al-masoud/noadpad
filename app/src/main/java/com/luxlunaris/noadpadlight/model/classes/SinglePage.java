@@ -503,6 +503,11 @@ public class SinglePage extends File implements Page {
 		//get the html source
 		String text = getText();
 
+
+		if(!audioDir.exists()){
+			return;
+		}
+
 		//for each image...
 		for (File audioFile : audioDir.listFiles()) {
 			String unixTimeOfAudio = audioFile.getName().replaceAll("\\w+", "");
