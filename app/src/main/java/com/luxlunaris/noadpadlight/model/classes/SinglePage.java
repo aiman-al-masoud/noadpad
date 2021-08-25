@@ -731,9 +731,13 @@ public class SinglePage extends File implements Page {
 
 		paragraph = paragraph.trim();
 
+		if(paragraph.isEmpty()){
+			return null;
+		}
+
 		File audioFile = new File(audioDir+File.separator+paragraph);
 
-		Log.d("PAR_AUDIO_?", audioFile.getPath());
+		Log.d("PAR_AUDIO_?", audioFile.getPath()+" "+audioFile.exists());
 
 
 		if(audioFile.exists()){
@@ -747,6 +751,19 @@ public class SinglePage extends File implements Page {
 	public File getAudioDir() {
 		return audioDir;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

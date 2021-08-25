@@ -39,7 +39,7 @@
     <item
         android:id="@+id/record_audio"
         android:icon="@android:drawable/presence_audio_online"
-        android:title="record audio"
+        android:title="@string/record_audio"
         />
 
 

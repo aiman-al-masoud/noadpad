@@ -258,19 +258,19 @@ public class AudioFragment extends DialogFragment  {
 
                 case STATE_PLAYING:
                     pausePlayer();
-                    ((Button)v).setText("play");
+                    ((Button)v).setText(R.string.play);
                     //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
 
                     break;
                 case STATE_PLAYING_PAUSED:
                     resumePlayer();
-                    ((Button)v).setText("pause");
+                    ((Button)v).setText(R.string.pause);
                     //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
 
                     break;
                 default:
                     startPlayer();
-                    ((Button)v).setText("pause");
+                    ((Button)v).setText(R.string.pause);
 
                     break;
             }
@@ -287,11 +287,11 @@ public class AudioFragment extends DialogFragment  {
 
                 case STATE_RECORDING:
                     stopRecording();
-                    ((Button)v).setText("record");
+                    ((Button)v).setText(R.string.record);
                     break;
                 default:
                     startRecording();
-                    ((Button)v).setText("stop");
+                    ((Button)v).setText(R.string.stop);
                     break;
             }
 
@@ -303,7 +303,7 @@ public class AudioFragment extends DialogFragment  {
         @Override
         public void onCompletion(MediaPlayer mp) {
             state = STATE_IDLE;
-            playButton.setText("play");
+            playButton.setText(R.string.play);
         }
     }
 

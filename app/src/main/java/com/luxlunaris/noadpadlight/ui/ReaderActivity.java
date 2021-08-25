@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -83,20 +84,14 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         //retrieve the page that you were called to display
         page = (Page)getIntent().getSerializableExtra(PAGE_EXTRA);
 
-        //Log.d("RESTART_READER", page.toString());
-
-
 
         //set the view's initial text to the Page's text
         reloadText();
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
 
-
-
         textView.setOnClickListener(new ParaClickHandler());
-
-
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 
