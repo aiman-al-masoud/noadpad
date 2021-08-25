@@ -2,28 +2,23 @@ package com.luxlunaris.noadpadlight.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.luxlunaris.noadpadlight.R;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.IDN;
 
 
-public class AudioFragment extends DialogFragment  {
+public class RecorderFragment extends DialogFragment  {
 
     /**
      * Please implement this interface to get the
@@ -37,7 +32,6 @@ public class AudioFragment extends DialogFragment  {
      * Buttons and commands.
      */
     Button recordButton;
-    Button playButton;
 
     /**
      * Audio file (could be the one recorded or the one played, can't record and play simultaneously).
@@ -54,8 +48,6 @@ public class AudioFragment extends DialogFragment  {
      * Media player and recorder objects.
      */
     MediaRecorder recorder;
-    MediaPlayer player;
-
 
     /**
      * Listener that gets a requested audio file back
@@ -75,17 +67,15 @@ public class AudioFragment extends DialogFragment  {
      */
     final int STATE_IDLE = -1;
     final int  STATE_RECORDING = 2;
-    final int  STATE_PLAYING = 3;
-    final int  STATE_PLAYING_PAUSED = 5;
     private int state = STATE_IDLE;
 
 
-    public AudioFragment() {
+    public RecorderFragment() {
         // Required empty public constructor
     }
 
-    public static AudioFragment newInstance() {
-        AudioFragment fragment = new AudioFragment();
+    public static RecorderFragment newInstance() {
+        RecorderFragment fragment = new RecorderFragment();
         return fragment;
     }
 
@@ -100,23 +90,16 @@ public class AudioFragment extends DialogFragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_audio, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_recorder, container, false);
         recordButton = view.findViewById(R.id.record);
-        playButton = view.findViewById(R.id.play);
-
         recordButton.setOnClickListener(new RecordHandler());
-        playButton.setOnClickListener(new PlayHandler());
-
-
+        recordButton.setBackgroundColor(Color.WHITE);
+        recordButton.setTextColor(Color.BLACK);
         return view;
     }
 
-
-
-
     /**
-     * Reuqest permissions upon create.
+     * Request permissions upon create.
      * @param savedInstanceState
      */
     @Override
@@ -126,14 +109,8 @@ public class AudioFragment extends DialogFragment  {
         requestPermissions(permissions, REQUEST_AUDIO_PERMISSION);
     }
 
-
-    public void setAudioPlaybackFile(File audioFile){
-        this.audioFile = audioFile;
-    }
-
-
     /**
-     * Dimiss fragment if permission denied.
+     * Dismiss fragment if permission denied.
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -152,8 +129,9 @@ public class AudioFragment extends DialogFragment  {
         }
     }
 
-
-
+    /**
+     * Start the recorder.
+     */
     private void startRecording(){
 
         if(state!=STATE_IDLE){
@@ -172,7 +150,6 @@ public class AudioFragment extends DialogFragment  {
         recorder.setOutputFile(audioFile.getPath());
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-
         try {
             recorder.prepare();
         } catch (IOException e) {
@@ -185,7 +162,10 @@ public class AudioFragment extends DialogFragment  {
         state = STATE_RECORDING;
     }
 
-
+    /**
+     *  Stop recording and call the listener to
+     *  deliver audioFile.
+     */
     private void stopRecording() {
         if(recorder!=null){
             recorder.stop();
@@ -195,89 +175,11 @@ public class AudioFragment extends DialogFragment  {
         state = STATE_IDLE;
 
         listener.onRecordingReady(audioFile);
-
-
     }
 
-
-    private void startPlayer(){
-
-
-        if(state!=STATE_IDLE){
-            return;
-        }
-
-        player = new MediaPlayer();
-        player.setOnCompletionListener(new PlayingDoneHandler());
-
-        try{
-            player.setDataSource(audioFile.getPath());
-            player.prepare();
-            player.start();
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-        Toast.makeText(getContext(), ((float)player.getDuration()/1000)+" " , Toast.LENGTH_LONG).show();
-
-        state = STATE_PLAYING;
-
-    }
-
-
-    private void stopPlayer(){
-        if(player!=null){
-            //player.stop();
-            player.release();
-        }
-        player = null;
-
-        state = STATE_IDLE;
-    }
-
-
-    private void pausePlayer(){
-        player.pause();
-        state = STATE_PLAYING_PAUSED;
-    }
-
-    private void resumePlayer(){
-        player.start();
-        state = STATE_PLAYING;
-    }
-
-
-
-    class PlayHandler implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-
-            switch (state){
-
-                case STATE_PLAYING:
-                    pausePlayer();
-                    ((Button)v).setText(R.string.play);
-                    //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
-
-                    break;
-                case STATE_PLAYING_PAUSED:
-                    resumePlayer();
-                    ((Button)v).setText(R.string.pause);
-                    //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
-
-                    break;
-                default:
-                    startPlayer();
-                    ((Button)v).setText(R.string.pause);
-
-                    break;
-            }
-        }
-    }
-
-
+    /**
+     * Handle pressing the record button.
+     */
     class RecordHandler implements View.OnClickListener {
 
         @Override
@@ -294,21 +196,8 @@ public class AudioFragment extends DialogFragment  {
                     ((Button)v).setText(R.string.stop);
                     break;
             }
-
         }
     }
-
-    class PlayingDoneHandler implements MediaPlayer.OnCompletionListener {
-
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            state = STATE_IDLE;
-            playButton.setText(R.string.play);
-        }
-    }
-
-
-
 
 
 

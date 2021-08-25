@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -29,7 +28,7 @@ import java.io.File;
  * The activity responsible for displaying and editing a Page.
  */
 
-public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester, AudioFragment.AudioActivity, TextPrompt.TextRequester {
+public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester, RecorderFragment.AudioActivity, TextPrompt.TextRequester {
 
     /**
      * The currently displayed Page
@@ -71,6 +70,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private Menu optionsMenu;
 
+
+
+    private AudioPlayerFragment playerFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,14 +323,14 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 jumpToPosition(currentPos);
                 break;
             case R.id.record_audio:
-                AudioFragment audioFragment = new AudioFragment();
-                audioFragment.setListener(this);
-                audioFragment.show(getSupportFragmentManager(), "");
+                RecorderFragment recorderFragment = new RecorderFragment();
+                recorderFragment.setListener(this);
+                recorderFragment.show(getSupportFragmentManager(), "");
                 break;
             case R.id.add_link:
                 TextPrompt prompt = TextPrompt.newInstance();
                 prompt.setListener(this);
-                prompt.setPrompt(GET_WEB_LINK,    getResources().getString(R.string.input_link_prompt));
+                prompt.setPrompt(GET_WEB_LINK, getResources().getString(R.string.input_link_prompt));
                 prompt.show(getSupportFragmentManager(), "");
                 break;
 
@@ -457,12 +459,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                     return;
                 }
 
-                AudioFragment audioFragment = new AudioFragment();
-                //audioFragment.setListener(this);
-                audioFragment.setAudioPlaybackFile(audioFile);
-                audioFragment.show(getSupportFragmentManager(), "");
-
-
+                playerFrag = playerFrag==null? AudioPlayerFragment.newInstance(): playerFrag;
+                playerFrag.setAudioPlaybackFile(audioFile);
+                playerFrag.show(getSupportFragmentManager(), "");
             }
 
     }
