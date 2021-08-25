@@ -752,6 +752,41 @@ public class SinglePage extends File implements Page {
 		return audioDir;
 	}
 
+	public void addLink(String link, int pos){
+
+		if(!link.contains("http")){
+			link = "http://"+link;
+		}
+
+
+		//stupid way of "cleaning" the link a bit for presentation.
+		String linkName = new String(link);
+		linkName = linkName.replace("https", "").replace("http","").replace("://", "").replace("www", "").replaceAll("\\W*", "");
+
+
+		//find paragraph from position
+		int parNum = lineToParagraph( getLine(pos));
+		//(add the audio "element" as a new paragraph after the one selected, hence: +1)
+		parNum+=1;
+
+		//get the paragraphs of this page
+		String[] pars = getParagraphs();
+		//convert the paragraphs array to a mutable list
+		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
+		//add a new audio "element" at the specified position.
+		parsList.add(parNum, "<p>"+"<a href='"+link+"'>"+linkName+"</a>"+"</p>");
+		//recompose the html source from the paragraphs' list.
+		String newHtml = "";
+		for(String par : parsList){
+			newHtml+=par;
+		}
+		//save the new html source
+		setText(newHtml);
+
+	}
+
+
+
 
 
 

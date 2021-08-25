@@ -173,7 +173,9 @@ public interface Page extends Serializable {
 
 	File getAudioDir();
 
+	public void addLink(String link, int pos);
 
 
 
-}
+
+	}

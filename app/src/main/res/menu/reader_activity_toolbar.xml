@@ -43,6 +43,10 @@
         />
 
 
+    <item
+        android:id="@+id/add_link"
+        android:title="@string/add_link"
+        />
 
 
     <item

@@ -68,7 +68,9 @@
     <string name="pause">Pausa</string>
     <string name="record">Registra</string>
     <string name="stop">Ferma</string>
-    <string name="record_audio">Registra audio</string>
+    <string name="record_audio">Registra Audio</string>
+    <string name="add_link">Aggiungi Link</string>
+    <string name="input_link_prompt">Inserisci un link ad un sito web:</string>
 
 
 </resources>

@@ -74,7 +74,9 @@
     <string name="pause">Pause</string>
     <string name="record">Record</string>
     <string name="stop">Stop</string>
-    <string name="record_audio">Record audio</string>
+    <string name="record_audio">Record Audio</string>
+    <string name="add_link">Add Link</string>
+    <string name="input_link_prompt">Input a link to a website:</string>
 
 
 </resources>

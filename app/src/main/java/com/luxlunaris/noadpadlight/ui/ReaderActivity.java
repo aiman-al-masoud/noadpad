@@ -29,7 +29,7 @@ import java.io.File;
  * The activity responsible for displaying and editing a Page.
  */
 
-public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester, AudioFragment.AudioActivity {
+public class ReaderActivity extends ColorActivity implements ImportFileFragment.FileRequester, AudioFragment.AudioActivity, TextPrompt.TextRequester {
 
     /**
      * The currently displayed Page
@@ -59,9 +59,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private boolean HTML_EDIT_MODE = false;
 
     /**
-     * Code used to request a doodle from DoodleActivity.
+     * Callback-request codes.
      */
     private static final int REQUEST_DOODLE =  1;
+    private static final String GET_WEB_LINK  = "2";
+
+
 
     /**
      * The toolbar menu.
@@ -322,6 +325,15 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 audioFragment.setListener(this);
                 audioFragment.show(getSupportFragmentManager(), "");
                 break;
+            case R.id.add_link:
+                TextPrompt prompt = TextPrompt.newInstance();
+                prompt.setListener(this);
+                prompt.setPrompt(GET_WEB_LINK,    getResources().getString(R.string.input_link_prompt));
+                prompt.show(getSupportFragmentManager(), "");
+                break;
+
+
+
 
         }
 
@@ -445,7 +457,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                     return;
                 }
 
-                Log.d("PAR_AUDIO_?", "sdkdkskd"+audioFile);
                 AudioFragment audioFragment = new AudioFragment();
                 //audioFragment.setListener(this);
                 audioFragment.setAudioPlaybackFile(audioFile);
@@ -463,6 +474,19 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         reloadText();
     }
 
+
+
+    @Override
+    public void onTextInputted(String tag, String userResponse) {
+        switch (tag){
+
+        case GET_WEB_LINK:
+            page.addLink(userResponse, textView.getSelectionStart());
+            reloadText();
+            break;
+
+        }
+    }
 
 
 
