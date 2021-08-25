@@ -90,6 +90,9 @@ public class Compacter {
             File[] imageFiles = page.getImageDir().listFiles();
             FileIO.copyFilesToDirectory(imageFiles, blankPage.getImageDir().getPath());
 
+            //copy the audio files
+            FileIO.copyFilesToDirectory(page.getAudioDir().listFiles(), blankPage.getAudioDir().getPath());
+
         }
 
         Log.d("COMPACTER", "text blob after: "+textBlob+"\n\n\n");

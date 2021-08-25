@@ -105,9 +105,9 @@ public class SinglePage extends File implements Page {
 		}
 
 
-
-		//delete any non-used image files.
+		//delete any non-used media files.
 		checkDeleteImages();
+		checkDeleteAudio();
 
 	}
 
@@ -499,6 +499,22 @@ public class SinglePage extends File implements Page {
 
 	}
 
+	private void checkDeleteAudio() {
+		//get the html source
+		String text = getText();
+
+		//for each image...
+		for (File audioFile : audioDir.listFiles()) {
+			String unixTimeOfAudio = audioFile.getName().replaceAll("\\w+", "");
+
+			//if the name of the image is not in the html source, the image file is useless
+			if (!text.contains(unixTimeOfAudio)) {
+				audioFile.delete();
+			}
+		}
+	}
+
+
 
 	/**
 	 * From the position in the rendered text, determine
@@ -727,9 +743,10 @@ public class SinglePage extends File implements Page {
 		return null;
 	}
 
-
-
-
+	@Override
+	public File getAudioDir() {
+		return audioDir;
+	}
 
 
 }

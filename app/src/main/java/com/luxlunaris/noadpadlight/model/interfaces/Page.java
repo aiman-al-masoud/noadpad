@@ -171,6 +171,7 @@ public interface Page extends Serializable {
 
 	File getAudioFile(int pos);
 
+	File getAudioDir();
 
 
 
