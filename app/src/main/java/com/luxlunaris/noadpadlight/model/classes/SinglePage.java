@@ -531,8 +531,13 @@ public class SinglePage extends File implements Page {
 			return 0;
 		}
 
-		String upTillPos;
-		upTillPos = text.substring(0, Math.min(pos, text.length()-1));
+		String upTillPos ="";
+		try{
+			upTillPos = text.substring(0, Math.min(pos, text.length()-1));
+		}catch (IndexOutOfBoundsException e){
+
+		}
+
 
 		int newLines = upTillPos.split("\n").length;
 
