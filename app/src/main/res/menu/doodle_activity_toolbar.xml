@@ -15,14 +15,11 @@
         android:title="@string/color_palette"
         app:showAsAction="always" />
 
-
     <item
         android:id="@+id/pick_width"
         android:icon="@drawable/brush"
         android:title="@string/pick_width"
         app:showAsAction="always" />
-
-
 
 
 
