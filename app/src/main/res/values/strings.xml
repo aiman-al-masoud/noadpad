@@ -1,10 +1,9 @@
 <resources>
+
+    <!-- App-name: -->
     <string name="app_name">Noadpad</string>
-    <!-- Strings used for fragments for navigation -->
 
-    <!-- TODO: Remove or change this placeholder text -->
-
-
+    <!-- Credits/info string: -->
     <string name="credits">
         
         Thanks for trying out Noadpad! :-) \n\n
@@ -15,8 +14,9 @@
         Repo: https://github.com/aiman-al-masoud/noadpad \n\n
         Quick Start Guide: https://github.com/aiman-al-masoud/noadpad/wiki/Quick-Start-Guide  \n\n
         License: https://github.com/aiman-al-masoud/noadpad/blob/master/LICENSE.md  \n\n
-
     </string>
+
+    <!-- All menu and/or prompt strings: -->
     <string name="search_icon_title">Search</string>
     <string name="new_page_icon_title">New Page</string>
     <string name="edit_icon_title">Edit</string>
