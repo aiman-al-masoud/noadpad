@@ -175,7 +175,7 @@ public class AudioPlayerFragment extends DialogFragment {
 
         int duration  =player.getDuration();
         progressBar.setMax(duration);
-        audioDurationText.setText((duration/1000)+"");
+        audioDurationText.setText(((float)duration/1000)+"");
 
 
         progressBarTimer = new Timer();
@@ -216,7 +216,9 @@ public class AudioPlayerFragment extends DialogFragment {
     }
 
 
-
+    /**
+     * Updates the state of the playback-progress bar.
+     */
     class ProgressBarUpdater extends TimerTask{
         @Override
         public void run() {

@@ -8,12 +8,32 @@
         android:title="@string/search_icon_title"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
+
     <item
         android:id="@+id/importImage"
         android:title="@string/import_image_icon_title" />
+
     <item
-        android:id="@+id/switch_edit_mode"
-        android:title="@string/switch_edit_mode_icon_title" />
+        android:id="@+id/make_doodle"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/add_doodle"
+        />
+
+    <item
+        android:id="@+id/add_link"
+        android:title="@string/add_link"
+        />
+
+    <item
+        android:id="@+id/record_audio"
+        android:icon="@android:drawable/presence_audio_online"
+        android:title="@string/record_audio"
+        />
+
+
+
+
+
     <item
         android:id="@+id/zoom_out"
         android:icon="@android:drawable/btn_minus"
@@ -28,25 +48,16 @@
         app:showAsAction="always" />
 
 
-    <item
-        android:id="@+id/make_doodle"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/add_doodle"
-        />
 
 
 
-    <item
-        android:id="@+id/record_audio"
-        android:icon="@android:drawable/presence_audio_online"
-        android:title="@string/record_audio"
-        />
 
 
-    <item
-        android:id="@+id/add_link"
-        android:title="@string/add_link"
-        />
+
+
+
+
+
 
 
     <item
@@ -77,6 +88,26 @@
         </menu>
 
         </item>
+
+
+
+    <item
+        android:id="@+id/advanced_menu"
+        android:title="@string/advanced_opts">
+
+        <menu>
+
+            <item
+                android:id="@+id/switch_edit_mode"
+                android:title="@string/switch_edit_mode_icon_title" />
+
+        </menu>
+
+
+    </item>
+
+
+
 
 
 

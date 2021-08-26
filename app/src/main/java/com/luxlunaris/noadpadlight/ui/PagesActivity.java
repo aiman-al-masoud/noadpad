@@ -276,7 +276,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         setTitle(R.string.recycle_bin_title);
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(false);
-        optionsMenu.findItem(R.id.load_more_pages).setVisible(false);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(false);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(true);
         optionsMenu.findItem(R.id.restore).setVisible(true);
@@ -290,7 +289,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void exitRecycleBin(){
         //in options menu
         optionsMenu.findItem(R.id.new_page).setVisible(true);
-        optionsMenu.findItem(R.id.load_more_pages).setVisible(true);
         optionsMenu.findItem(R.id.show_recycle_bin).setVisible(true);
         optionsMenu.findItem(R.id.empty_recycle_bin_from_within).setVisible(false);
         optionsMenu.findItem(R.id.restore).setVisible(false);

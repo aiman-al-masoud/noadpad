@@ -77,8 +77,7 @@
     <string name="record_audio">Record Audio</string>
     <string name="add_link">Add Link</string>
     <string name="input_link_prompt">Input a link to a website:</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="advanced_opts">Advanced Opts.</string>
 
 
 </resources>

@@ -71,6 +71,7 @@
     <string name="record_audio">Registra Audio</string>
     <string name="add_link">Aggiungi Link</string>
     <string name="input_link_prompt">Inserisci un link ad un sito web:</string>
+    <string name="advanced_opts">Opzioni Avanzate</string>
 
 
 </resources>

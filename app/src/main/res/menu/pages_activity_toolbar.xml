@@ -35,6 +35,10 @@
                 android:id="@+id/compact"
                 android:title="@string/edit_options_compact_title" />
 
+            <item
+                android:id="@+id/export_selected"
+                android:title="@string/export"
+                />
 
             <item
                 android:id="@+id/restore"
@@ -51,10 +55,7 @@
                 android:title="@string/unselect_all"
                 />
 
-            <item
-                android:id="@+id/export_selected"
-                android:title="@string/export"
-                />
+
 
 
 
@@ -69,18 +70,19 @@
         android:title="@string/settings_icon_title"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/load_more_pages"
-        android:icon="@android:drawable/ic_popup_sync"
-        android:title="@string/load_more_pages"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
 
 
     <item
         android:id="@+id/show_recycle_bin"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/recycle_bin"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/load_more_pages"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/load_more_pages"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
