@@ -4,8 +4,10 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.luxlunaris.noadpadlight.R;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class AudioPlayerFragment extends DialogFragment {
 
@@ -61,11 +65,20 @@ public class AudioPlayerFragment extends DialogFragment {
 
         if(state==STATE_PLAYING){
             playButton.setText(R.string.pause);
+            ((MaterialButton)playButton).setIcon(getResources().getDrawable(android.R.drawable.ic_media_pause));
         }
 
-        //if(player!=null){
-        //    progressBar.setProgress(player.getCurrentPosition());
-       // }
+        if(player!=null){
+            int pos = player.getCurrentPosition();
+            progressBar.setMax(player.getDuration());
+            progressBar.setProgress(pos);
+            int duration = player.getDuration();
+            String durString = String.format("%d : %d",
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+            );
+            audioDurationText.setText(durString);
+        }
 
     }
 
@@ -128,16 +141,17 @@ public class AudioPlayerFragment extends DialogFragment {
                 case STATE_PLAYING:
                     pausePlayer();
                     playButton.setText(R.string.play);
-                    //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
+                    ((MaterialButton)playButton).setIcon(getResources().getDrawable(android.R.drawable.ic_media_play));
                     break;
                 case STATE_PLAYING_PAUSED:
                     resumePlayer();
                     playButton.setText(R.string.pause);
-                    //((Button)v).setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0);
+                    ((MaterialButton)playButton).setIcon(getResources().getDrawable(android.R.drawable.ic_media_pause));
                     break;
                 default:
                     startPlayer();
                     playButton.setText(R.string.pause);
+                    ((MaterialButton)playButton).setIcon(getResources().getDrawable(android.R.drawable.ic_media_pause));
                     break;
             }
         }
@@ -171,11 +185,16 @@ public class AudioPlayerFragment extends DialogFragment {
             e.printStackTrace();
         }
 
-        Toast.makeText(getContext(), ((float)player.getDuration()/1000)+" " , Toast.LENGTH_LONG).show();
 
-        int duration  =player.getDuration();
+        int duration  = player.getDuration();
         progressBar.setMax(duration);
-        audioDurationText.setText(((float)duration/1000)+"");
+        String durString = String.format("%d : %d",
+                TimeUnit.MILLISECONDS.toMinutes(duration),
+                TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+        );
+        audioDurationText.setText(durString);
+
+
 
 
         progressBarTimer = new Timer();

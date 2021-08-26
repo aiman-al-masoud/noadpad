@@ -287,6 +287,11 @@ public class FileIO {
 		}
 	}
 
+	/**
+	 * Write a bitmap to a location on disk as a png file.
+	 * @param bitmap
+	 * @param destPath
+	 */
 	public static void writeBitmap(Bitmap bitmap, String destPath){
 
 		try {

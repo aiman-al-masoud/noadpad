@@ -79,6 +79,7 @@
     <string name="input_link_prompt">Input a link to a website:</string>
     <string name="advanced_opts">Advanced Opts.</string>
     <string name="import_audio_clip">Import Audio Clip</string>
+    <string name="take_photo">Take Photo</string>
 
 
 </resources>
