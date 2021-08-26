@@ -1,6 +1,7 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaRecorder;
@@ -10,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.luxlunaris.noadpadlight.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -200,15 +204,13 @@ public class RecorderFragment extends DialogFragment  {
     }
 
 
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(state==STATE_RECORDING){
+            stopRecording();
+        }
+    }
 
 
 }

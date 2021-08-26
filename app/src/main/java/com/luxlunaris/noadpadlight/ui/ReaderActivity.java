@@ -63,23 +63,21 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private static final int REQUEST_DOODLE =  1;
     private static final String GET_WEB_LINK  = "2";
 
-
-
     /**
      * The toolbar menu.
      */
     private Menu optionsMenu;
 
-
-
+    /**
+     * Fragment that plays audio files.
+     */
     private AudioPlayerFragment playerFrag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
-
-
         setTitle(R.string.reader_activity_title_normal);
 
         //get the text view
@@ -88,14 +86,14 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         textView.setTextSize(TEXT_SIZE);
         //retrieve the page that you were called to display
         page = (Page)getIntent().getSerializableExtra(PAGE_EXTRA);
-
-
         //set the view's initial text to the Page's text
         reloadText();
         //jump to the last-saved position of the page
         jumpToPosition(page.getLastPosition());
 
+        //for audio files
         textView.setOnClickListener(new ParaClickHandler());
+        //for weblinks
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
@@ -448,8 +446,10 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
 
-
-
+    /**
+     * When edittext gets clicked, the position is conveyed to page,
+     * and page returns the file (if any) associated to the clicked paragraph.
+     */
     class ParaClickHandler implements View.OnClickListener {
 
             public void onClick(View v) {
@@ -466,15 +466,22 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
     }
 
-
+    /**
+     * Called by RecorderFragment when it's done recording
+     * an audio file.
+     * @param audioFile
+     */
     @Override
     public void onRecordingReady(File audioFile) {
         page.addAudioClip(audioFile, textView.getSelectionStart());
         reloadText();
     }
 
-
-
+    /**
+     * Callback for text input prompts.
+     * @param tag
+     * @param userResponse
+     */
     @Override
     public void onTextInputted(String tag, String userResponse) {
         switch (tag){
