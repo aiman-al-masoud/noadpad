@@ -204,6 +204,10 @@ public class FileIO {
 			destDir.mkdirs();
 		}
 
+		if(files==null){
+			return;
+		}
+
 		for(File file : files){
 			try {
 
