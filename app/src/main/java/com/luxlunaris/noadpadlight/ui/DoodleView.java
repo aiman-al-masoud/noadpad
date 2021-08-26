@@ -141,8 +141,9 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
 
     public void showColorPickerDialog(){
 
-        new ColorPickerDialog.Builder(this.getContext())
-                .setTitle(R.string.color_palette)
+        ColorPickerDialog.Builder builder =  new ColorPickerDialog.Builder(this.getContext(), R.style.Theme_AppCompat_Dialog_Alert);
+
+        builder.setTitle(R.string.color_palette)
                 .setPreferenceName(getContext().getString(R.string.color_palette))
                 .setPositiveButton(this.getContext().getString(R.string.confirm),
 
@@ -152,6 +153,7 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
                                 addPath(envelope.getColor(), null);
                             }
                         })
+
                 .setNegativeButton(this.getContext().getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -159,11 +161,11 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
                                 dialogInterface.dismiss();
                             }
                         })
+
                 .attachAlphaSlideBar(true) // the default value is true.
                 .attachBrightnessSlideBar(true)  // the default value is true.
                 .setBottomSpace(12)// set a bottom space between the last slidebar and buttons.
                 .show();
-
     }
 
 
