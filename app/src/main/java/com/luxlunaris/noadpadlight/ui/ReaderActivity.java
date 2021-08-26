@@ -1,8 +1,11 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -18,9 +21,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.control.classes.Paths;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 
 import java.io.File;
 
@@ -64,6 +69,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private static final String GET_WEB_LINK  = "2";
     private static final int REQUEST_IMAGE = 3;
     private static final int REQUEST_AUDIO = 4;
+    private static final int REQUEST_IMAGE_CAPTURE = 5;
+
 
 
     /**
@@ -341,6 +348,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 f.setTag(REQUEST_AUDIO);
                 f.show(getSupportFragmentManager(), "");
                 break;
+            case R.id.capture_image:
+                requestImageCapture();
+                break;
 
 
 
@@ -443,6 +453,14 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 //put this image file in the page
                 addImage(doodleFile.getPath());
                 break;
+            case REQUEST_IMAGE_CAPTURE:
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                File tmpImg = new File(Paths.APP_DIR_PATH+File.separator+"img_capture");
+                FileIO.writeBitmap(imageBitmap, tmpImg.getPath());
+                addImage(tmpImg.getPath());
+                break;
+
 
         }
 
@@ -517,6 +535,17 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             break;
 
 
+        }
+    }
+
+
+
+    private void requestImageCapture(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
         }
     }
 

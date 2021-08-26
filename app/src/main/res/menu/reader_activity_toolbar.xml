@@ -14,6 +14,11 @@
         android:title="@string/import_image_icon_title" />
 
     <item
+        android:id="@+id/capture_image"
+        android:title="Take Photo" />
+
+
+    <item
         android:id="@+id/make_doodle"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/add_doodle"

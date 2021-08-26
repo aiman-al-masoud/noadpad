@@ -3,6 +3,7 @@ package com.luxlunaris.noadpadlight.model.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -277,58 +279,27 @@ public class FileIO {
 	}
 
 
-
-
-	/*
-	public byte[] getBytes(InputStream inputStream) throws IOException {
-		ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-		int bufferSize = 1024;
-		byte[] buffer = new byte[bufferSize];
-
-		int len = 0;
-		while ((len = inputStream.read(buffer)) != -1) {
-			byteBuffer.write(buffer, 0, len);
-		}
-		return byteBuffer.toByteArray();
-	}
-
-
-
-	public byte[] uriToBytes(Context context, Uri contentUri){
-
-		byte[] bytes = new byte[0];
-
-		try {
-			InputStream in = context.getContentResolver().openInputStream(contentUri);
-			bytes = getBytes(in);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return bytes;
-	}
-
-
-
-	public void writeByteArrayToFile(String filepath, byte[] bytes){
-		try {
-			FileUtils.writeByteArrayToFile(new File(filepath), bytes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	 */
-
-
-
 	public static void moveFile(String oldPath, String newPath){
 		try {
 			FileUtils.moveFile(new File(oldPath), new File(newPath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void writeBitmap(Bitmap bitmap, String destPath){
+
+		try {
+			File f = new File(destPath);
+			f.createNewFile();
+			FileOutputStream fos = new FileOutputStream(f);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 

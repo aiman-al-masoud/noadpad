@@ -14,6 +14,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.luxlunaris.noadpadlight.R;
+import com.luxlunaris.noadpadlight.model.services.FileIO;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
@@ -111,18 +112,23 @@ public class DoodleView extends View implements SliderFragment.SliderListener {
 
         File doodleFile = new File(getContext().getFilesDir(), "doodle.png");
 
-        try {
-            FileOutputStream fos  =  new FileOutputStream(doodleFile);
+        //try {
             setDrawingCacheEnabled(true);///
             Bitmap b = Bitmap.createBitmap( getDrawingCache());
             setDrawingCacheEnabled(false);///
 
-            b.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
+           // FileOutputStream fos  =  new FileOutputStream(doodleFile);
+            //b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            //fos.flush();
+            //fos.close();
+
+            FileIO.writeBitmap(b, doodleFile.getPath());
+
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
 
         return doodleFile;
     }
