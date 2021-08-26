@@ -90,6 +90,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         setContentView(R.layout.activity_reader);
         setTitle(R.string.reader_activity_title_normal);
 
+
         //get the text view
         textView = findViewById(R.id.reader_text_view);
         //set the initial text size
@@ -265,7 +266,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 jumpToPosition(page.nextPosition());
 
                 //display a toast about the multiplicity of said token
-                Toast.makeText(getBaseContext(), getString(R.string.occurrences_found_toast)+ multiplicity , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.occurrences_found_toast)+ multiplicity , Toast.LENGTH_LONG).show();
+
+
                 return true;
             }
 
