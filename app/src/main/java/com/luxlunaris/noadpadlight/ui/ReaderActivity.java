@@ -62,6 +62,9 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private static final int REQUEST_DOODLE =  1;
     private static final String GET_WEB_LINK  = "2";
+    private static final int REQUEST_IMAGE = 3;
+    private static final int REQUEST_AUDIO = 4;
+
 
     /**
      * The toolbar menu.
@@ -292,6 +295,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             case R.id.importImage:
                 ImportFileFragment frag = ImportFileFragment.newInstance();
                 frag.setFileRequester(this);
+                frag.setTag(REQUEST_IMAGE);
                 frag.show(getSupportFragmentManager(), "");
                 break;
             case R.id.switch_edit_mode:
@@ -330,6 +334,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 prompt.setListener(this);
                 prompt.setPrompt(GET_WEB_LINK, getResources().getString(R.string.input_link_prompt));
                 prompt.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.import_audio:
+                ImportFileFragment f = ImportFileFragment.newInstance();
+                f.setFileRequester(this);
+                f.setTag(REQUEST_AUDIO);
+                f.show(getSupportFragmentManager(), "");
                 break;
 
 
@@ -373,13 +383,28 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
     /**
-     * When you obtain an image file to be added to the current page.
+     * Called by the ImportFileFragment when its done getting
+     * the file from the user.
      * @param file
      */
     @Override
-    public void onFileObtained(File file) {
-        Toast.makeText(this, R.string.image_imported, Toast.LENGTH_SHORT).show();
-        addImage(file.getPath());
+    public void onFileObtained(int tag, File file) {
+
+        switch(tag){
+
+            case REQUEST_IMAGE:
+                Toast.makeText(this, R.string.image_imported, Toast.LENGTH_SHORT).show();
+                addImage(file.getPath());
+                break;
+            case REQUEST_AUDIO:
+                page.addAudioClip(file, textView.getSelectionStart());
+                reloadText();
+                break;
+
+
+
+        }
+
     }
 
     /**
@@ -490,6 +515,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             page.addLink(userResponse, textView.getSelectionStart());
             reloadText();
             break;
+
 
         }
     }

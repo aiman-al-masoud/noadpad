@@ -169,8 +169,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
         //get the appropriate page fragment
         PageFragment pgFrag = getFragment(page);
 
-        Log.d("PAGE_FRAGMENTS", "got fragment: "+pgFrag);
-
         //the id of the future container of pgFrag
         int containerId = -1;
 
@@ -191,8 +189,7 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
             getSupportFragmentManager().executePendingTransactions();
         }catch (Exception | Error  e){
             e.printStackTrace();
-            Log.d("PAGE_FRAGMENTS", " adding exception: "+e.getMessage()+" "+e.getCause());
-
+            Log.d("PAGE_FRAGMENTS", "EXCEPTION WHILE ADDING FRAG: "+e.getMessage()+" "+e.getCause());
         }
 
         //add the page fragment to the fragment's list
@@ -206,7 +203,6 @@ public class PagesActivity extends ColorActivity  implements NotebookListener, Y
     private void loadPages(Page[] pages){
 
         for(Page page : pages){
-            Log.d("FIRST_IN_LIST", page.getPreview());
             addPage(page, false);
         }
 

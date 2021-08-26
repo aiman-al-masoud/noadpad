@@ -26,10 +26,13 @@
 
     <item
         android:id="@+id/record_audio"
-        android:icon="@android:drawable/presence_audio_online"
         android:title="@string/record_audio"
         />
 
+    <item
+        android:id="@+id/import_audio"
+        android:title="@string/import_audio_clip"
+        />
 
 
 

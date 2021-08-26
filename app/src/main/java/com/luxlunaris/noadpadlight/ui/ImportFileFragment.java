@@ -53,6 +53,12 @@ public class ImportFileFragment extends DialogFragment {
      */
     private FileRequester listener;
 
+    /**
+     * Tag for callback id purposes.
+     */
+    private int tag;
+
+
     public ImportFileFragment() {
         // Required empty public constructor
     }
@@ -116,7 +122,7 @@ public class ImportFileFragment extends DialogFragment {
             }
 
             //pass the file to the listener
-            listener.onFileObtained(selectedFile);
+            listener.onFileObtained(tag, selectedFile);
 
             //dismiss this fragment.
             dismiss();
@@ -168,9 +174,17 @@ public class ImportFileFragment extends DialogFragment {
      * notified when the file is ready.
      */
     public interface FileRequester{
-        public void onFileObtained(File file);
+        public void onFileObtained(int tag, File file);
     }
 
+    /**
+     * Set the callback tag.
+     * Do it before any show(), unless requesting
+     * the same service twice in a row.
+     */
+    public void setTag(int tag){
+        this.tag = tag;
+    }
 
 
 
