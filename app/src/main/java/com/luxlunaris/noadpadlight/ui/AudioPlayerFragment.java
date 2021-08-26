@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luxlunaris.noadpadlight.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AudioPlayerFragment extends DialogFragment {
 
@@ -24,6 +28,11 @@ public class AudioPlayerFragment extends DialogFragment {
      * Plays/pauses the recording.
      */
     Button playButton;
+
+    ProgressBar progressBar;
+
+    TextView audioDurationText;
+
 
     /**
      * Audio file to be played back.
@@ -44,6 +53,8 @@ public class AudioPlayerFragment extends DialogFragment {
     private int state = STATE_IDLE;
 
 
+    Timer progressBarTimer;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -51,6 +62,11 @@ public class AudioPlayerFragment extends DialogFragment {
         if(state==STATE_PLAYING){
             playButton.setText(R.string.pause);
         }
+
+        //if(player!=null){
+        //    progressBar.setProgress(player.getCurrentPosition());
+       // }
+
     }
 
     public AudioPlayerFragment() {
@@ -66,6 +82,8 @@ public class AudioPlayerFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_audio_player, container, false);
         playButton = view.findViewById(R.id.play);
+        progressBar = view.findViewById(R.id.audioPlaybackProgressBar);
+        audioDurationText = view.findViewById(R.id.audioDurationText);
         playButton.setOnClickListener(new PlayHandler());
         playButton.setBackgroundColor(Color.WHITE);
         playButton.setTextColor(Color.BLACK);
@@ -139,8 +157,10 @@ public class AudioPlayerFragment extends DialogFragment {
             player.release();
         }
 
+
         player = new MediaPlayer();
         player.setOnCompletionListener(new PlayingDoneHandler());
+
 
         try{
             player.setDataSource(audioFile.getPath());
@@ -152,6 +172,15 @@ public class AudioPlayerFragment extends DialogFragment {
         }
 
         Toast.makeText(getContext(), ((float)player.getDuration()/1000)+" " , Toast.LENGTH_LONG).show();
+
+        int duration  =player.getDuration();
+        progressBar.setMax(duration);
+        audioDurationText.setText((duration/1000)+"");
+
+
+        progressBarTimer = new Timer();
+        progressBarTimer.schedule(new ProgressBarUpdater(),0 ,100 );
+
 
         state = STATE_PLAYING;
 
@@ -185,6 +214,25 @@ public class AudioPlayerFragment extends DialogFragment {
 
         state = STATE_IDLE;
     }
+
+
+
+    class ProgressBarUpdater extends TimerTask{
+        @Override
+        public void run() {
+
+            if(player!=null && state == STATE_PLAYING){
+                progressBar.setProgress(player.getCurrentPosition());
+            }
+
+        }
+    }
+
+
+
+
+
+
 
 
 
