@@ -63,7 +63,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         View view =inflater.inflate(R.layout.fragment_page, container, false);
 
         //if this fragment's page is null, it calls the supporting activity.
-        if(page==null){
+        if(page==null ){
 
             try{
                 NullEmergency emergency = (NullEmergency)getActivity();
@@ -74,6 +74,15 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
 
             return view;
         }
+
+
+
+        //TODO: Tmp fix: remove myself if page is from the 70's
+        if(page.getLastModifiedTime()==0){
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            return view;
+        }
+
 
         //get this fragment's button
         pageButton = view.findViewById(R.id.pageButton);
