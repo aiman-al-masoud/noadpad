@@ -77,6 +77,11 @@ public class AudioPlayerFragment extends DialogFragment {
      * @param audioFile
      */
     public void setAudioPlaybackFile(File audioFile){
+
+        if(!audioFile.equals(this.audioFile)){
+            state = STATE_IDLE;
+        }
+
         this.audioFile = audioFile;
     }
 
@@ -128,6 +133,10 @@ public class AudioPlayerFragment extends DialogFragment {
 
         if(state!=STATE_IDLE){
             return;
+        }
+
+        if(player!=null){
+            player.release();
         }
 
         player = new MediaPlayer();
