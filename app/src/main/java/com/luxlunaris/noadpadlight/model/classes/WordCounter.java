@@ -1,12 +1,13 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
  * Contains methods to analyze a string of text.
  */
-public class WordCounter {
+public class WordCounter implements Serializable {
 
     String originalText;
     Integer[] positionsOfToken;
