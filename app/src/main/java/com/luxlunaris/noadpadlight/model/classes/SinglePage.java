@@ -34,18 +34,19 @@ public class SinglePage extends File implements Page {
 	File textFile;
 
 	/**
-	 * Directory that contains this Page's images.
+	 * Directory that holds this Page's images.
 	 */
 	private File imageDir;
 
-
+	/**
+	 * Directory that holds this Page's audio files.
+	 */
 	private File audioDir;
 
 	/**
 	 * this Page's listeners (Notebook)
 	 */
 	ArrayList<PageListener> listeners;
-
 
 	/**
 	 * true if this Page is currently "selected"
@@ -127,20 +128,13 @@ public class SinglePage extends File implements Page {
 	@Override
 	public boolean delete() {
 
-
-		Log.d("70s", this.getName()+" gettting deleted");
-
 		//notify the listeners that this got deleted
 		try{
 			for(PageListener listener : listeners){
 				listener.onDeleted(this);
-				Log.d("70s", "notified "+listener);
-
 			}
 		}catch (ConcurrentModificationException e){
 			e.printStackTrace();
-			Log.d("70s", "concurrent modification");
-
 		}
 
 		FileIO.deleteDirectory(this.getPath());
@@ -167,7 +161,6 @@ public class SinglePage extends File implements Page {
 			e.printStackTrace();
 		}
 
-		Log.d("CREATED_PAGE", "CREATED PAGE: "+getName()+" "+textFile.exists()+" "+imageDir.exists());
 
 		//notify the listeners that this got created
 		for(PageListener listener : listeners){
@@ -343,7 +336,6 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void addListener(PageListener listener) {
-		Log.d("PAGE_GETS_LISTENER", listener+" started listening to: "+ this);
 		listeners.add(listener);
 	}
 
@@ -420,18 +412,6 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void addImage(String path, int pos) {
 
-		//convert the position in the rendered text to line number
-		int lineNum = getLine(pos);
-
-		Log.d("ADDING_IMAGE", "AT LINE: "+lineNum);
-
-		//get the line number to paragraph number
-		int parNum = lineToParagraph(lineNum);
-		//(add the image as a new paragraph after the one selected, hence: +1)
-		parNum+=1;
-
-		Log.d("ADDING_IMAGE", "AT PARAGRAPH: "+parNum);
-
 		//prepare a new file in this Page's imgDir
 		File imageCopy = new File(imageDir.getPath()+File.separator+System.currentTimeMillis());
 
@@ -441,25 +421,7 @@ public class SinglePage extends File implements Page {
 		//create the image element in html
 		String imgElement = generateImgTag(imageCopy.getPath());
 
-		//get the paragraphs of this page
-		String[] pars = getParagraphs();
-
-		//convert the paragraphs array to a mutable list
-		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
-
-		//add a new image-paragraph at the specified position.
-		parsList.add(parNum, "<p>"+imgElement+"</p>");
-
-		//recompose the html source from the paragraphs' list.
-		String newHtml = "";
-		for(String par : parsList){
-			newHtml+=par;
-		}
-
-		Log.d("ADDING_IMAGE", "NEW HTML: "+newHtml);
-
-		//save the new html source
-		setText(newHtml);
+		insertParagraph(imgElement, pos);
 	}
 
 	/**
@@ -485,14 +447,11 @@ public class SinglePage extends File implements Page {
 		//for each image...
 		for(File imgFile : imageDir.listFiles()){
 
-			Log.d("IMAGE_DEL", imgFile.getName());
-
 			String nameOfImage = imgFile.getName();
 
 			//if the name of the image is not in the html source, the image file is useless
 			if(!text.contains(nameOfImage)){
 				imgFile.delete();
-				Log.d("IMAGE_DEL", imgFile.getName() + "no longer in use, deleted!");
 			}
 
 		}
@@ -700,26 +659,8 @@ public class SinglePage extends File implements Page {
 		File copy = new File(audioDir+File.separator+System.currentTimeMillis()+".3gp");
 		FileIO.moveFile(audioFile.getPath(), copy.getPath());
 
-		Log.d("PAR_AUDIO_?", copy.getPath()+" "+copy.exists());
-
-		//find paragraph from position
-		int parNum = lineToParagraph( getLine(pos));
-		//(add the audio "element" as a new paragraph after the one selected, hence: +1)
-		parNum+=1;
-
-		//get the paragraphs of this page
-		String[] pars = getParagraphs();
-		//convert the paragraphs array to a mutable list
-		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
-		//add a new audio "element" at the specified position.
-		parsList.add(parNum, "<p>"+"AUDIO_"+copy.getName()+"</p>");
-		//recompose the html source from the paragraphs' list.
-		String newHtml = "";
-		for(String par : parsList){
-			newHtml+=par;
-		}
-		//save the new html source
-		setText(newHtml);
+		String content = "AUDIO_"+copy.getName();
+		insertParagraph(content, pos);
 	}
 
 	@Override
@@ -732,12 +673,9 @@ public class SinglePage extends File implements Page {
 		}
 
 		String paragraph = pars[lineToParagraph(getLine(pos))];
-		Log.d("PAR_AUDIO_?", paragraph);
 
 		//strip the paragraph
 		paragraph = paragraph.replace("<p>", "").replace("</p>", "").replaceAll("<.*>", "").replace("AUDIO_", "");
-
-		Log.d("PAR_AUDIO_?", paragraph);
 
 		paragraph = paragraph.trim();
 
@@ -746,9 +684,6 @@ public class SinglePage extends File implements Page {
 		}
 
 		File audioFile = new File(audioDir+File.separator+paragraph);
-
-		Log.d("PAR_AUDIO_?", audioFile.getPath()+" "+audioFile.exists());
-
 
 		if(audioFile.exists()){
 			return audioFile;
@@ -768,23 +703,38 @@ public class SinglePage extends File implements Page {
 			link = "http://"+link;
 		}
 
-
 		//stupid way of "cleaning" the link a bit for presentation.
-		String linkName = new String(link);
+		String linkName = link;
 		linkName = linkName.replace("https", "").replace("http","").replace("://", "").replace("www", "").replaceAll("\\W*", "");
 
+		String content = "<a href='"+link+"'>"+linkName+"</a>";
 
+		insertParagraph(content, pos);
+	}
+
+
+	/**
+	 * Insert a new paragraph at a specified position.
+	 * @param content: stuff between the "p" tags, excluding the tags themselves.
+	 * @param pos
+	 */
+	private void insertParagraph(String content, int pos){
+
+		//GET THE NEW POSITION THE INSERTED PAR SHOULD STAY AT:
 		//find paragraph from position
 		int parNum = lineToParagraph( getLine(pos));
 		//(add the audio "element" as a new paragraph after the one selected, hence: +1)
 		parNum+=1;
+
+		//prepare the paragraph:
+		String newPar = "<p>"+content+"</p>";
 
 		//get the paragraphs of this page
 		String[] pars = getParagraphs();
 		//convert the paragraphs array to a mutable list
 		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
 		//add a new audio "element" at the specified position.
-		parsList.add(parNum, "<p>"+"<a href='"+link+"'>"+linkName+"</a>"+"</p>");
+		parsList.add(parNum, newPar);
 		//recompose the html source from the paragraphs' list.
 		String newHtml = "";
 		for(String par : parsList){
@@ -794,6 +744,10 @@ public class SinglePage extends File implements Page {
 		setText(newHtml);
 
 	}
+
+
+
+
 
 
 
