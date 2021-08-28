@@ -539,7 +539,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "Oops! Couldn't find a camera app!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_camera_app, Toast.LENGTH_LONG).show();
         }
     }
 
