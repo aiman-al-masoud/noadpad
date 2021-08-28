@@ -245,25 +245,10 @@ public class BasicBooklet implements Booklet {
 
     @Override
     public void onDeleted(Page page) {
-
-        //TODO: why doesn't .remove work? Why is the object's id not the same?
-
-        //remove deleted page from pagesList
-        for(Page p : new ArrayList<>(pagesList)){
-            if(p.getName().equals(page.getName())){
-                pagesList.remove(p);
-            }
-        }
-
-        //remove deleted page from selectedPagesList
-        for(Page p : new ArrayList<>(selectedPagesList)){
-            if(p.getName().equals(page.getName())){
-                selectedPagesList.remove(p);
-            }
-        }
-
+        remove(page);
+        //pagesList.remove(page);
+        //selectedPagesList.remove(page);
         listener.onDeleted(page);
-        listOnDisplay.remove(page);
     }
 
     @Override
@@ -352,6 +337,44 @@ public class BasicBooklet implements Booklet {
         }
 
     }
+
+
+    /**
+     * Does this Booklet contain a given page?
+     * @param page
+     * @return
+     */
+    @Override
+    public boolean contains(Page page){
+        for(Page p : new ArrayList<>(pagesList)){
+            if(p.getName().equals(page.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Remove a page from this Booklet's lists.
+     * @param page
+     */
+    protected void remove(Page page){
+        for(Page p : new ArrayList<>(selectedPagesList)){
+            if(p.getName().equals(page.getName())){
+                selectedPagesList.remove(p);
+                pagesList.remove(p);
+            }
+        }
+
+        selectedPagesList.remove(page);
+        pagesList.remove(page);
+    }
+
+
+
+
+
 
 
 

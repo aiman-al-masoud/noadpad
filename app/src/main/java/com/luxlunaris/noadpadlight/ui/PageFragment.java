@@ -136,10 +136,11 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
             pageButton.setTextColor(SELECTED_TEXT_COLOR);
         }
 
-        //different color if in recycle bin
-        if(page.isInRecycleBin()){
+        //different color if not editable
+        if(!page.getBoolean(Page.TAG_EDITABLE)){
             pageButton.setBackgroundColor(Color.DKGRAY);
         }
+
     }
     /**
      * Set this fragment's text to a preview of the page

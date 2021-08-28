@@ -243,8 +243,8 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
 
         optionsMenu = menu;
 
-        //if page is in recycle bin, prevent editing.
-        if(page.isInRecycleBin()){
+        //if page is not editable, prevent editing.
+        if(!page.getBoolean(Page.TAG_EDITABLE)){
             setEditable(false);
         }else{
             setEditable(true);

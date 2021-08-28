@@ -15,45 +15,53 @@ import java.io.Serializable;
 public interface Page extends Serializable {
 
 	/**
+	 * Settable tags.
+	 * Handled by setTag, getString, getBool ...
+	 */
+	String TAG_EDITABLE = "editable";
+	String TAG_IN_RECYCLE_BIN = "in_recycle_bin";
+
+
+	/**
 	 * Get the Page's text
 	 * @return
 	 */
-	public String getText();
+	String getText();
 
 	/**
 	 * Modify/set the Page's text
 	 * @param text
 	 */
-	public void setText(String text);
+	void setText(String text);
 
 	/**
 	 * Get the Page's name
 	 * @return
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Get the time the Page was created
 	 * @return
 	 */
-	public long getCreationTime();
+	long getCreationTime();
 
 	/**
 	 * Get the last time the Page was modified
 	 * @return
 	 */
-	public long getLastModifiedTime();
+	long getLastModifiedTime();
 
 	/**
 	 * Delete the Page
 	 * @return
 	 */
-	public boolean delete();
+	boolean delete();
 
 	/**
 	 * Create the Page
 	 */
-	public void create();
+	void create();
 
 
 	/**
@@ -61,54 +69,54 @@ public interface Page extends Serializable {
 	 * @param token
 	 * @return
 	 */
-	public int numOfTokens(String token);
+	int numOfTokens(String token);
 
 
 	/**
 	 * Set the token to be found.
 	 * @param token
 	 */
-	public void setTokenToBeFound(String token);
+	void setTokenToBeFound(String token);
 
 
 	/**
 	 * Get the next position of the current token
 	 * @return
 	 */
-	public int nextPosition();
+	int nextPosition();
 
 
 	/**
 	 * Get the previous position of the current token
 	 * @return
 	 */
-	public int previousPosition();
+	int previousPosition();
 
 
 	/**
 	 * Save the current position
 	 * @param pos
 	 */
-	public void savePosition(int pos);
+	void savePosition(int pos);
 
 
 	/**
 	 * Get the last-saved (last visited) position
 	 * @return
 	 */
-	public int getLastPosition();
+	int getLastPosition();
 
 	/**
 	 * Add a PageListener to this Page
 	 * @param listener
 	 */
-	public void addListener(PageListener listener);
+	void addListener(PageListener listener);
 
 	/**
 	 * Get a text based preview of this Page
 	 * @return
 	 */
-	public String getPreview();
+	String getPreview();
 
 	/**
 	 *  Checks if this page contains ALL of the provided keywords
@@ -116,64 +124,104 @@ public interface Page extends Serializable {
 	 * @param keywords
 	 * @return
 	 */
-	public boolean contains(String[] keywords);
+	boolean contains(String[] keywords);
 
 
 	/**
 	 * Is this Page currently selected?
 	 * @return
 	 */
-	public boolean isSelected();
+	boolean isSelected();
 
 
 	/**
 	 * Set this Page as selected.
 	 * @param select
 	 */
-	public void setSelected(boolean select);
+	void setSelected(boolean select);
 
 
 	/**
 	 * Add an image to this Page.
 	 * @param path
 	 */
-	public void addImage(String path, int pos);
+	void addImage(String path, int pos);
 
 
 	/**
 	 * Returns the image directory of this Page.
 	 * @return
 	 */
-	public File getImageDir();
+	File getImageDir();
 
 	/**
 	 * Surround a part of this Page's text with an html tag.
 	 * @param pos
 	 * @param tag
 	 */
-	public void addHtmlTag(int pos, String tag);
+	void addHtmlTag(int pos, String tag);
 
 
 	/**
 	 * Remove all of the html tags from a position.
 	 * @param pos
 	 */
-	public void removeHtmlTags(int pos);
+	void removeHtmlTags(int pos);
 
 
-	public boolean isInRecycleBin();
+	/**
+	 * Set a tag of any kind.
+	 * (Just convert the value to a string by appending +"" or calling toString())
+	 * @param tag
+	 * @param value
+	 */
+	void setTag(String tag, String value);
 
-	public void setInRecycleBin(boolean inReycleBin);
+	/**
+	 * Get back a tag as a String.
+	 * @param tag
+	 * @return
+	 */
+	String getString(String tag);
 
+	/**
+	 * Attempt getting back a tag as a boolean.
+	 * @param tag
+	 * @return
+	 */
+	boolean getBoolean(String tag);
 
-
+	/**
+	 * Add an audio clip file at the specified position.
+	 * @param audioFile
+	 * @param pos
+	 */
 	void addAudioClip(File audioFile, int pos);
 
+	/**
+	 * Get the audio clip file (if any) at the specified position.
+	 * @param pos
+	 * @return
+	 */
 	File getAudioFile(int pos);
 
+	/**
+	 * Get the audio clip directory.
+	 * @return
+	 */
 	File getAudioDir();
 
-	public void addLink(String link, int pos);
+	/**
+	 * Add a link at the specified posistion.
+	 * @param link
+	 * @param pos
+	 */
+	void addLink(String link, int pos);
+
+
+
+
+
 
 
 

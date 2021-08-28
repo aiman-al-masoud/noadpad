@@ -59,6 +59,10 @@ public class SinglePage extends File implements Page {
 	WordCounter wordCounter;
 
 
+
+
+
+
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
@@ -99,7 +103,7 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void setText(String text) {
 
-		if(isInRecycleBin()){
+		if(!getBoolean(TAG_EDITABLE)){
 			return;
 		}
 
@@ -145,7 +149,6 @@ public class SinglePage extends File implements Page {
 
 		FileIO.deleteDirectory(this.getPath());
 
-		//return del;
 		return true;
 	}
 
@@ -174,8 +177,6 @@ public class SinglePage extends File implements Page {
 		}
 
 	}
-
-
 
 
 	/**
@@ -458,11 +459,6 @@ public class SinglePage extends File implements Page {
 			}
 		}
 
-		//test log how many lines in each paragraph
-		for(int i =0; i<numLinesPerPar.length; i++){
-			Log.d("LINE_NUM", "par "+i+" has: "+numLinesPerPar[i]+" lines");
-		}
-
 		//convert the lineNum to a paragraph num
 		int accumulLines = 0;
 		for(int i =0; i<numLinesPerPar.length; i++){
@@ -567,20 +563,35 @@ public class SinglePage extends File implements Page {
 	}
 
 	@Override
-	public boolean isInRecycleBin() {
-
-		try {
-			return metadata.getBoolean("IN_RECYCLE_BIN");
-		} catch (WrongTagTypeException e) {
-			e.printStackTrace();
-		}
-		return false;
+	public void setTag(String tag, String value) {
+		metadata.setTagValue(tag, value);
 	}
 
 	@Override
-	public void setInRecycleBin(boolean inRecycleBin) {
-		metadata.setTagValue("IN_RECYCLE_BIN", inRecycleBin+"");
+	public String getString(String tag) {
+		return metadata.getString(tag);
 	}
+
+	@Override
+	public boolean getBoolean(String tag){
+
+		try {
+			return metadata.getBoolean(tag);
+		} catch (WrongTagTypeException e) {
+			e.printStackTrace();
+		}
+
+		//defaults based on the semantics of the tag
+		switch (tag){
+			case TAG_EDITABLE:
+				return true;
+			case TAG_IN_RECYCLE_BIN:
+				return false;
+		}
+
+		return false;
+	}
+
 
 	@Override
 	public void addAudioClip(File audioFile, int pos) {

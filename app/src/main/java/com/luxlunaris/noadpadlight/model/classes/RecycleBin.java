@@ -38,19 +38,23 @@ public class RecycleBin extends BasicBooklet  {
      */
     public void put(Page page){
 
-        //if page is already in the recycle bin, remove it.
-        //It means it's getting deleted forever.
-        if(page.isInRecycleBin()){
-            pagesList.remove(page);
+        //If page is already in the recycle bin, remove it,
+        //it means it's getting deleted forever.
+        if(page.getBoolean(Page.TAG_IN_RECYCLE_BIN)){
+            remove(page);
             return;
         }
+
+
 
         SinglePage copy = new SinglePage(RECYCLE_BIN_DIR+ File.separator+page.getName());
         copy.create();
         ArrayList<Page> mockList = new ArrayList<>();
         mockList.add(page);
         new Compacter(false).compact(mockList, copy);
-        copy.setInRecycleBin(true);
+        copy.setTag(Page.TAG_EDITABLE, false+"");
+        copy.setTag(Page.TAG_IN_RECYCLE_BIN, true+"");
+
 
         addPage(copy);
     }
@@ -61,16 +65,18 @@ public class RecycleBin extends BasicBooklet  {
      */
     public void restore(Page deletedPage){
 
-        if(!deletedPage.isInRecycleBin()){
+        //if page isn't in recycle bin, halt.
+        if(!deletedPage.getBoolean(Page.TAG_IN_RECYCLE_BIN)){
             return;
         }
 
-        pagesList.remove(deletedPage);
+        remove(deletedPage);
         Page restoredCopy = Notebook.getInstance().newPage(deletedPage.getName());
         ArrayList<Page> mockList = new ArrayList<>();
         mockList.add(deletedPage);
         new Compacter(false).compact(mockList, restoredCopy);
-        restoredCopy.setInRecycleBin(false);
+        restoredCopy.setTag(Page.TAG_EDITABLE, true+"");
+        restoredCopy.setTag(Page.TAG_IN_RECYCLE_BIN, false+"");
         deletedPage.delete();
     }
 
@@ -93,10 +99,10 @@ public class RecycleBin extends BasicBooklet  {
         return pagesList.toArray(new Page[0]);
     }
 
-
-
-
-
+    @Override
+    public void onCreated(Page page){
+        /* Do nothing */
+    }
 
 
 

@@ -52,5 +52,7 @@ public interface Booklet extends Pageable, Serializable, PageListener {
 
     void deleteSelection();
 
+    public boolean contains(Page page);
 
-}
+
+    }
