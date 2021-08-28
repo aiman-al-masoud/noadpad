@@ -72,7 +72,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private static final int REQUEST_IMAGE_CAPTURE = 5;
 
 
-
     /**
      * The toolbar menu.
      */
@@ -115,18 +114,12 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private void reloadText(){
 
-
         //get the html source code from the Page.
         String text =page.getText();
-        Log.d("TEST_IMAGE", "TEXT FROM PAGE-FILE: "+text);
 
-        //convert the html source code to a Spanned object
-        //Spanned s = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY, new ImageGetter(), null);
-        //using deprecated version for legacy support.
-
+        //convert the html source code to a Spanned object (using deprecated version for legacy support).
         //TODO: Solve: when the activity starts back after being killed in the bg, html source's image tags are ok, but span doesn't contain images.
         Spanned s = Html.fromHtml (text, new ImageGetter(this), null);
-
 
         if(HTML_EDIT_MODE){
             //pass raw html text
@@ -355,9 +348,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 requestImageCapture();
                 break;
 
-
-
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -541,14 +531,15 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         }
     }
 
-
-
+    /**
+     *
+     */
     private void requestImageCapture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         } catch (ActivityNotFoundException e) {
-            // display error state to the user
+            Toast.makeText(this, "Oops! Couldn't find a camera app!", Toast.LENGTH_LONG).show();
         }
     }
 

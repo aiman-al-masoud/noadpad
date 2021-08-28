@@ -74,7 +74,7 @@
     <string name="advanced_opts">Opzioni Avanzate</string>
     <string name="import_audio_clip">Importa Spezzone Audio</string>
     <string name="take_photo">Scatta Foto</string>
-
+    <string name="no_camera_app">Ops! Nessuna app \"camera\" è installata sul dispositivo!</string>
 
 
 </resources>
