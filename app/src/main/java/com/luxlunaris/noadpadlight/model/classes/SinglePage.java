@@ -54,11 +54,9 @@ public class SinglePage extends File implements Page {
 	boolean selected = false;
 
 	/**
-	 * Data relative to the currently searched-for token.
+	 * Helps w/ token finding and counting.
 	 */
-	Integer[] positionsOfToken;
-	String currentToken;
-	int posIndex = 0;
+	WordCounter wordCounter;
 
 
 	public SinglePage(String pathname) {
@@ -69,6 +67,19 @@ public class SinglePage extends File implements Page {
 		audioDir = new File(getPath()+File.separator+"audios");
 		listeners = new ArrayList<>();
 	}
+
+
+	/**
+	 * Get this Page's WordCounter object.
+	 * @return
+	 */
+	private WordCounter getWordCounter(){
+		if(wordCounter== null){
+			wordCounter = new WordCounter(getTextNoTags());
+		}
+		return wordCounter;
+	}
+
 
 	/**
 	 * get this Page's text from the text file.
@@ -92,9 +103,6 @@ public class SinglePage extends File implements Page {
 			return;
 		}
 
-
-		Log.d("TEST_IMAGE", "saving: "+text);
-
 		FileIO.write(textFile.getPath(), text);
 
 		try{
@@ -105,11 +113,9 @@ public class SinglePage extends File implements Page {
 			e.printStackTrace();
 		}
 
-
 		//delete any non-used media files.
 		checkDeleteImages();
 		checkDeleteAudio();
-
 	}
 
 	/**
@@ -170,17 +176,7 @@ public class SinglePage extends File implements Page {
 	}
 
 
-	/**
-	 * How many times does a token appear in this Page's text?
-	 * @param token
-	 * @return
-	 */
-	@Override
-	public int numOfTokens(String token) {
-		//escape the token's special chars (just in case)
-		token = escapeRegex(token);
-		return getTextNoTags().toUpperCase().split(token.toUpperCase()).length-1;
-	}
+
 
 	/**
 	 * Get this Page's name
@@ -209,6 +205,15 @@ public class SinglePage extends File implements Page {
 		return textFile.lastModified();
 	}
 
+	/**
+	 * How many times does a token appear in this Page's text?
+	 * @param token
+	 * @return
+	 */
+	@Override
+	public int numOfTokens(String token) {
+		return getWordCounter().numOfTokens(token);
+	}
 
 	/**
 	 * Set the token to be found in this Page
@@ -216,57 +221,8 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void setTokenToBeFound(String token){
-		positionsOfToken = getTokensPositions(token);
-		currentToken = token;
-		posIndex = 0;
+		getWordCounter().setTokenToBeFound(token);
 	}
-
-	/**
-	 * Returns the escaped version of string.
-	 * @param string
-	 * @return
-	 */
-	private String escapeRegex(String string){
-		Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
-		return SPECIAL_REGEX_CHARS.matcher(string).replaceAll("\\\\$0");
-	}
-
-
-	/**
-	 * Find all of the positions of a token in this Page
-	 * @param token
-	 * @return
-	 */
-	private Integer[] getTokensPositions(String token) {
-
-		//initialize list of positions
-		ArrayList<Integer> positions = new ArrayList<Integer>();
-
-		//convert token and text to upper case
-		token = token.toUpperCase();
-
-		//escape the token's special chars (just in case)
-		token = escapeRegex(token);
-
-		//get the text (w/out tags, as displayed on screen) and convert it to upper case
-		String text = getTextNoTags().toUpperCase();
-
-		//split the text by the token
-		String[] parts = text.split(token);
-
-		//first position
-		positions.add(parts[0].length());
-
-		//get the other positions
-		for(int i =1; i<parts.length-1; i++){
-			int lastPos = positions.get(positions.size()-1);
-			int nextPos = lastPos+ token.length() +parts[i].length();
-			positions.add(nextPos);
-		}
-
-		return positions.toArray(new Integer[0]);
-	}
-
 
 	/**
 	 *  Get the next position of the currently sought-after token
@@ -274,42 +230,17 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public int nextPosition() {
-
-		//if no token, or no positions, return index = 0
-		if(currentToken ==null || positionsOfToken.length==0){
-			return 0;
-		}
-
-
-		if(posIndex+1 > positionsOfToken.length-1){
-			return positionsOfToken[posIndex];
-		}
-
-		//return the due position, THEN increment the index
-		return positionsOfToken[posIndex++];
+		return getWordCounter().nextPosition();
 	}
 
 	/**
 	 *  Get the previous position of the currently sought-after token
 	 * @return
 	 */
-
 	@Override
 	public int previousPosition() {
-
-		//if no token, or no positions, return index = 0
-		if(currentToken ==null || positionsOfToken.length==0){
-			return 0;
-		}
-
-		if(posIndex-1 < 0){
-			return positionsOfToken[posIndex];
-		}
-
-		//return the due position, THEN increment the index
-		return positionsOfToken[posIndex--];
+		return getWordCounter().previousPosition();
 	}
-
 
 	/**
 	 * Set a "bookmark" within this page
@@ -577,7 +508,6 @@ public class SinglePage extends File implements Page {
 	public void addHtmlTag(int pos, String tag){
 
 		int lineNum = getLine(pos);
-		Log.d("LINE_NUM", lineNum+"");
 
 		//get the paragraphs
 		String[] pars = getParagraphs();
