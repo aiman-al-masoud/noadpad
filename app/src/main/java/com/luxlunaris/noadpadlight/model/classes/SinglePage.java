@@ -1,6 +1,5 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import android.text.Html;
 import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
@@ -12,9 +11,7 @@ import com.luxlunaris.noadpadlight.model.services.FileIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
-import java.util.List;
 
 /**
  * SinglePage is a persistent implementation of the Page interface.
@@ -28,9 +25,9 @@ public class SinglePage extends File implements Page {
 	Metadata metadata;
 
 	/**
-	 * contains this Page's user-generated text
+	 * manages this Page's html source-code text
 	 */
-	File textFile;
+	HtmlFile htmlFile;
 
 	/**
 	 * Directory that holds this Page's images.
@@ -65,7 +62,7 @@ public class SinglePage extends File implements Page {
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
-		textFile = new File(getPath()+File.separator+"text");
+		htmlFile = new HtmlFile(getPath()+File.separator+"text");
 		imageDir = new File(getPath()+File.separator+"images");
 		audioDir = new File(getPath()+File.separator+"audios");
 		mediaDirs = new File[]{imageDir, audioDir};
@@ -92,8 +89,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public String getText() {
-		String text = FileIO.read(textFile.getPath());
-		return text ==null? "" : text;
+		return htmlFile.getSourceCode();
 	}
 
 	/**
@@ -107,7 +103,8 @@ public class SinglePage extends File implements Page {
 			return;
 		}
 
-		FileIO.write(textFile.getPath(), text);
+
+		htmlFile.setSourceCode(text);
 
 		try{
 			for(PageListener listener : listeners){
@@ -129,7 +126,7 @@ public class SinglePage extends File implements Page {
 	 * @return
 	 */
 	public String getTextNoTags(){
-		return Html.fromHtml(getText()).toString();
+		return htmlFile.getRendered();
 	}
 
 
@@ -160,12 +157,11 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void create() {
 
-
 		mkdir();
 		
 		try {
 			((MetadataFile)metadata).createNewFile();
-			textFile.createNewFile();
+			htmlFile.createNewFile();
 			imageDir.mkdir();
 			audioDir.mkdir();
 		} catch (IOException e) {
@@ -205,7 +201,10 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public long getLastModifiedTime() {
-		return textFile.lastModified();
+
+		//return textFile.lastModified();
+		return htmlFile.lastModified();
+
 	}
 
 	/**
@@ -280,7 +279,9 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public String getPreview() {
-		return FileIO.readLine(textFile.getPath())+"\n";
+		//TODO: encapsulate this in HtmlFile
+		//return FileIO.readLine(textFile.getPath())+"\n";
+		return FileIO.readLine(htmlFile.getPath())+"\n";
 	}
 
 	/**
@@ -355,7 +356,7 @@ public class SinglePage extends File implements Page {
 		//create the image element in html
 		String imgElement = generateImgTag(imageCopy.getPath());
 
-		insertParagraph(imgElement, pos);
+		htmlFile.insertParagraph(imgElement, pos);
 	}
 
 	/**
@@ -393,88 +394,6 @@ public class SinglePage extends File implements Page {
 		}
 	}
 
-
-	/**
-	 * From the position in the rendered text, determine
-	 * the line.
-	 * @param pos
-	 * @return
-	 */
-	private int getLine(int pos){
-
-		String text = getTextNoTags();
-
-		//if length
-		if(text.length()==0){
-			return 0;
-		}
-
-		String upTillPos ="";
-		try{
-			upTillPos = text.substring(0, Math.min(pos, text.length()-1));
-		}catch (IndexOutOfBoundsException e){
-
-		}
-
-		int newLines = upTillPos.split("\n").length;
-
-		return newLines;
-	}
-
-	/**
-	 * Given a line number find the paragraph containing it.
-	 * @param lineNum
-	 * @return
-	 */
-	private int lineToParagraph(int lineNum){
-
-		//get the paragraphs in this Page
-		String[] pars = getParagraphs();
-
-		//get the number of lines in each paragraph
-		int[] numLinesPerPar =  new int[pars.length];
-		for(int i =0; i<pars.length; i++){
-			numLinesPerPar[i] = pars[i].split("<br>").length;
-			if(numLinesPerPar[i]==1){
-				numLinesPerPar[i] = 2;
-			}
-		}
-
-		//convert the lineNum to a paragraph num
-		int accumulLines = 0;
-		for(int i =0; i<numLinesPerPar.length; i++){
-			accumulLines += numLinesPerPar[i];
-			if(lineNum <= accumulLines){
-				Log.d("LINE_NUM", "line "+lineNum+ " is in paragraph: "+i);
-				return i;
-			}
-		}
-
-		return numLinesPerPar.length-1;
-	}
-
-
-	/**
-	 * Get the html source as a list of paragraphs.
-	 * @return
-	 */
-	private String[] getParagraphs(){
-		//split the html source by end of paragraph tags
-		String[] pars = getText().split("</p>");
-
-		//remove the last empty "paragraph"
-		pars = Arrays.copyOf(pars, pars.length-1);
-
-		//adjust each paragraph
-		for(int i =0; i<pars.length; i++){
-			pars[i] = pars[i].replaceAll("\n", "");
-			pars[i] = pars[i]+" </p>";
-		}
-
-		return pars;
-	}
-
-
 	/**
 	 * Surround some text with an html tag and save.
 	 * (Works on entire paragraphs.)
@@ -486,8 +405,8 @@ public class SinglePage extends File implements Page {
 		//replacement = original sandwitched between two tags.
 		String startTag = "<"+tag+">";
 		String endTag = "</"+tag+">";
-		String replacement =startTag+getParagraphs()[lineToParagraph(getLine(pos))]+endTag;
-		replaceParagraph(replacement, pos);
+		String replacement = startTag+htmlFile.getParagraphAt(pos)+endTag;
+		htmlFile.replaceParagraph(replacement, pos);
 	}
 
 	/**
@@ -497,35 +416,8 @@ public class SinglePage extends File implements Page {
 	@Override
 	public void removeHtmlTags(int pos){
 		//remove all tags other than the paragraph tag. (sort of)
-		String replacement = getParagraphs()[lineToParagraph(getLine(pos))].replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
-		replaceParagraph(replacement, pos);
-	}
-
-
-	/**
-	 * Replace an existing paragraph with another one.
-	 * @param replacement
-	 * @param pos
-	 */
-	protected void replaceParagraph(String replacement, int pos){
-
-		//get all of the paragraphs
-		String[] pars = getParagraphs();
-
-		//get the paragraph num from the position
-		int parNum = lineToParagraph(getLine(pos));
-
-		//replace the paragraph
-		pars[parNum] = replacement;
-
-		//re-build the html source from paragraph-array.
-		String newHtml = "";
-		for(String par : pars){
-			newHtml+=par;
-		}
-
-		//save it.
-		setText(newHtml);
+		String replacement = htmlFile.getParagraphAt(pos).replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
+		htmlFile.replaceParagraph(replacement, pos);
 	}
 
 	@Override
@@ -567,19 +459,16 @@ public class SinglePage extends File implements Page {
 		FileIO.moveFile(audioFile.getPath(), copy.getPath());
 
 		String content = "AUDIO_"+copy.getName();
-		insertParagraph(content, pos);
+
+		//insertParagraph(content, pos);
+		htmlFile.insertParagraph(content, pos);
+
 	}
 
 	@Override
 	public File getAudioFile(int pos) {
 
-		String[] pars =  getParagraphs();
-
-		if(pars.length==0){
-			return null;
-		}
-
-		String paragraph = pars[lineToParagraph(getLine(pos))];
+		String paragraph = htmlFile.getParagraphAt(pos);
 
 		//strip the paragraph
 		paragraph = paragraph.replace("<p>", "").replace("</p>", "").replaceAll("<.*>", "").replace("AUDIO_", "");
@@ -604,6 +493,7 @@ public class SinglePage extends File implements Page {
 		return audioDir;
 	}
 
+
 	public void addLink(String link, int pos){
 
 		if(!link.contains("http")){
@@ -616,42 +506,8 @@ public class SinglePage extends File implements Page {
 
 		String content = "<a href='"+link+"'>"+linkName+"</a>";
 
-		insertParagraph(content, pos);
+		htmlFile.insertParagraph(content, pos);
 	}
-
-
-	/**
-	 * Insert a new paragraph at a specified position.
-	 * @param content: stuff between the "p" tags, excluding the tags themselves.
-	 * @param pos
-	 */
-	private void insertParagraph(String content, int pos){
-
-		//GET THE NEW POSITION THE INSERTED PAR SHOULD STAY AT:
-		//find paragraph from position
-		int parNum = lineToParagraph( getLine(pos));
-		//(add the audio "element" as a new paragraph after the one selected, hence: +1)
-		parNum+=1;
-
-		//prepare the paragraph:
-		String newPar = "<p>"+content+"</p>";
-
-		//get the paragraphs of this page
-		String[] pars = getParagraphs();
-		//convert the paragraphs array to a mutable list
-		List<String> parsList = new ArrayList<>(Arrays.asList(pars));
-		//add a new audio "element" at the specified position.
-		parsList.add(parNum, newPar);
-		//recompose the html source from the paragraphs' list.
-		String newHtml = "";
-		for(String par : parsList){
-			newHtml+=par;
-		}
-		//save the new html source
-		setText(newHtml);
-
-	}
-
 
 
 
