@@ -46,8 +46,6 @@ public class HtmlFile extends File {
         return Html.fromHtml(getSourceCode()).toString();
     }
 
-
-
     /**
      * Surround some text with an html tag and save.
      * (Works on entire paragraphs.)
@@ -174,6 +172,15 @@ public class HtmlFile extends File {
     }
 
     /**
+     * Get a text-based preview of this Page.
+     * (The first line).
+     * @return
+     */
+    public String getPreview() {
+        return FileIO.readLine(getPath())+"\n";
+    }
+
+    /**
      * Get the html source as a list of paragraphs.
      * @return
      */
@@ -226,6 +233,26 @@ public class HtmlFile extends File {
         return numLinesPerPar.length-1;
     }
 
+
+    /**
+     * Insert a link html element at a specified position.
+     * @param link
+     * @param pos
+     */
+    public void addLink(String link, int pos){
+
+        if(!link.contains("http")){
+            link = "http://"+link;
+        }
+
+        //stupid way of "cleaning" the link a bit for presentation.
+        String linkName = link;
+        linkName = linkName.replace("https", "").replace("http","").replace("://", "").replace("www", "").replaceAll("\\W*", "");
+
+        String content = "<a href='"+link+"'>"+linkName+"</a>";
+
+        insertParagraph(content, pos);
+    }
 
 
 

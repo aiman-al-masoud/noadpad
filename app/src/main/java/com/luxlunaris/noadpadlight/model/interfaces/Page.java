@@ -1,6 +1,7 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
+import com.luxlunaris.noadpadlight.ui.NullEmergency;
 
 import java.io.File;
 import java.io.Serializable;

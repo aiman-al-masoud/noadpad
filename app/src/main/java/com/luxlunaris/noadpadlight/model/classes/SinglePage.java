@@ -279,9 +279,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public String getPreview() {
-		//TODO: encapsulate this in HtmlFile
-		//return FileIO.readLine(textFile.getPath())+"\n";
-		return FileIO.readLine(htmlFile.getPath())+"\n";
+		return htmlFile.getPreview();
 	}
 
 	/**
@@ -398,15 +396,11 @@ public class SinglePage extends File implements Page {
 	 * Surround some text with an html tag and save.
 	 * (Works on entire paragraphs.)
 	 * @param pos
-	 * @param tag
+	 * @param tag: just the core, eg: <p><p/> => p
 	 */
 	@Override
 	public void addHtmlTag(int pos, String tag){
-		//replacement = original sandwitched between two tags.
-		String startTag = "<"+tag+">";
-		String endTag = "</"+tag+">";
-		String replacement = startTag+htmlFile.getParagraphAt(pos)+endTag;
-		htmlFile.replaceParagraph(replacement, pos);
+		htmlFile.addHtmlTag(pos, tag);
 	}
 
 	/**
@@ -415,9 +409,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void removeHtmlTags(int pos){
-		//remove all tags other than the paragraph tag. (sort of)
-		String replacement = htmlFile.getParagraphAt(pos).replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
-		htmlFile.replaceParagraph(replacement, pos);
+		htmlFile.removeHtmlTags(pos);
 	}
 
 	@Override
@@ -493,39 +485,10 @@ public class SinglePage extends File implements Page {
 		return audioDir;
 	}
 
-
+	@Override
 	public void addLink(String link, int pos){
-
-		if(!link.contains("http")){
-			link = "http://"+link;
-		}
-
-		//stupid way of "cleaning" the link a bit for presentation.
-		String linkName = link;
-		linkName = linkName.replace("https", "").replace("http","").replace("://", "").replace("www", "").replaceAll("\\W*", "");
-
-		String content = "<a href='"+link+"'>"+linkName+"</a>";
-
-		htmlFile.insertParagraph(content, pos);
+		htmlFile.addLink(link, pos);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
