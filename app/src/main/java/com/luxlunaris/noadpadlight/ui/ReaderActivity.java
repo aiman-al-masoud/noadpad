@@ -531,8 +531,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             page.addLink(userResponse, textView.getSelectionStart());
             reloadText();
             break;
-
-
         }
     }
 
