@@ -7,6 +7,7 @@ import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.HtmlFile;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
+import com.luxlunaris.noadpadlight.model.interfaces.WordCounter;
 import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class SinglePage extends File implements Page {
 	 */
 	private WordCounter getWordCounter(){
 		if(wordCounter== null){
-			wordCounter = new WordCounter(getRendered());
+			wordCounter = new BasicWordCounter(getRendered());
 		}
 		return wordCounter;
 	}
@@ -104,16 +105,15 @@ public class SinglePage extends File implements Page {
 			return;
 		}
 
-
 		htmlFile.setSourceCode(text);
 
-		try{
+		//try{
 			for(PageListener listener : listeners){
 				listener.onModified(this);
 			}
-		}catch (ConcurrentModificationException e){
-			e.printStackTrace();
-		}
+		//}catch (ConcurrentModificationException e){
+		//	e.printStackTrace();
+		//}
 
 		//delete any no-longer needed media files.
 		for(File dir : mediaDirs){
@@ -253,7 +253,7 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void savePosition(int pos) {
-		metadata.setTagValue("LAST_POSITION", pos+"");
+		metadata.setTag("LAST_POSITION", pos+"");
 	}
 
 	/**
@@ -438,13 +438,15 @@ public class SinglePage extends File implements Page {
 
 	@Override
 	public void setTag(String tag, String value) {
-		metadata.setTagValue(tag, value);
+		metadata.setTag(tag, value);
 	}
+
 
 	@Override
 	public String getString(String tag) {
 		return metadata.getString(tag);
 	}
+
 
 	@Override
 	public boolean getBoolean(String tag){
@@ -465,7 +467,6 @@ public class SinglePage extends File implements Page {
 
 		return false;
 	}
-
 
 	@Override
 	public void addAudioClip(File audioFile, int pos) {

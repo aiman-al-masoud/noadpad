@@ -1,13 +1,14 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import java.io.Serializable;
+import com.luxlunaris.noadpadlight.model.interfaces.WordCounter;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
  * Contains methods to analyze a string of text.
  */
-public class WordCounter implements Serializable {
+public class BasicWordCounter implements WordCounter {
 
     String originalText;
     Integer[] positionsOfToken;
@@ -15,7 +16,7 @@ public class WordCounter implements Serializable {
     int posIndex;
 
 
-    public WordCounter(String originalText){
+    public BasicWordCounter(String originalText){
         this.originalText = originalText;
     }
 
@@ -24,6 +25,7 @@ public class WordCounter implements Serializable {
      * Set the token to be found in this Page
      * @param token
      */
+    @Override
     public void setTokenToBeFound(String token){
         positionsOfToken = getTokensPositions(token);
         currentToken = token;
@@ -36,6 +38,7 @@ public class WordCounter implements Serializable {
      *  Get the next position of the currently sought-after token
      * @return
      */
+    @Override
     public int nextPosition() {
 
         //if no token, or no positions, return index = 0
@@ -56,6 +59,7 @@ public class WordCounter implements Serializable {
      * @return
      */
 
+    @Override
     public int previousPosition() {
 
         //if no token, or no positions, return index = 0
@@ -76,6 +80,7 @@ public class WordCounter implements Serializable {
      * @param token
      * @return
      */
+    @Override
     public int numOfTokens(String token) {
         //escape the token's special chars (just in case)
         token = escapeRegex(token);

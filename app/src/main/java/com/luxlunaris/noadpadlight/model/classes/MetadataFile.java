@@ -35,7 +35,7 @@ public class MetadataFile extends File implements Metadata {
 	 * @param value
 	 */
 	@Override
-	public void setTagValue(String key, String value) {
+	public void setTag(String key, String value) {
 
 		//get the old value of the key
 		String oldValue = getString(key);

@@ -1,8 +1,10 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
-import com.luxlunaris.noadpadlight.model.classes.MetadataFile;
 import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 
+/**
+ * A simple persistent dictionary.
+ */
 public interface Metadata {
 
 	/**
@@ -10,7 +12,7 @@ public interface Metadata {
 	 * @param tagName
 	 * @return
 	 */
-	public String getString(String tagName);
+	String getString(String tagName);
 
 	/**
 	 * Get the value of a tag assuming it's an integer.
@@ -18,7 +20,7 @@ public interface Metadata {
 	 * @return
 	 * @throws WrongTagTypeException
 	 */
-	public int getInt(String tagName) throws WrongTagTypeException;
+	int getInt(String tagName) throws WrongTagTypeException;
 
 	/**
 	 * Get the value of a tag assuming it's a boolean.
@@ -26,7 +28,7 @@ public interface Metadata {
 	 * @return
 	 * @throws WrongTagTypeException
 	 */
-	public boolean getBoolean(String tagName) throws WrongTagTypeException;
+	boolean getBoolean(String tagName) throws WrongTagTypeException;
 
 	/**
 	 * Get the value of a tag assuming it's a float.
@@ -34,7 +36,7 @@ public interface Metadata {
 	 * @return
 	 * @throws WrongTagTypeException
 	 */
-	public double getFloat(String tagName) throws WrongTagTypeException;
+	double getFloat(String tagName) throws WrongTagTypeException;
 
 
 	/**
@@ -43,13 +45,16 @@ public interface Metadata {
 	 * @param tagName
 	 * @param tagValue
 	 */
-	public void setTagValue(String tagName, String tagValue);
+	void setTag(String tagName, String tagValue);
 
 	/**
 	 * Delete a tag as well as its value.
 	 * @param tagName
 	 */
-	public void removeTag(String tagName);
-	
+	void removeTag(String tagName);
+
+
+
+
 	
 }

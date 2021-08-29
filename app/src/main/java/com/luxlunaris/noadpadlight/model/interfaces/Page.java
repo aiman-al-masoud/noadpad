@@ -1,10 +1,6 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
-import android.text.Html;
-
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
-import com.luxlunaris.noadpadlight.ui.NullEmergency;
-
 import java.io.File;
 import java.io.Serializable;
 
@@ -15,7 +11,7 @@ import java.io.Serializable;
  * can contain text, other files, and the relative metadata.
  *
  */
-public interface Page extends HtmlFile, Serializable {
+public interface Page extends HtmlFile, Selectable, WordCounter, Serializable {
 
 	/**
 	 * Settable tags.
@@ -37,40 +33,10 @@ public interface Page extends HtmlFile, Serializable {
 	long getCreationTime();
 
 	/**
-	 * get the number of tokens
-	 * @param token
-	 * @return
-	 */
-	int numOfTokens(String token);
-
-
-	/**
-	 * Set the token to be found.
-	 * @param token
-	 */
-	void setTokenToBeFound(String token);
-
-
-	/**
-	 * Get the next position of the current token
-	 * @return
-	 */
-	int nextPosition();
-
-
-	/**
-	 * Get the previous position of the current token
-	 * @return
-	 */
-	int previousPosition();
-
-
-	/**
 	 * Save the current position
 	 * @param pos
 	 */
 	void savePosition(int pos);
-
 
 	/**
 	 * Get the last-saved (last visited) position
@@ -85,12 +51,6 @@ public interface Page extends HtmlFile, Serializable {
 	void addListener(PageListener listener);
 
 	/**
-	 * Get a text based preview of this Page
-	 * @return
-	 */
-	String getPreview();
-
-	/**
 	 *  Checks if this page contains ALL of the provided keywords
 	 * 	(ANDed keywords)
 	 * @param keywords
@@ -98,55 +58,17 @@ public interface Page extends HtmlFile, Serializable {
 	 */
 	boolean contains(String[] keywords);
 
-
-	/**
-	 * Is this Page currently selected?
-	 * @return
-	 */
-	boolean isSelected();
-
-
-	/**
-	 * Set this Page as selected.
-	 * @param select
-	 */
-	void setSelected(boolean select);
-
-
 	/**
 	 * Add an image to this Page.
 	 * @param path
 	 */
 	void addImage(String path, int pos);
 
-
 	/**
 	 * Returns the image directory of this Page.
 	 * @return
 	 */
 	File getImageDir();
-
-	/**
-	 * Set a tag of any kind.
-	 * (Just convert the value to a string by appending +"" or calling toString())
-	 * @param tag
-	 * @param value
-	 */
-	void setTag(String tag, String value);
-
-	/**
-	 * Get back a tag as a String.
-	 * @param tag
-	 * @return
-	 */
-	String getString(String tag);
-
-	/**
-	 * Attempt getting back a tag as a boolean.
-	 * @param tag
-	 * @return
-	 */
-	boolean getBoolean(String tag);
 
 	/**
 	 * Add an audio clip file at the specified position.
@@ -168,9 +90,14 @@ public interface Page extends HtmlFile, Serializable {
 	 */
 	File getAudioDir();
 
-
-
-
+	/**
+	 * Like metadata, but WrongTypeException should be handled internally to the Page-implementation.
+	 * @param tag
+	 * @return
+	 */
+	String getString(String tag);
+	boolean getBoolean(String tag);
+	void setTag(String tag, String value);
 
 
 

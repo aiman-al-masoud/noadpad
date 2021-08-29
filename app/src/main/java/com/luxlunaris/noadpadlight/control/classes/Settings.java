@@ -183,7 +183,7 @@ public class Settings {
         makeInstance();
 
         //set the new tag value
-        settingsFile.setTagValue(TAG_NAME.toString(), newValue);
+        settingsFile.setTag(TAG_NAME.toString(), newValue);
 
         //notify all of the listeners of the modified tag that its value changed
         notifyListenersOfTag(TAG_NAME);

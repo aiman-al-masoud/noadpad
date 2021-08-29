@@ -229,7 +229,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         optionsMenu.findItem(R.id.add_link).setVisible(editable);
         optionsMenu.findItem(R.id.record_audio).setVisible(editable);
         optionsMenu.findItem(R.id.import_audio).setVisible(editable);
-
     }
 
     /**
