@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * SinglePage is a persistent implementation of the Page interface.
@@ -44,6 +43,11 @@ public class SinglePage extends File implements Page {
 	private File audioDir;
 
 	/**
+	 * List of all directories containing multimedia resources for this Page.
+	 */
+	private File[] mediaDirs;
+
+	/**
 	 * this Page's listeners (Notebook)
 	 */
 	ArrayList<PageListener> listeners;
@@ -64,6 +68,7 @@ public class SinglePage extends File implements Page {
 		textFile = new File(getPath()+File.separator+"text");
 		imageDir = new File(getPath()+File.separator+"images");
 		audioDir = new File(getPath()+File.separator+"audios");
+		mediaDirs = new File[]{imageDir, audioDir};
 		listeners = new ArrayList<>();
 	}
 
@@ -112,9 +117,11 @@ public class SinglePage extends File implements Page {
 			e.printStackTrace();
 		}
 
-		//delete any non-used media files.
-		checkDeleteImages();
-		checkDeleteAudio();
+		//delete any no-longer needed media files.
+		for(File dir : mediaDirs){
+			checkDirForDeadFiles(dir);
+		}
+
 	}
 
 	/**
@@ -361,46 +368,27 @@ public class SinglePage extends File implements Page {
 	}
 
 	/**
-	 * Checks if there are any images that
-	 * don't have a corresponding tag in the
-	 * html source and deletes them from the
-	 * imageDir.
+	 * Assumes that the parsed directory is flat, and that
+	 * the name (getName()) of any file should be
+	 * contained in the html source in some form.
+	 * @param dir
 	 */
-	private void checkDeleteImages(){
+	public void checkDirForDeadFiles(File dir){
 
-		//get the html source
-		String text = getText();
-
-		//for each image...
-		for(File imgFile : imageDir.listFiles()){
-
-			String nameOfImage = imgFile.getName();
-
-			//if the name of the image is not in the html source, the image file is useless
-			if(!text.contains(nameOfImage)){
-				imgFile.delete();
-			}
-
-		}
-
-	}
-
-	private void checkDeleteAudio() {
-		//get the html source
-		String text = getText();
-
-
-		if(!audioDir.exists()){
+		if(!dir.exists()){
 			return;
 		}
 
-		//for each image...
-		for (File audioFile : audioDir.listFiles()) {
-			String unixTimeOfAudio = audioFile.getName().replaceAll("\\w+", "");
+		//get the html source
+		String text = getText();
 
-			//if the name of the image is not in the html source, the image file is useless
-			if (!text.contains(unixTimeOfAudio)) {
-				audioFile.delete();
+		for (File file : dir.listFiles()) {
+			String unixTimeName = file.getName();
+
+			//if the name of the file is not in the html source, the file is useless
+			if (!text.contains(unixTimeName)) {
+				file.delete();
+				Log.d("DEAD_FILES", "deleted: "+file);
 			}
 		}
 	}
