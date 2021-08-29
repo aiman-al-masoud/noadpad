@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +24,7 @@ import com.luxlunaris.noadpadlight.control.classes.Paths;
 import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 

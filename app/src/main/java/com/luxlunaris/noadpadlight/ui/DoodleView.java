@@ -14,14 +14,12 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**

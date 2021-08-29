@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 

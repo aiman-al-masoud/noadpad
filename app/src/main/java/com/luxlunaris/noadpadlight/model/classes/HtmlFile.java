@@ -4,7 +4,7 @@ package com.luxlunaris.noadpadlight.model.classes;
 import android.text.Html;
 import android.util.Log;
 
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 import java.util.ArrayList;

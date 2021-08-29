@@ -6,7 +6,7 @@ import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 import java.io.IOException;

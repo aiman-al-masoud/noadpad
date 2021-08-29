@@ -1,4 +1,4 @@
-package com.luxlunaris.noadpadlight.model.services;
+package com.luxlunaris.noadpadlight.services;
 
 import android.content.Context;
 import android.text.format.DateFormat;

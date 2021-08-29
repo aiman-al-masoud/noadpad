@@ -2,7 +2,7 @@ package com.luxlunaris.noadpadlight.model.classes;
 
 import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
-import com.luxlunaris.noadpadlight.model.services.FileIO;
+import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 import java.io.IOException;
