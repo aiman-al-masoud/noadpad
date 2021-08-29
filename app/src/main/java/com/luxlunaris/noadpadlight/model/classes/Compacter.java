@@ -56,9 +56,6 @@ public class Compacter {
             textBlob+=page.getText()+"\n\n";
         }
 
-
-        Log.d("COMPACTER", "text blob before: "+textBlob+"\n\n\n");
-
         //this is the path in the html that will replace the older ones.
         String blankPagesPath = ((File)blankPage).getPath();
         //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
@@ -66,22 +63,14 @@ public class Compacter {
         blankPagesPath = blankPagesPath.substring(start, blankPagesPath.length());
 
 
-        Log.d("COMPACTER", "replacement: " +blankPagesPath);
-
-
         //migrate images from old pages to blank page.
         for(Page page : pages){
-            //textBlob = textBlob.replaceAll(((File)page).getPath(), ((File)blankPage).getPath());
-
 
             //these are the paths to be replaced
             String oldPathToBeReplaced = ((File)page).getPath();
             //due to slight differences across devices in initial part of path, just replace the part from "com.luxlunaris..." onwards
             start = oldPathToBeReplaced.indexOf("com");
             oldPathToBeReplaced = oldPathToBeReplaced.substring(start, oldPathToBeReplaced.length());
-
-            Log.d("COMPACTER", "to be replaced: "+oldPathToBeReplaced);
-
 
             //replace all instances of old path w/ path of new blank page
             textBlob = textBlob.replaceAll(oldPathToBeReplaced, blankPagesPath);
@@ -95,12 +84,8 @@ public class Compacter {
 
         }
 
-        Log.d("COMPACTER", "text blob after: "+textBlob+"\n\n\n");
-
-
         //set the text of the blank page
         blankPage.setText(textBlob);
-
 
     }
 

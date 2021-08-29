@@ -58,11 +58,6 @@ public class SinglePage extends File implements Page {
 	 */
 	WordCounter wordCounter;
 
-
-
-
-
-
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
@@ -411,7 +406,6 @@ public class SinglePage extends File implements Page {
 	}
 
 
-
 	/**
 	 * From the position in the rendered text, determine
 	 * the line.
@@ -433,7 +427,6 @@ public class SinglePage extends File implements Page {
 		}catch (IndexOutOfBoundsException e){
 
 		}
-
 
 		int newLines = upTillPos.split("\n").length;
 
@@ -502,31 +495,11 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void addHtmlTag(int pos, String tag){
-
-		int lineNum = getLine(pos);
-
-		//get the paragraphs
-		String[] pars = getParagraphs();
-
-		//convert the line number to the paragraph number.
-		lineNum = lineToParagraph(lineNum);
-
-		//make the tags from the inner part
+		//replacement = original sandwitched between two tags.
 		String startTag = "<"+tag+">";
 		String endTag = "</"+tag+">";
-
-		//apply the html tag
-		pars[lineNum] = startTag+pars[lineNum]+endTag;
-
-		//re-build the html source from the single paragraphs.
-		String newHtml = "";
-		for(String par : pars){
-			newHtml+=par;
-		}
-
-		//save it.
-		setText(newHtml);
-
+		String replacement =startTag+getParagraphs()[lineToParagraph(getLine(pos))]+endTag;
+		replaceParagraph(replacement, pos);
 	}
 
 	/**
@@ -535,24 +508,29 @@ public class SinglePage extends File implements Page {
 	 */
 	@Override
 	public void removeHtmlTags(int pos){
+		//remove all tags other than the paragraph tag. (sort of)
+		String replacement = getParagraphs()[lineToParagraph(getLine(pos))].replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
+		replaceParagraph(replacement, pos);
+	}
 
-		int lineNum = getLine(pos);
 
-		//get the paragraphs
+	/**
+	 * Replace an existing paragraph with another one.
+	 * @param replacement
+	 * @param pos
+	 */
+	protected void replaceParagraph(String replacement, int pos){
+
+		//get all of the paragraphs
 		String[] pars = getParagraphs();
 
-		//convert the line number to the paragraph number.
-		lineNum = lineToParagraph(lineNum);
-
-		String modifiedPar = pars[lineNum];
-
-		//remove all tags other than the paragraph tag. (sort of)
-		modifiedPar = modifiedPar.replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
+		//get the paragraph num from the position
+		int parNum = lineToParagraph(getLine(pos));
 
 		//replace the paragraph
-		pars[lineNum] = modifiedPar;
+		pars[parNum] = replacement;
 
-		//re-build the html source from the single paragraphs.
+		//re-build the html source from paragraph-array.
 		String newHtml = "";
 		for(String par : pars){
 			newHtml+=par;

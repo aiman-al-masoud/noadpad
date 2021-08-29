@@ -404,8 +404,6 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 reloadText();
                 break;
 
-
-
         }
 
     }
@@ -532,7 +530,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     }
 
     /**
-     *
+     * Request that a photo be taken and sent back by the camera app.
      */
     private void requestImageCapture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
