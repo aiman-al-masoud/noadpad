@@ -207,6 +207,10 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
             return;
         }
 
+        if(!page.getBoolean(Page.TAG_EDITABLE)){
+            return;
+        }
+
         //else save the new text
         saveToPage();
         Toast.makeText(this, R.string.saved_page_changed_toast, Toast.LENGTH_SHORT).show();
@@ -222,6 +226,11 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         optionsMenu.findItem(R.id.importImage).setVisible(editable);
         optionsMenu.findItem(R.id.make_doodle).setVisible(editable);
         optionsMenu.findItem(R.id.styles_menu).setVisible(editable);
+        optionsMenu.findItem(R.id.capture_image).setVisible(editable);
+        optionsMenu.findItem(R.id.add_link).setVisible(editable);
+        optionsMenu.findItem(R.id.record_audio).setVisible(editable);
+        optionsMenu.findItem(R.id.import_audio).setVisible(editable);
+
     }
 
     /**
