@@ -106,7 +106,7 @@ public class BasicBooklet implements Booklet {
             addPage(page);
         }
 
-        //sort the pages by time of creation
+        //sort the pages by the time they where last modified
         Collections.sort(pagesList, new LastModifiedComparator());
     }
 
@@ -255,6 +255,9 @@ public class BasicBooklet implements Booklet {
     public void onModified(Page page) {
 
         Collections.sort(pagesList, new LastModifiedComparator());
+        Collections.sort(listOnDisplay, new LastModifiedComparator());
+
+
         listener.onModified(page);
 
     }
@@ -274,6 +277,8 @@ public class BasicBooklet implements Booklet {
 
         //TODO: why does this have to be called here, if it's already been called in onModified?????!
         Collections.sort(pagesList, new LastModifiedComparator());
+        Collections.sort(listOnDisplay, new LastModifiedComparator());
+
 
         //calculating the amount of pages left to deliver
         amount = Math.min(amount, listOnDisplay.size() -currentPage );
