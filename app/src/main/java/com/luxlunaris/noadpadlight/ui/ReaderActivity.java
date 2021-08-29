@@ -114,7 +114,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
     private void reloadText(){
 
         //get the html source code from the Page.
-        String text =page.getText();
+        String text =page.getSourceCode();
 
         //convert the html source code to a Spanned object (using deprecated version for legacy support).
         //TODO: Solve: when the activity starts back after being killed in the bg, html source's image tags are ok, but span doesn't contain images.
@@ -134,7 +134,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      */
     private void saveToPage(){
         String edited = getEdited();
-        page.setText(edited);
+        page.setSourceCode(edited);
     }
 
     /**
@@ -202,7 +202,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
         page.savePosition(textView.getSelectionStart());
 
         //if the edited text doesn't differ from the text in the page, don't re-write it
-        if(Html.toHtml(textView.getEditableText()).equals(page.getText())){
+        if(Html.toHtml(textView.getEditableText()).equals(page.getSourceCode())){
             return;
         }
 

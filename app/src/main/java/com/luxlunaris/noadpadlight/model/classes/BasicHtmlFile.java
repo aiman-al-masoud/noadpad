@@ -4,9 +4,11 @@ package com.luxlunaris.noadpadlight.model.classes;
 import android.text.Html;
 import android.util.Log;
 
+import com.luxlunaris.noadpadlight.model.interfaces.HtmlFile;
 import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +16,9 @@ import java.util.List;
 /**
  * A wrapper for a text file that handles an html document.
  */
-public class HtmlFile extends File {
+public class BasicHtmlFile extends File implements HtmlFile {
 
-    public HtmlFile(String pathname) {
+    public BasicHtmlFile(String pathname) {
         super(pathname);
     }
 
@@ -25,6 +27,7 @@ public class HtmlFile extends File {
      * (The raw text with all of the html tags).
      * @return
      */
+    @Override
     public String getSourceCode() {
         String text = FileIO.read(getPath());
         return text ==null? "" : text;
@@ -34,6 +37,7 @@ public class HtmlFile extends File {
      * Save new/edited source to the text file.
      * @param text
      */
+    @Override
     public void setSourceCode(String text) {
         FileIO.write(getPath(), text);
     }
@@ -42,6 +46,7 @@ public class HtmlFile extends File {
      * Get the rendered text without any html tags.
      * @return
      */
+    @Override
     public String getRendered(){
         return Html.fromHtml(getSourceCode()).toString();
     }
@@ -52,6 +57,7 @@ public class HtmlFile extends File {
      * @param pos
      * @param tag
      */
+    @Override
     public void addHtmlTag(int pos, String tag){
         //replacement = original sandwitched between two tags.
         String startTag = "<"+tag+">";
@@ -64,6 +70,7 @@ public class HtmlFile extends File {
      * Remove all html tags from a paragraph.
      * @param pos
      */
+    @Override
     public void removeHtmlTags(int pos){
         //remove all tags other than the paragraph tag. (sort of)
         String replacement = getParagraphs()[lineToParagraph(getLine(pos))].replaceAll("<[abcefghijklmnoqrstuvwxyz]>", "").replaceAll("</[abcefghijklmnoqrstuvwxyz]>", "");
@@ -75,6 +82,7 @@ public class HtmlFile extends File {
      * @param replacement
      * @param pos
      */
+    @Override
     public void replaceParagraph(String replacement, int pos){
 
         //get all of the paragraphs
@@ -101,6 +109,7 @@ public class HtmlFile extends File {
      * @param content: stuff between the "p" tags, excluding the tags themselves.
      * @param pos
      */
+    @Override
     public void insertParagraph(String content, int pos){
 
         //GET THE NEW POSITION THE INSERTED PAR SHOULD STAY AT:
@@ -133,6 +142,7 @@ public class HtmlFile extends File {
      * (position as in the rendered text).
      * @return
      */
+    @Override
     public String getParagraphAt(int pos){
 
         try{
@@ -150,6 +160,7 @@ public class HtmlFile extends File {
      * @param pos
      * @return
      */
+    @Override
     public int getLine(int pos){
 
         String text = getRendered();
@@ -176,6 +187,7 @@ public class HtmlFile extends File {
      * (The first line).
      * @return
      */
+    @Override
     public String getPreview() {
         return FileIO.readLine(getPath())+"\n";
     }
@@ -239,6 +251,7 @@ public class HtmlFile extends File {
      * @param link
      * @param pos
      */
+    @Override
     public void addLink(String link, int pos){
 
         if(!link.contains("http")){
@@ -254,20 +267,19 @@ public class HtmlFile extends File {
         insertParagraph(content, pos);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Create this (as a single file, of course).
+     * @return
+     */
+    @Override
+    public boolean create() {
+        try {
+            return createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 }

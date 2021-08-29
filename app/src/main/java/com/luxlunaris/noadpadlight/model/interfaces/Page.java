@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
+import android.text.Html;
+
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.ui.NullEmergency;
 
@@ -13,7 +15,7 @@ import java.io.Serializable;
  * can contain text, other files, and the relative metadata.
  *
  */
-public interface Page extends Serializable {
+public interface Page extends HtmlFile, Serializable {
 
 	/**
 	 * Settable tags.
@@ -21,19 +23,6 @@ public interface Page extends Serializable {
 	 */
 	String TAG_EDITABLE = "editable";
 	String TAG_IN_RECYCLE_BIN = "in_recycle_bin";
-
-
-	/**
-	 * Get the Page's text
-	 * @return
-	 */
-	String getText();
-
-	/**
-	 * Modify/set the Page's text
-	 * @param text
-	 */
-	void setText(String text);
 
 	/**
 	 * Get the Page's name
@@ -46,24 +35,6 @@ public interface Page extends Serializable {
 	 * @return
 	 */
 	long getCreationTime();
-
-	/**
-	 * Get the last time the Page was modified
-	 * @return
-	 */
-	long getLastModifiedTime();
-
-	/**
-	 * Delete the Page
-	 * @return
-	 */
-	boolean delete();
-
-	/**
-	 * Create the Page
-	 */
-	void create();
-
 
 	/**
 	 * get the number of tokens
@@ -156,21 +127,6 @@ public interface Page extends Serializable {
 	File getImageDir();
 
 	/**
-	 * Surround a part of this Page's text with an html tag.
-	 * @param pos
-	 * @param tag
-	 */
-	void addHtmlTag(int pos, String tag);
-
-
-	/**
-	 * Remove all of the html tags from a position.
-	 * @param pos
-	 */
-	void removeHtmlTags(int pos);
-
-
-	/**
 	 * Set a tag of any kind.
 	 * (Just convert the value to a string by appending +"" or calling toString())
 	 * @param tag
@@ -211,13 +167,6 @@ public interface Page extends Serializable {
 	 * @return
 	 */
 	File getAudioDir();
-
-	/**
-	 * Add a link at the specified posistion.
-	 * @param link
-	 * @param pos
-	 */
-	void addLink(String link, int pos);
 
 
 

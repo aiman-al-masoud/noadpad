@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
+import com.luxlunaris.noadpadlight.model.interfaces.HtmlFile;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.services.FileIO;
@@ -62,7 +63,7 @@ public class SinglePage extends File implements Page {
 	public SinglePage(String pathname) {
 		super(pathname);
 		metadata = new MetadataFile(getPath()+File.separator+"metadata");
-		htmlFile = new HtmlFile(getPath()+File.separator+"text");
+		htmlFile = new BasicHtmlFile(getPath()+File.separator+"text");
 		imageDir = new File(getPath()+File.separator+"images");
 		audioDir = new File(getPath()+File.separator+"audios");
 		mediaDirs = new File[]{imageDir, audioDir};
@@ -76,7 +77,7 @@ public class SinglePage extends File implements Page {
 	 */
 	private WordCounter getWordCounter(){
 		if(wordCounter== null){
-			wordCounter = new WordCounter(getTextNoTags());
+			wordCounter = new WordCounter(getRendered());
 		}
 		return wordCounter;
 	}
@@ -88,7 +89,7 @@ public class SinglePage extends File implements Page {
 	 * @return
 	 */
 	@Override
-	public String getText() {
+	public String getSourceCode() {
 		return htmlFile.getSourceCode();
 	}
 
@@ -97,7 +98,7 @@ public class SinglePage extends File implements Page {
 	 * @param text
 	 */
 	@Override
-	public void setText(String text) {
+	public void setSourceCode(String text) {
 
 		if(!getBoolean(TAG_EDITABLE)){
 			return;
@@ -125,7 +126,8 @@ public class SinglePage extends File implements Page {
 	 * Get the text of this Page without any html tags.
 	 * @return
 	 */
-	public String getTextNoTags(){
+	@Override
+	public String getRendered(){
 		return htmlFile.getRendered();
 	}
 
@@ -155,17 +157,18 @@ public class SinglePage extends File implements Page {
 	 * Create this Page on disk as a directory
 	 */
 	@Override
-	public void create() {
+	public boolean create() {
 
 		mkdir();
 		
 		try {
 			((MetadataFile)metadata).createNewFile();
-			htmlFile.createNewFile();
+			htmlFile.create();
 			imageDir.mkdir();
 			audioDir.mkdir();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 
@@ -174,6 +177,7 @@ public class SinglePage extends File implements Page {
 			listener.onCreated(this);
 		}
 
+		return true;
 	}
 
 
@@ -200,9 +204,8 @@ public class SinglePage extends File implements Page {
 	 * @return
 	 */
 	@Override
-	public long getLastModifiedTime() {
+	public long lastModified() {
 
-		//return textFile.lastModified();
 		return htmlFile.lastModified();
 
 	}
@@ -290,7 +293,7 @@ public class SinglePage extends File implements Page {
 	 */
 	public boolean contains(String[] keywords){
 
-		String text =  getTextNoTags().toUpperCase();
+		String text =  getRendered().toUpperCase();
 		for(String keyword : keywords){
 			if(!text.contains(keyword.toUpperCase())){
 				return false;
@@ -379,7 +382,7 @@ public class SinglePage extends File implements Page {
 		}
 
 		//get the html source
-		String text = getText();
+		String text = getSourceCode();
 
 		for (File file : dir.listFiles()) {
 			String unixTimeName = file.getName();
@@ -411,6 +414,27 @@ public class SinglePage extends File implements Page {
 	public void removeHtmlTags(int pos){
 		htmlFile.removeHtmlTags(pos);
 	}
+
+	@Override
+	public void replaceParagraph(String replacement, int pos) {
+		htmlFile.replaceParagraph(replacement, pos);
+	}
+
+	@Override
+	public void insertParagraph(String content, int pos) {
+		htmlFile.insertParagraph(content, pos);
+	}
+
+	@Override
+	public String getParagraphAt(int pos) {
+		return htmlFile.getParagraphAt(pos);
+	}
+
+	@Override
+	public int getLine(int pos) {
+		return htmlFile.getLine(pos);
+	}
+
 
 	@Override
 	public void setTag(String tag, String value) {

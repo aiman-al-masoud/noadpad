@@ -45,13 +45,13 @@ public class Compacter {
                 //get the date-last-modified string in with locale settings
                 //TODO figure out a cheap* way to get context in here t.b.a.t. call unitTimeToString.
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy hh:mm");
-                String dateString = dateFormat.format(new Date(page.getLastModifiedTime()));
+                String dateString = dateFormat.format(new Date(page.lastModified()));
 
                 head = dateString+"\n";
                 textBlob+=head;
             }
 
-            textBlob+=page.getText()+"\n\n";
+            textBlob+=page.getSourceCode()+"\n\n";
         }
 
         //this is the path in the html that will replace the older ones.
@@ -83,7 +83,7 @@ public class Compacter {
         }
 
         //set the text of the blank page
-        blankPage.setText(textBlob);
+        blankPage.setSourceCode(textBlob);
 
     }
 

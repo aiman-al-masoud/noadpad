@@ -118,7 +118,7 @@ public class Notebook implements Pageable, PageListener {
 	public void onDeleted(Page page) {
 
 		//if deleted page is not empty, add it to recycle bin
-		if(!page.getText().trim().isEmpty()){
+		if(!page.getSourceCode().trim().isEmpty()){
 			recycleBin.put(page);
 		}
 

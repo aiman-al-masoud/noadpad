@@ -72,7 +72,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
 
 
         //TODO: Tmp fix: remove myself if page is from the 70's
-        if(page.getLastModifiedTime()==0){
+        if(page.lastModified()==0){
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             return view;
         }
@@ -145,7 +145,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         try{
             String text  = page.getPreview();
 
-            String dateTimeString = "<small>"+ TimeServices.unixTimeToString(page.getLastModifiedTime(), getContext())+"</small>";
+            String dateTimeString = "<small>"+ TimeServices.unixTimeToString(page.lastModified(), getContext())+"</small>";
 
             text+="\n"+dateTimeString;
 
