@@ -70,13 +70,11 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         }
 
 
-
         //TODO: Tmp fix: remove myself if page is from the 70's
         if(page.lastModified()==0){
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             return view;
         }
-
 
         //get this fragment's button
         pageButton = view.findViewById(R.id.pageButton);
