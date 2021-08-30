@@ -110,8 +110,12 @@ public class SinglePage extends File implements Page {
 
         htmlFile.setSourceCode(text);
 
-        for (PageListener listener : listeners) {
-            listener.onModified(this);
+        try{
+            for (PageListener listener : listeners) {
+                listener.onModified(this);
+            }
+        }catch (ConcurrentModificationException e){
+            e.printStackTrace();
         }
 
         //delete any no-longer needed media files.
@@ -141,9 +145,14 @@ public class SinglePage extends File implements Page {
     public boolean delete() {
 
         //notify the listeners before deletion happens.
-        for (PageListener listener : listeners) {
-            listener.onDeleted(this);
+        try{
+            for (PageListener listener : listeners) {
+                listener.onDeleted(this);
+            }
+        }catch (ConcurrentModificationException e){
+            e.printStackTrace();
         }
+
 
         FileIO.deleteDirectory(this.getPath());
         return true;

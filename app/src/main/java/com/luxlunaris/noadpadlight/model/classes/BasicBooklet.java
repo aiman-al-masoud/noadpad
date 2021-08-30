@@ -59,7 +59,6 @@ public class BasicBooklet implements Booklet {
         pagesList = new ArrayList<>();
         selectedPagesList = new ArrayList<>();
         rewind();
-
         listOnDisplay = pagesList;
     }
 
@@ -182,33 +181,37 @@ public class BasicBooklet implements Booklet {
 
             public void run(){
 
+                //unzip the zip-file and get the pages folder.
                 File unzipped = FileIO.unzipDir(sourcePath, Paths.TMP_DIR+"unzipped");
                 File pagesFolder = new File(unzipped.getPath()+File.separator+"pages");
 
-                //protect against zip files that are not pertinent.
+                //protect against irrelevant or corrupt zip files.
                 if(!pagesFolder.exists()){
                     return;
                 }
 
-
+                //for each page file, add it to the list of pages
                 for(File file : pagesFolder.listFiles()){
 
                     //copy each file from the unzipped file
                     try {
                         File copy =  new File(PAGES_DIR+File.separator+file.getName());
                         FileUtils.copyDirectory(file, copy);
-
-                        //Page page = new SinglePage(file.getPath());
                         Page page = new SinglePage(copy.getPath());
                         addPage(page);
-                        listener.onCreated(page);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    Collections.sort(pagesList, new LastModifiedComparator());
-
                 }
+
+                //sort the pages by date of last modification.
+                Collections.sort(pagesList, new LastModifiedComparator());
+
+                //add pages in reverse order, because pagesList is sorted: newest first, but onCreated adds page on top of fragments, so w/ regular order you'd get oldest on top.
+                for(int i =pagesList.size()-1; i>=0; i--){
+                    listener.onCreated(pagesList.get(i));
+                }
+
             }
 
 
@@ -245,8 +248,6 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onDeleted(Page page) {
         remove(page);
-        //pagesList.remove(page);
-        //selectedPagesList.remove(page);
         listener.onDeleted(page);
     }
 
@@ -255,7 +256,6 @@ public class BasicBooklet implements Booklet {
 
         Collections.sort(pagesList, new LastModifiedComparator());
         Collections.sort(listOnDisplay, new LastModifiedComparator());
-
 
         listener.onModified(page);
 
@@ -278,22 +278,15 @@ public class BasicBooklet implements Booklet {
         Collections.sort(pagesList, new LastModifiedComparator());
         Collections.sort(listOnDisplay, new LastModifiedComparator());
 
-
         //calculating the amount of pages left to deliver
         amount = Math.min(amount, listOnDisplay.size() -currentPage );
 
         List<Page> result = new ArrayList<>();
 
         try{
-            Log.d("CURRENT_PAGE", "current page: "+currentPage);
-
             result = listOnDisplay.subList(currentPage, currentPage+amount);
-            Log.d("CURRENT_PAGE", "result size: "+result.size());
-
             currentPage+=amount;
-        }catch (Exception e){
-
-        }
+        }catch (Exception e){ }
 
         return result.toArray(new Page[0]);
     }
