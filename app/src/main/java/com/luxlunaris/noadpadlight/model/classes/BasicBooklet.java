@@ -190,6 +190,9 @@ public class BasicBooklet implements Booklet {
                     return;
                 }
 
+                //list of imported pages, to be filled in for loop
+                ArrayList<Page> importedPages = new ArrayList<>();
+
                 //for each page file, add it to the list of pages
                 for(File file : pagesFolder.listFiles()){
 
@@ -199,6 +202,7 @@ public class BasicBooklet implements Booklet {
                         FileUtils.copyDirectory(file, copy);
                         Page page = new SinglePage(copy.getPath());
                         addPage(page);
+                        importedPages.add(page);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -206,10 +210,11 @@ public class BasicBooklet implements Booklet {
 
                 //sort the pages by date of last modification.
                 Collections.sort(pagesList, new LastModifiedComparator());
+                Collections.sort(importedPages, new LastModifiedComparator());
 
                 //add pages in reverse order, because pagesList is sorted: newest first, but onCreated adds page on top of fragments, so w/ regular order you'd get oldest on top.
-                for(int i =pagesList.size()-1; i>=0; i--){
-                    listener.onCreated(pagesList.get(i));
+                for(int i =importedPages.size()-1; i>=0; i--){
+                    listener.onCreated(importedPages.get(i));
                 }
 
             }
