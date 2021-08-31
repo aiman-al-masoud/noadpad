@@ -213,7 +213,13 @@ public class SinglePage extends File implements Page {
      */
     @Override
     public long lastModified() {
-        return htmlFile.lastModified();
+        long mod = htmlFile.lastModified();
+
+        if(mod>=Long.MAX_VALUE  | mod<=Long.MIN_VALUE){
+            return 0;
+        }
+
+        return mod;
     }
 
     /**
@@ -497,6 +503,10 @@ public class SinglePage extends File implements Page {
     public File getAudioFile(int pos) {
 
         String paragraph = htmlFile.getParagraphAt(pos);
+
+        if(paragraph==null){
+            return null;
+        }
 
         //strip the paragraph
         paragraph = paragraph.replace("<p>", "").replace("</p>", "").replaceAll("<.*>", "").replace("AUDIO_", "");

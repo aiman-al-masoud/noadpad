@@ -105,8 +105,18 @@ public class BasicBooklet implements Booklet {
         }
 
         //sort the pages by the time they where last modified
-        Collections.sort(pagesList, new LastModifiedComparator());
+        sortList();
+
     }
+
+    public void sortList(){
+        try{
+            Collections.sort(pagesList, new LastModifiedComparator());
+            Collections.sort(listOnDisplay, new LastModifiedComparator());
+        }catch (IllegalArgumentException e){ e.printStackTrace();}
+    }
+
+
 
     /**
      * Returns an array of the selected pages
@@ -209,8 +219,10 @@ public class BasicBooklet implements Booklet {
                 }
 
                 //sort the pages by date of last modification.
-                Collections.sort(pagesList, new LastModifiedComparator());
+                sortList();
                 Collections.sort(importedPages, new LastModifiedComparator());
+
+
 
                 //add pages in reverse order, because pagesList is sorted: newest first, but onCreated adds page on top of fragments, so w/ regular order you'd get oldest on top.
                 for(int i =importedPages.size()-1; i>=0; i--){
@@ -259,8 +271,9 @@ public class BasicBooklet implements Booklet {
     @Override
     public void onModified(Page page) {
 
-        Collections.sort(pagesList, new LastModifiedComparator());
-        Collections.sort(listOnDisplay, new LastModifiedComparator());
+        //Collections.sort(pagesList, new LastModifiedComparator());
+        //Collections.sort(listOnDisplay, new LastModifiedComparator());
+        sortList();
 
         listener.onModified(page);
 
@@ -280,8 +293,9 @@ public class BasicBooklet implements Booklet {
     public Page[] getNext(int amount) {
 
         //TODO: why does this have to be called here, if it's already been called in onModified?????!
-        Collections.sort(pagesList, new LastModifiedComparator());
-        Collections.sort(listOnDisplay, new LastModifiedComparator());
+        //Collections.sort(pagesList, new LastModifiedComparator());
+        //Collections.sort(listOnDisplay, new LastModifiedComparator());
+        sortList();
 
         //calculating the amount of pages left to deliver
         amount = Math.min(amount, listOnDisplay.size() -currentPage );
