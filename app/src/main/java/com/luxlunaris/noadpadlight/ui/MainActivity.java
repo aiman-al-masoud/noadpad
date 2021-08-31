@@ -9,7 +9,6 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.services.FileIO;
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public void plainLaunch(){
         startPagesActivity();
         //decide whether or not to open a blank page at app launch
-        boolean startToBlankPage = Settings.getBoolean(SETTINGS_TAGS.LAUNCH_TO_BLANK_PAGE);
+        boolean startToBlankPage = Settings.getBoolean(Settings.TAG_LAUNCH_TO_BLANK_PAGE);
         if(startToBlankPage && !appStartedFlag){
             //set the "launch phase is over" flag
             appStartedFlag = true;

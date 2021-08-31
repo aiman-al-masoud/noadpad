@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.services.FileIO;
 
@@ -82,7 +81,7 @@ public class ImportFileFragment extends DialogFragment {
         confirmSelectionButton.setOnClickListener(new HandleConfirm());
 
         //paint this fragment with the current theme
-        THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        THEMES theme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
         view.setBackgroundColor(theme.BG_COLOR);
         selectFileButton.setBackgroundColor(theme.BG_COLOR);
         confirmSelectionButton.setBackgroundColor(theme.BG_COLOR);

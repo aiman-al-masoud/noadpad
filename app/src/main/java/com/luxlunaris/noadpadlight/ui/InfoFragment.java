@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 
 /**
@@ -51,7 +50,7 @@ public class InfoFragment extends DialogFragment {
         gotItButton.setOnClickListener(new GotItHandler());
         textArea = view.findViewById(R.id.infoFragmentText);
         textArea.setText(text);
-        THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        THEMES theme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
         gotItButton.setBackgroundColor(theme.BG_COLOR);
         gotItButton.setTextColor(theme.FG_COLOR);
         textArea.setBackgroundColor(theme.BG_COLOR);

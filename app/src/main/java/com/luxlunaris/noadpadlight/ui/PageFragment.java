@@ -12,10 +12,10 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
+import com.luxlunaris.noadpadlight.model.classes.Tag;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import com.luxlunaris.noadpadlight.services.TimeServices;
@@ -36,7 +36,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
     /**
      * Text color when unselected
      */
-    private static int NORMAL_TEXT_COLOR = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)).FG_COLOR;
+    private static int NORMAL_TEXT_COLOR = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME)).FG_COLOR;
 
     /**
      * Text color when selected
@@ -47,7 +47,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         PageFragment fragment = new PageFragment();
         fragment.page = page;
         page.addListener(fragment);
-        Settings.listenToTag(SETTINGS_TAGS.THEME, fragment);
+        Settings.listenToTag(Settings.TAG_THEME, fragment);
         return fragment;
     }
 
@@ -103,7 +103,7 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
         });
 
         //get the theme and set the background color
-        THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME) );
+        THEMES theme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME) );
         pageButton.setBackgroundColor(theme.BG_COLOR);
 
         //if this fragment's page is selected, set the color to selected
@@ -178,8 +178,8 @@ public class PageFragment extends Fragment implements SettingsTagListener, PageL
     }
 
     @Override
-    public void onTagUpdated(SETTINGS_TAGS tag) {
-        THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+    public void onTagUpdated(Tag tag) {
+        THEMES newTheme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
         NORMAL_TEXT_COLOR =  newTheme.FG_COLOR;
     }
 

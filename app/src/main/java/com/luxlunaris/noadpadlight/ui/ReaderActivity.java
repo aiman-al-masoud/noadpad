@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Paths;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 import com.luxlunaris.noadpadlight.services.FileIO;
@@ -48,7 +47,7 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
      * current text size
      * defaults to: 18
      */
-    int TEXT_SIZE = Settings.getInt(SETTINGS_TAGS.TEXT_SIZE);
+    int TEXT_SIZE = Settings.getInt(Settings.TAG_TEXT_SIZE);
 
     /**
      * Used to call this activity by an intent.
@@ -294,13 +293,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 //increment the text size
                 textView.setTextSize(++TEXT_SIZE);
                 //save the new text size
-                Settings.setTag(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
+                Settings.setTag(Settings.TAG_TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.zoom_out:
                 //decrement the text size
                 textView.setTextSize(--TEXT_SIZE);
                 //save the new text size
-                Settings.setTag(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
+                Settings.setTag(Settings.TAG_TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.importImage:
                 ImportFileFragment frag = ImportFileFragment.newInstance();

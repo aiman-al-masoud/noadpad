@@ -11,8 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.model.classes.Tag;
 
 /**
  * Toggle fragment contains a switch/toggle, that regulates
@@ -33,7 +33,7 @@ public class ToggleFragment extends Fragment {
     /**
      * The tag of a binary setting
      */
-    private SETTINGS_TAGS SETTING_TAG;
+    private Tag SETTING_TAG;
 
     /**
      * Tag's value in the settings file when setting enabled
@@ -51,7 +51,7 @@ public class ToggleFragment extends Fragment {
     }
 
 
-    public static ToggleFragment newInstance(String text, SETTINGS_TAGS SETTING_TAG) {
+    public static ToggleFragment newInstance(String text, Tag SETTING_TAG) {
         ToggleFragment fragment = new ToggleFragment();
         fragment.text = text;
         fragment.SETTING_TAG = SETTING_TAG;

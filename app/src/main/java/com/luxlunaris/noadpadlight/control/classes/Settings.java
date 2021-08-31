@@ -35,7 +35,8 @@ public class Settings{
     /**
      * Associates to (potentially) each tag a list of listeners of that tag.
      */
-    private static HashMap<SETTINGS_TAGS, ArrayList<SettingsTagListener>> tagListeners;
+    //private static HashMap<SETTINGS_TAGS, ArrayList<SettingsTagListener>> tagListeners;
+    private static HashMap<Tag, ArrayList<SettingsTagListener>> tagListeners;
 
 
     /**
@@ -52,7 +53,9 @@ public class Settings{
      * @param tag
      * @param listener
      */
-    public static void listenToTag(SETTINGS_TAGS tag, SettingsTagListener listener){
+    //public static void listenToTag(SETTINGS_TAGS tag, SettingsTagListener listener){
+    public static void listenToTag(Tag tag, SettingsTagListener listener){
+
 
         //get the list of listeners of a tag
         ArrayList<SettingsTagListener> listeners = tagListeners.get(tag);
@@ -100,78 +103,65 @@ public class Settings{
 
     /**
      * Get the value of a boolean tag.
-     * @param TAG_NAME
+     * @param tag
      * @return
      */
-    public static boolean getBoolean(SETTINGS_TAGS TAG_NAME){
-
-        //set up all singleton parameters
+    public static boolean getBoolean(Tag tag){
         makeInstance();
-        return settingsFile.getBoolean(TAG_NAME.toString());
+        return settingsFile.getBoolean(tag.tag);
     }
 
     /**
      * Get the value of an int tag.
-     * @param TAG_NAME
+     * @param tag
      * @return
      */
-    public static int getInt(SETTINGS_TAGS TAG_NAME){
-
-        //set up all instance attributes
+    public static int getInt(Tag tag){
         makeInstance();
-        return settingsFile.getInt(TAG_NAME.toString());
+        return settingsFile.getInt(tag.tag);
     }
 
 
     /**
      * Get the value of a string tag.
-     * @param TAG_NAME
+     * @param tag
      * @return
      */
-    public static String getString(SETTINGS_TAGS TAG_NAME){
-
-        //set up all instance attributes
+    public static String getString(Tag tag){
         makeInstance();
-        return settingsFile.getString(TAG_NAME.toString());
+        return settingsFile.getString(tag.tag);
     }
 
 
     /**
      * Get the value of a float tag.
-     * @param TAG_NAME
+     * @param tag
      * @return
      */
-    public static double getFloat(SETTINGS_TAGS TAG_NAME){
-
-        //set up all instance attributes
+    public static double getFloat(Tag tag){
         makeInstance();
-        return settingsFile.getFloat(TAG_NAME.toString());
+        return settingsFile.getFloat(tag.tag);
     }
 
 
     /**
      * Set the value of any tag (enter it in string form).
-     * @param TAG_NAME
+     * @param tag
      * @param newValue
      */
-    public static void setTag(SETTINGS_TAGS TAG_NAME, String newValue){
-
-        //set up all instance attributes
+    public static void setTag(Tag tag, String newValue){
         makeInstance();
-
         //set the new tag value
-        settingsFile.setTag(TAG_NAME.toString(), newValue);
-
+        settingsFile.setTag(tag.tag, newValue);
         //notify all of the listeners of the modified tag that its value changed
-        notifyListenersOfTag(TAG_NAME);
-
+        notifyListenersOfTag(tag);
     }
 
     /**
      * notify all of the listeners of the modified tag that its value changed
      * @param tag
      */
-    private static void notifyListenersOfTag(SETTINGS_TAGS tag){
+    private static void notifyListenersOfTag(Tag tag){
         ArrayList<SettingsTagListener> listenersOfTag = tagListeners.get(tag);
         if(listenersOfTag!=null){
             for(SettingsTagListener listener : listenersOfTag){

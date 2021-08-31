@@ -1,7 +1,6 @@
 package com.luxlunaris.noadpadlight.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
+import com.luxlunaris.noadpadlight.model.classes.Tag;
 
 import java.util.List;
 
@@ -42,12 +41,12 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
         setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 
         //get the current theme from the global Settings
-        currentTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        currentTheme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
 
         //set the theme of this activity
         setTheme(currentTheme);
 
-        Settings.listenToTag(SETTINGS_TAGS.THEME, this);
+        Settings.listenToTag(Settings.TAG_THEME, this);
 
 
         super.onCreate(savedInstanceState);
@@ -73,7 +72,7 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
             justCreatedFlag = false;
         }
 
-        THEMES newTheme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+        THEMES newTheme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
         if(currentTheme!=newTheme){
             currentTheme = newTheme;
             repaintViews();
@@ -122,9 +121,9 @@ public abstract class ColorActivity extends AppCompatActivity implements Setting
 
 
     @Override
-    public void onTagUpdated(SETTINGS_TAGS tag) {
+    public void onTagUpdated(Tag tag) {
         System.out.println("HELLOOO??????????????????");
-        setTheme(THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME)));
+        setTheme(THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME)));
         repaintViews();
     }
 

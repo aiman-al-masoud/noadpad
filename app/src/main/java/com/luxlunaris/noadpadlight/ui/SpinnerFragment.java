@@ -13,8 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.luxlunaris.noadpadlight.R;
-import com.luxlunaris.noadpadlight.control.classes.SETTINGS_TAGS;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
+import com.luxlunaris.noadpadlight.model.classes.Tag;
 
 
 /**
@@ -46,7 +46,7 @@ public class SpinnerFragment extends Fragment {
     /**
      * Specifies the setting to be changed
      */
-    SETTINGS_TAGS settingTag;
+    Tag settingTag;
 
     /**
      * Text to be displayed to the user.
@@ -64,7 +64,7 @@ public class SpinnerFragment extends Fragment {
     }
 
 
-    public static SpinnerFragment newInstance(SETTINGS_TAGS settingTag, Enum[] optionsEnum, String text) {
+    public static SpinnerFragment newInstance(Tag settingTag, Enum[] optionsEnum, String text) {
         SpinnerFragment fragment = new SpinnerFragment();
         fragment.optionsEnum = optionsEnum;
         fragment.settingTag = settingTag;
@@ -95,7 +95,7 @@ public class SpinnerFragment extends Fragment {
 
 
                 //set the color of the text on the spinner
-                THEMES theme = THEMES.getThemeByName(Settings.getString(SETTINGS_TAGS.THEME));
+                THEMES theme = THEMES.getThemeByName(Settings.getString(Settings.TAG_THEME));
                 ((TextView) parent.getChildAt(0)).setTextColor(theme.FG_COLOR);
 
                 //change the setting based on what item is selected
