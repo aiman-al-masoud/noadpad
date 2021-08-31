@@ -1,31 +1,59 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.services.FileIO;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class MetadataFile extends File implements Metadata {
 
-	
+
+	/**
+	 * Key: Tag, Value: default value in string format.
+	 */
+	HashMap<String, String> defaultVals;
+
+
+
 	public MetadataFile(String pathname) {
-		super(pathname);	
+		super(pathname);
+		defaultVals = new HashMap<>();
 	}
 	
-	
-	public void create() {
+
+	@Override
+	public boolean create() {
 		try {
-			this.createNewFile();
+			return this.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
-	
+
+	@Override
+	public boolean delete(){
+		return this.delete();
+	}
+
+
+	/**
+	 * Set a non-persistent default value, meant to be "hardcoded" when this object is initialized.
+	 * @param tag
+	 * @param tagDefaultVal
+	 */
+	@Override
+	public void setTagDefault(String tag, String tagDefaultVal) {
+		defaultVals.put(tag, tagDefaultVal);
+	}
+
 	
 	/**
 	 * inserts a key-value pair in the module. 
@@ -38,11 +66,15 @@ public class MetadataFile extends File implements Metadata {
 	public void setTag(String key, String value) {
 
 		//get the old value of the key
-		String oldValue = getString(key);
+		String oldValue = getStringNoDefault(key);
 		
 		//get this file's text
 		String text = FileIO.read(this.getPath());
-		
+
+		if(text==null){
+			text = "";
+		}
+
 		//if it's the first time you're putting this key in, add a new key-value line
 		if(oldValue==null) {
 			text+=key+" : "+value+"\n";
@@ -55,33 +87,52 @@ public class MetadataFile extends File implements Metadata {
 		FileIO.write(this.getPath(), text);
 		
 	}
-	
-	
-	
+
+
 	/**
-	 * Returns the value associated to a key, null if not found.
-	 * In case the value is a referenced file, it returns 
-	 * the contents of that referenced file.
+	 * Returns the value associated to a key, or its
+	 * default value or null if not found.
 	 * @param key
 	 * @return
 	 */
 	@Override
 	public String getString(String key) {
+
+		String value = getStringNoDefault(key);
+
+		//if value is null, attempt getting the value from default map.
+		if(value==null){
+			Log.d("WRONG_TAG_TYPE", key+": using default value.");
+			value = defaultVals.get(key);
+		}
+
+		//return value, could be null.
+		return value;
+	}
+
+
+	/**
+	 * Just get whatever value is stored on the file, or null if none.
+	 * To be called INTERNALLY to this class!
+	 * @param key
+	 * @return
+	 */
+	protected String getStringNoDefault(String key){
 		//get this file's text
 		String text = FileIO.read(this.getPath());
 		String value = null;
 		try {
-			//try matching the pattern: key : value\n 
+			//try matching the pattern: key : value\n
 			Pattern pattern = Pattern.compile(key+" : (.*?)\n");
-			
+
 			Matcher matcher = pattern.matcher(text);
 			matcher.find();
-			
+
 			//get the value
 			value = matcher.group(1);
-			
+
 		}catch(Exception e) {/*do nothing*/}
-		
+
 		return value;
 	}
 
@@ -90,18 +141,20 @@ public class MetadataFile extends File implements Metadata {
 	 * Get the value of a tag that stores an integer
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
 	 */
 	@Override
-	public int getInt(String tagName) throws WrongTagTypeException {
+	public int getInt(String tagName) {
+
+		String value = getString(tagName);
 
 		try{
-			int parsedInt = Integer.parseInt(getString(tagName).trim());
-			return parsedInt;
-		}catch(NumberFormatException | NullPointerException e) {
-			throw new WrongTagTypeException(tagName+" is not an int!");
+			return Integer.parseInt(value.trim());
+		}catch (NullPointerException | NumberFormatException e){
+			Log.d("WRONG_TAG_TYPE", tagName+" is not an int, found value = "+value);
 		}
 
+		//int default
+		return 0;
 	}
 
 
@@ -109,27 +162,22 @@ public class MetadataFile extends File implements Metadata {
 	 * Get the value of a tag that stores a boolean
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
 	 */
 	@Override
-	public boolean getBoolean(String tagName) throws WrongTagTypeException {
+	public boolean getBoolean(String tagName)  {
 
 		String boolString = getString(tagName);
 
 		if(boolString==null){
-			throw  new WrongTagTypeException(tagName+" is not a boolean! It's null!");
+			Log.d("WRONG_TAG_TYPE", tagName+" boolean is null!");
 		}
 
-
-		if(boolString.toLowerCase().trim().equals("true")){
+		if(boolString.toLowerCase().trim().equals(TRUE_STR)){
 			return true;
 		}
 
-		if(boolString.toLowerCase().trim().equals("false")){
-			return false;
-		}
-
-		throw new WrongTagTypeException(tagName+" is not a boolean!");
+		//anything that isn't "true" is false:
+		return false;
 
 	}
 
@@ -137,19 +185,21 @@ public class MetadataFile extends File implements Metadata {
 	 * Get the value of a tag that stores a floating point number.
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
 	 */
 	@Override
-	public double getFloat(String tagName) throws WrongTagTypeException {
+	public double getFloat(String tagName) {
+
+		String value = getString(tagName);
+
 		try{
-			double parsedDouble = Double.parseDouble(getString(tagName).trim());
-			return parsedDouble;
-		}catch (NumberFormatException e){
-			throw new WrongTagTypeException(tagName+" is not a number!");
+			return Double.parseDouble(value.trim());
+		}catch (NullPointerException | NumberFormatException e){
+			Log.d("WRONG_TAG_TYPE", tagName+" is not an double, found value = "+value);
 		}
 
+		//double default
+		return 0;
 	}
-
 
 	/**
 	 * Removes a key and its associated value.
@@ -163,8 +213,13 @@ public class MetadataFile extends File implements Metadata {
 		}
 		String newText = FileIO.read(this.getPath()).replace(key+" : "+value+"\n", "");
 		FileIO.write(this.getPath(), newText);
-		
 	}
+
+
+
+
+
+
 
 
 

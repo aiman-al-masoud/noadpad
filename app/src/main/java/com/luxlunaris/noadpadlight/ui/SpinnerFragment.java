@@ -1,6 +1,5 @@
 package com.luxlunaris.noadpadlight.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -100,7 +99,7 @@ public class SpinnerFragment extends Fragment {
                 ((TextView) parent.getChildAt(0)).setTextColor(theme.FG_COLOR);
 
                 //change the setting based on what item is selected
-                Settings.setTagValue(settingTag, optionsEnum[position].toString());
+                Settings.setTag(settingTag, optionsEnum[position].toString());
             }
 
             @Override

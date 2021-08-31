@@ -2,7 +2,9 @@ package com.luxlunaris.noadpadlight.control.classes;
 
 import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
 import com.luxlunaris.noadpadlight.model.classes.MetadataFile;
-import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
+import com.luxlunaris.noadpadlight.model.classes.Tag;
+import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
+import com.luxlunaris.noadpadlight.ui.THEMES;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,12 +15,11 @@ import java.util.HashMap;
  *
  * Makes use of the Metadata IF.
  *
- *
  * It notifies registered listeners of a tag when the value of
  * that tag changes.
  *
  */
-public class Settings {
+public class Settings{
 
 
     /**
@@ -35,6 +36,14 @@ public class Settings {
      * Associates to (potentially) each tag a list of listeners of that tag.
      */
     private static HashMap<SETTINGS_TAGS, ArrayList<SettingsTagListener>> tagListeners;
+
+
+    /**
+     * Tags and default values.
+     */
+    public static Tag TAG_TEXT_SIZE = new Tag("TEXT_SIZE", 18+"");
+    public static Tag TAG_LAUNCH_TO_BLANK_PAGE = new Tag("LAUNCH_TO_BLANK_PAGE", Metadata.FALSE_STR);
+    public static Tag TAG_THEME = new Tag("THEME", THEMES.LIGHT.toString());
 
 
     /**
@@ -69,6 +78,7 @@ public class Settings {
 
         if(settingsFile==null){
             settingsFile = new MetadataFile(SETTINGS_FILE_PATH);
+            initTagValues();
         }
 
         if(!settingsFile.exists()){
@@ -81,6 +91,12 @@ public class Settings {
 
     }
 
+    private static void initTagValues(){
+        settingsFile.setTagDefault(TAG_LAUNCH_TO_BLANK_PAGE.tag, TAG_LAUNCH_TO_BLANK_PAGE.defaultValue);
+        settingsFile.setTagDefault(TAG_TEXT_SIZE.tag, TAG_TEXT_SIZE.defaultValue);
+        settingsFile.setTagDefault(TAG_THEME.tag, TAG_THEME.defaultValue);
+    }
+
 
     /**
      * Get the value of a boolean tag.
@@ -91,18 +107,8 @@ public class Settings {
 
         //set up all singleton parameters
         makeInstance();
-
-        try {
-            return settingsFile.getBoolean(TAG_NAME.toString());
-        } catch (WrongTagTypeException | NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        //return the tag's default value
-        return (boolean)TAG_NAME.DEFAULT_VAL;
-
+        return settingsFile.getBoolean(TAG_NAME.toString());
     }
-
 
     /**
      * Get the value of an int tag.
@@ -113,17 +119,7 @@ public class Settings {
 
         //set up all instance attributes
         makeInstance();
-
-        try {
-            return settingsFile.getInt(TAG_NAME.toString());
-        } catch (WrongTagTypeException | NullPointerException e) {
-            e.printStackTrace();
-        }
-
-
-        //return the default value of the tag
-        return (int)TAG_NAME.DEFAULT_VAL;
-
+        return settingsFile.getInt(TAG_NAME.toString());
     }
 
 
@@ -136,17 +132,7 @@ public class Settings {
 
         //set up all instance attributes
         makeInstance();
-
-        //get the string from the settings file
-        String string = settingsFile.getString(TAG_NAME.toString());
-
-        //return the string only if it's not null
-        if(string!=null){
-            return string;
-        }
-
-        //return the default value of the tag
-        return (String) TAG_NAME.DEFAULT_VAL;
+        return settingsFile.getString(TAG_NAME.toString());
     }
 
 
@@ -159,16 +145,7 @@ public class Settings {
 
         //set up all instance attributes
         makeInstance();
-
-
-        try {
-            return settingsFile.getFloat(TAG_NAME.toString());
-        } catch (WrongTagTypeException | NullPointerException  e) {
-            e.printStackTrace();
-        }
-
-        //default float value
-        return 0;
+        return settingsFile.getFloat(TAG_NAME.toString());
     }
 
 
@@ -177,7 +154,7 @@ public class Settings {
      * @param TAG_NAME
      * @param newValue
      */
-    public static void setTagValue(SETTINGS_TAGS TAG_NAME, String newValue){
+    public static void setTag(SETTINGS_TAGS TAG_NAME, String newValue){
 
         //set up all instance attributes
         makeInstance();
@@ -206,25 +183,5 @@ public class Settings {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

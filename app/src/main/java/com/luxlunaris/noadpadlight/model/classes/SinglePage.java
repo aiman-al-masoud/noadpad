@@ -3,7 +3,6 @@ package com.luxlunaris.noadpadlight.model.classes;
 import android.util.Log;
 
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
-import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
 import com.luxlunaris.noadpadlight.model.interfaces.HtmlFile;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
@@ -61,15 +60,26 @@ public class SinglePage extends File implements Page {
      */
     WordCounter wordCounter;
 
+
+
     public SinglePage(String pathname) {
         super(pathname);
-        metadata = new MetadataFile(getPath() + File.separator + "metadata");
+        listeners = new ArrayList<>();
         htmlFile = new BasicHtmlFile(getPath() + File.separator + "text");
         imageDir = new File(getPath() + File.separator + "images");
         audioDir = new File(getPath() + File.separator + "audios");
         mediaDirs = new File[]{imageDir, audioDir};
-        listeners = new ArrayList<>();
+        metadata = new MetadataFile(getPath() + File.separator + "metadata");
+        initTagDefaultVals();
     }
+
+
+    private void initTagDefaultVals(){
+        metadata.setTagDefault(TAG_EDITABLE_TAG.tag, TAG_EDITABLE_TAG.defaultValue);
+        metadata.setTagDefault(TAG_IN_RECYCLE_BIN_TAG.tag, TAG_IN_RECYCLE_BIN_TAG.defaultValue);
+        metadata.setTagDefault(TAG_LAST_POSITION_TAG.tag, TAG_LAST_POSITION_TAG.defaultValue);
+    }
+
 
 
     /**
@@ -270,7 +280,7 @@ public class SinglePage extends File implements Page {
      */
     @Override
     public void savePosition(int pos) {
-        metadata.setTag("LAST_POSITION", pos + "");
+        metadata.setTag(TAG_LAST_POSITION_TAG.tag, pos + "");
     }
 
     /**
@@ -471,11 +481,11 @@ public class SinglePage extends File implements Page {
     @Override
     public boolean getBoolean(String tag) {
 
-        try {
-            return metadata.getBoolean(tag);
-        } catch (WrongTagTypeException e) {
-            e.printStackTrace();
-        }
+
+        return metadata.getBoolean(tag);
+
+
+        /*
 
         //defaults based on the semantics of the tag
         switch (tag) {
@@ -485,7 +495,10 @@ public class SinglePage extends File implements Page {
                 return false;
         }
 
-        return false;
+                return false;
+
+         */
+
     }
 
     @Override

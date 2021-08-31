@@ -82,9 +82,9 @@ public class ToggleFragment extends Fragment {
 
                 //if checked set the value of the setting to true
                 if(isChecked){
-                    Settings.setTagValue(SETTING_TAG, ENABLED);
+                    Settings.setTag(SETTING_TAG, ENABLED);
                 }else{
-                    Settings.setTagValue(SETTING_TAG, DISABLED);
+                    Settings.setTag(SETTING_TAG, DISABLED);
                 }
 
             }

@@ -1,7 +1,5 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
-import android.util.Log;
-
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.classes.Paths;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;

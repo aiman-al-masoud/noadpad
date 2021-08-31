@@ -294,13 +294,13 @@ public class ReaderActivity extends ColorActivity implements ImportFileFragment.
                 //increment the text size
                 textView.setTextSize(++TEXT_SIZE);
                 //save the new text size
-                Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
+                Settings.setTag(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.zoom_out:
                 //decrement the text size
                 textView.setTextSize(--TEXT_SIZE);
                 //save the new text size
-                Settings.setTagValue(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
+                Settings.setTag(SETTINGS_TAGS.TEXT_SIZE, TEXT_SIZE+"");
                 break;
             case R.id.importImage:
                 ImportFileFragment frag = ImportFileFragment.newInstance();

@@ -1,11 +1,15 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
-import com.luxlunaris.noadpadlight.model.exceptions.WrongTagTypeException;
-
 /**
  * A simple persistent dictionary.
  */
 public interface Metadata {
+
+	/**
+	 * String representing the bool values
+	 */
+	String TRUE_STR = "true";
+	String FALSE_STR = "false";
 
 	/**
 	 * Get the string value of a tag.
@@ -18,34 +22,35 @@ public interface Metadata {
 	 * Get the value of a tag assuming it's an integer.
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
 	 */
-	int getInt(String tagName) throws WrongTagTypeException;
+	int getInt(String tagName);
+
 
 	/**
 	 * Get the value of a tag assuming it's a boolean.
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
 	 */
-	boolean getBoolean(String tagName) throws WrongTagTypeException;
+	boolean getBoolean(String tagName);
+
 
 	/**
 	 * Get the value of a tag assuming it's a float.
 	 * @param tagName
 	 * @return
-	 * @throws WrongTagTypeException
-	 */
-	double getFloat(String tagName) throws WrongTagTypeException;
-
+	 * */
+	double getFloat(String tagName);
 
 	/**
 	 * Set the value of a tag.
 	 * NB: you have to cast the value to a string to save it.
-	 * @param tagName
+	 * @param tag
 	 * @param tagValue
 	 */
-	void setTag(String tagName, String tagValue);
+	void setTag(String tag, String tagValue);
+
+
+	void setTagDefault(String tag, String tagDefaultVal);
 
 	/**
 	 * Delete a tag as well as its value.
@@ -53,6 +58,9 @@ public interface Metadata {
 	 */
 	void removeTag(String tagName);
 
+
+	boolean create();
+	boolean delete();
 
 
 
