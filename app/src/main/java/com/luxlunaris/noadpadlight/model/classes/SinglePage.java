@@ -463,6 +463,7 @@ public class SinglePage extends File implements Page {
         return htmlFile.getParagraphAt(pos);
     }
 
+
     @Override
     public int getLine(int pos) {
         return htmlFile.getLine(pos);
@@ -474,31 +475,29 @@ public class SinglePage extends File implements Page {
     }
 
     @Override
+    public void setTagDefault(String tag, String tagDefaultVal) { /*Unneeded*/}
+
+    @Override
+    public void removeTag(String tagName) {/*Unneeded*/ }
+
+    @Override
     public String getString(String tag) {
         return metadata.getString(tag);
     }
 
     @Override
+    public int getInt(String tag) {
+        return metadata.getInt(tag);
+    }
+
+    @Override
     public boolean getBoolean(String tag) {
-
-
         return metadata.getBoolean(tag);
+    }
 
-
-        /*
-
-        //defaults based on the semantics of the tag
-        switch (tag) {
-            case TAG_EDITABLE:
-                return true;
-            case TAG_IN_RECYCLE_BIN:
-                return false;
-        }
-
-                return false;
-
-         */
-
+    @Override
+    public double getFloat(String tag) {
+        return metadata.getFloat(tag);
     }
 
     @Override

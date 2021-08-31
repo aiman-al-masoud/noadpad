@@ -13,7 +13,7 @@ import java.io.Serializable;
  * can contain text, other files, and the relative metadata.
  *
  */
-public interface Page extends HtmlFile, Selectable, WordCounter, Serializable {
+public interface Page extends HtmlFile, Selectable, WordCounter, Metadata, Serializable {
 
 	/**
 	 * Settable tags.
@@ -22,13 +22,9 @@ public interface Page extends HtmlFile, Selectable, WordCounter, Serializable {
 	String TAG_EDITABLE = "editable";
 	String TAG_IN_RECYCLE_BIN = "in_recycle_bin";
 
-
 	Tag TAG_EDITABLE_TAG = new Tag("editable", Metadata.TRUE_STR);
 	Tag TAG_IN_RECYCLE_BIN_TAG = new Tag("in_recycle_bin", Metadata.FALSE_STR);
 	Tag TAG_LAST_POSITION_TAG = new Tag("LAST_POSITION", 0+"");
-
-
-
 
 	/**
 	 * Get the Page's name
@@ -99,18 +95,6 @@ public interface Page extends HtmlFile, Selectable, WordCounter, Serializable {
 	 * @return
 	 */
 	File getAudioDir();
-
-	/**
-	 * Like metadata, but WrongTypeException should be handled internally to the Page-implementation.
-	 * @param tag
-	 * @return
-	 */
-	String getString(String tag);
-	boolean getBoolean(String tag);
-	void setTag(String tag, String value);
-
-
-
 
 
 	}

@@ -35,9 +35,7 @@ public class Settings{
     /**
      * Associates to (potentially) each tag a list of listeners of that tag.
      */
-    //private static HashMap<SETTINGS_TAGS, ArrayList<SettingsTagListener>> tagListeners;
     private static HashMap<Tag, ArrayList<SettingsTagListener>> tagListeners;
-
 
     /**
      * Tags and default values.
@@ -53,9 +51,7 @@ public class Settings{
      * @param tag
      * @param listener
      */
-    //public static void listenToTag(SETTINGS_TAGS tag, SettingsTagListener listener){
     public static void listenToTag(Tag tag, SettingsTagListener listener){
-
 
         //get the list of listeners of a tag
         ArrayList<SettingsTagListener> listeners = tagListeners.get(tag);
