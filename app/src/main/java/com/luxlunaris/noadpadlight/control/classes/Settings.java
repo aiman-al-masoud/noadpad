@@ -21,7 +21,6 @@ import java.util.HashMap;
  */
 public class Settings{
 
-
     /**
      * Path to the metadatafile that stores the settings tags
      */
@@ -76,7 +75,6 @@ public class Settings{
 
         if(settingsFile==null){
             settingsFile = new MetadataFile(SETTINGS_FILE_PATH);
-            initTagValues();
         }
 
         if(!settingsFile.exists()){
@@ -89,12 +87,6 @@ public class Settings{
 
     }
 
-    private static void initTagValues(){
-        settingsFile.setTagDefault(TAG_LAUNCH_TO_BLANK_PAGE.tag, TAG_LAUNCH_TO_BLANK_PAGE.defaultValue);
-        settingsFile.setTagDefault(TAG_TEXT_SIZE.tag, TAG_TEXT_SIZE.defaultValue);
-        settingsFile.setTagDefault(TAG_THEME.tag, TAG_THEME.defaultValue);
-    }
-
     /**
      * Get the value of a boolean tag.
      * @param tag
@@ -102,7 +94,7 @@ public class Settings{
      */
     public static boolean getBoolean(Tag tag){
         makeInstance();
-        return settingsFile.getBoolean(tag.tag);
+        return settingsFile.getBoolean(tag);
     }
 
     /**
@@ -112,7 +104,7 @@ public class Settings{
      */
     public static int getInt(Tag tag){
         makeInstance();
-        return settingsFile.getInt(tag.tag);
+        return settingsFile.getInt(tag);
     }
 
     /**
@@ -122,7 +114,7 @@ public class Settings{
      */
     public static String getString(Tag tag){
         makeInstance();
-        return settingsFile.getString(tag.tag);
+        return settingsFile.getString(tag);
     }
 
     /**
@@ -132,7 +124,7 @@ public class Settings{
      */
     public static double getFloat(Tag tag){
         makeInstance();
-        return settingsFile.getFloat(tag.tag);
+        return settingsFile.getFloat(tag);
     }
 
 
@@ -144,7 +136,7 @@ public class Settings{
     public static void setTag(Tag tag, String newValue){
         makeInstance();
         //set the new tag value
-        settingsFile.setTag(tag.tag, newValue);
+        settingsFile.setTag(tag, newValue);
         //notify all of the listeners of the modified tag that its value changed
         notifyListenersOfTag(tag);
     }

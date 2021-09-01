@@ -1,33 +1,24 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
 import android.util.Log;
-
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
 import com.luxlunaris.noadpadlight.services.FileIO;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class MetadataFile extends File implements Metadata {
 
-
-	/**
-	 * Key: Tag, Value: default value in string format.
-	 */
-	HashMap<String, String> defaultVals;
-
-
-
 	public MetadataFile(String pathname) {
 		super(pathname);
-		defaultVals = new HashMap<>();
 	}
-	
 
+	/**
+	 * Create this on disk as a file.
+	 * @return
+	 */
 	@Override
 	public boolean create() {
 		try {
@@ -38,32 +29,17 @@ public class MetadataFile extends File implements Metadata {
 		return false;
 	}
 
-	@Override
-	public boolean delete(){
-		return this.delete();
-	}
-
-
-	/**
-	 * Set a non-persistent default value, meant to be "hardcoded" when this object is initialized.
-	 * @param tag
-	 * @param tagDefaultVal
-	 */
-	@Override
-	public void setTagDefault(String tag, String tagDefaultVal) {
-		defaultVals.put(tag, tagDefaultVal);
-	}
-
-	
 	/**
 	 * inserts a key-value pair in the module. 
 	 * If the added key was already in the Module,
 	 * its value gets OVERWRITTEN!
-	 * @param key
+	 * @param tag
 	 * @param value
 	 */
 	@Override
-	public void setTag(String key, String value) {
+	public void setTag(Tag tag, String value) {
+
+		String key = tag.tag;
 
 		//get the old value of the key
 		String oldValue = getStringNoDefault(key);
@@ -92,18 +68,19 @@ public class MetadataFile extends File implements Metadata {
 	/**
 	 * Returns the value associated to a key, or its
 	 * default value or null if not found.
-	 * @param key
+	 * @param tag
 	 * @return
 	 */
 	@Override
-	public String getString(String key) {
+	public String getString(Tag tag) {
 
+		String key = tag.tag;
 		String value = getStringNoDefault(key);
 
 		//if value is null, attempt getting the value from default map.
 		if(value==null){
 			Log.d("WRONG_TAG_TYPE", key+": using default value.");
-			value = defaultVals.get(key);
+			value = tag.defaultValue;
 		}
 
 		//return value, could be null.
@@ -139,18 +116,18 @@ public class MetadataFile extends File implements Metadata {
 
 	/**
 	 * Get the value of a tag that stores an integer
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
 	@Override
-	public int getInt(String tagName) {
+	public int getInt(Tag tag) {
 
-		String value = getString(tagName);
+		String value = getString(tag);
 
 		try{
 			return Integer.parseInt(value.trim());
 		}catch (NullPointerException | NumberFormatException e){
-			Log.d("WRONG_TAG_TYPE", tagName+" is not an int, found value = "+value);
+			Log.d("WRONG_TAG_TYPE", tag.tag+" is not an int, found value = "+value);
 		}
 
 		//int default
@@ -160,16 +137,16 @@ public class MetadataFile extends File implements Metadata {
 
 	/**
 	 * Get the value of a tag that stores a boolean
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
 	@Override
-	public boolean getBoolean(String tagName)  {
+	public boolean getBoolean(Tag tag)  {
 
-		String boolString = getString(tagName);
+		String boolString = getString(tag);
 
 		if(boolString==null){
-			Log.d("WRONG_TAG_TYPE", tagName+" boolean is null!");
+			Log.d("WRONG_TAG_TYPE", tag.tag+" boolean is null!");
 		}
 
 		if(boolString.toLowerCase().trim().equals(TRUE_STR)){
@@ -183,18 +160,18 @@ public class MetadataFile extends File implements Metadata {
 
 	/**
 	 * Get the value of a tag that stores a floating point number.
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
 	@Override
-	public double getFloat(String tagName) {
+	public double getFloat(Tag tag) {
 
-		String value = getString(tagName);
+		String value = getString(tag);
 
 		try{
 			return Double.parseDouble(value.trim());
 		}catch (NullPointerException | NumberFormatException e){
-			Log.d("WRONG_TAG_TYPE", tagName+" is not an double, found value = "+value);
+			Log.d("WRONG_TAG_TYPE", tag.tag+" is not an double, found value = "+value);
 		}
 
 		//double default
@@ -203,15 +180,15 @@ public class MetadataFile extends File implements Metadata {
 
 	/**
 	 * Removes a key and its associated value.
-	 * @param key
+	 * @param tag
 	 */
 	@Override
-	public void removeTag(String key) {
-		String value = getString(key);
+	public void removeTag(Tag tag) {
+		String value = getString(tag);
 		if(value==null) {
 			return; //no key to remove
 		}
-		String newText = FileIO.read(this.getPath()).replace(key+" : "+value+"\n", "");
+		String newText = FileIO.read(this.getPath()).replace(tag.tag+" : "+value+"\n", "");
 		FileIO.write(this.getPath(), newText);
 	}
 

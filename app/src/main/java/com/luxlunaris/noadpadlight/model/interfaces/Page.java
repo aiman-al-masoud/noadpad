@@ -16,15 +16,13 @@ import java.io.Serializable;
 public interface Page extends HtmlFile, Selectable, WordCounter, Metadata, Serializable {
 
 	/**
-	 * Settable tags.
+	 * Settable Metadata tags.
 	 * Handled by setTag, getString, getBool ...
 	 */
-	String TAG_EDITABLE = "editable";
-	String TAG_IN_RECYCLE_BIN = "in_recycle_bin";
+	Tag TAG_EDITABLE = new Tag("editable", Metadata.TRUE_STR);
+	Tag TAG_IN_RECYCLE_BIN= new Tag("in_recycle_bin", Metadata.FALSE_STR);
+	Tag TAG_LAST_POSITION = new Tag("LAST_POSITION", 0+"");
 
-	Tag TAG_EDITABLE_TAG = new Tag("editable", Metadata.TRUE_STR);
-	Tag TAG_IN_RECYCLE_BIN_TAG = new Tag("in_recycle_bin", Metadata.FALSE_STR);
-	Tag TAG_LAST_POSITION_TAG = new Tag("LAST_POSITION", 0+"");
 
 	/**
 	 * Get the Page's name

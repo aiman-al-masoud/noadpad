@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.model.interfaces;
 
+import com.luxlunaris.noadpadlight.model.classes.Tag;
+
 /**
  * A simple persistent dictionary.
  */
@@ -12,49 +14,33 @@ public interface Metadata {
 	String FALSE_STR = "false";
 
 
-
-
-
-
-
-
 	/**
 	 * Get the string value of a tag.
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
-	String getString(String tagName);
+	String getString(Tag tag);
 
 	/**
 	 * Get the value of a tag assuming it's an integer.
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
-	int getInt(String tagName);
+	int getInt(Tag tag);
 
 	/**
 	 * Get the value of a tag assuming it's a boolean.
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 */
-	boolean getBoolean(String tagName);
+	boolean getBoolean(Tag tag);
 
 	/**
 	 * Get the value of a tag assuming it's a float.
-	 * @param tagName
+	 * @param tag
 	 * @return
 	 * */
-	double getFloat(String tagName);
-
-
-	void setTagDefault(String tag, String tagDefaultVal);
-
-
-
-
-
-
-
+	double getFloat(Tag tag);
 
 	/**
 	 * Set the value of a tag.
@@ -62,15 +48,14 @@ public interface Metadata {
 	 * @param tag
 	 * @param tagValue
 	 */
-	void setTag(String tag, String tagValue);
-
+	void setTag(Tag tag, String tagValue);
 
 
 	/**
 	 * Delete a tag as well as its value.
-	 * @param tagName
+	 * @param tag
 	 */
-	void removeTag(String tagName);
+	void removeTag(Tag tag);
 
 	/**
 	 * "Fily" methods:
@@ -78,6 +63,7 @@ public interface Metadata {
 	 */
 	boolean create();
 	boolean delete();
+
 
 
 

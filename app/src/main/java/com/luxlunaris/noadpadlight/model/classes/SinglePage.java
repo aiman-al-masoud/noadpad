@@ -70,16 +70,7 @@ public class SinglePage extends File implements Page {
         audioDir = new File(getPath() + File.separator + "audios");
         mediaDirs = new File[]{imageDir, audioDir};
         metadata = new MetadataFile(getPath() + File.separator + "metadata");
-        initTagDefaultVals();
     }
-
-
-    private void initTagDefaultVals(){
-        metadata.setTagDefault(TAG_EDITABLE_TAG.tag, TAG_EDITABLE_TAG.defaultValue);
-        metadata.setTagDefault(TAG_IN_RECYCLE_BIN_TAG.tag, TAG_IN_RECYCLE_BIN_TAG.defaultValue);
-        metadata.setTagDefault(TAG_LAST_POSITION_TAG.tag, TAG_LAST_POSITION_TAG.defaultValue);
-    }
-
 
 
     /**
@@ -272,7 +263,7 @@ public class SinglePage extends File implements Page {
      */
     @Override
     public void savePosition(int pos) {
-        metadata.setTag(TAG_LAST_POSITION_TAG.tag, pos + "");
+        metadata.setTag(TAG_LAST_POSITION, pos + "");
     }
 
     /**
@@ -282,7 +273,7 @@ public class SinglePage extends File implements Page {
      */
     @Override
     public int getLastPosition() {
-        String lastPosString = metadata.getString("LAST_POSITION") == null ? "0" : metadata.getString("LAST_POSITION");
+        String lastPosString = metadata.getString(TAG_LAST_POSITION) == null ? "0" : metadata.getString(TAG_LAST_POSITION);
         return Integer.parseInt(lastPosString);
     }
 
@@ -462,33 +453,30 @@ public class SinglePage extends File implements Page {
     }
 
     @Override
-    public void setTag(String tag, String value) {
+    public void setTag(Tag tag, String value) {
         metadata.setTag(tag, value);
     }
 
     @Override
-    public void setTagDefault(String tag, String tagDefaultVal) { /*Unneeded*/}
+    public void removeTag(Tag tag) {/*Unneeded*/ }
 
     @Override
-    public void removeTag(String tagName) {/*Unneeded*/ }
-
-    @Override
-    public String getString(String tag) {
+    public String getString(Tag tag) {
         return metadata.getString(tag);
     }
 
     @Override
-    public int getInt(String tag) {
+    public int getInt(Tag tag) {
         return metadata.getInt(tag);
     }
 
     @Override
-    public boolean getBoolean(String tag) {
+    public boolean getBoolean(Tag tag) {
         return metadata.getBoolean(tag);
     }
 
     @Override
-    public double getFloat(String tag) {
+    public double getFloat(Tag tag) {
         return metadata.getFloat(tag);
     }
 

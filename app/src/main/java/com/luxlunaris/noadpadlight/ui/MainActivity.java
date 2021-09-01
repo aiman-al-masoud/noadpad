@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static final String PLAIN_LAUNCH = "PLAIN_LAUNCH";
-
     public static final String OPEN_ZIPPED_LAUNCH = "application/zip";
 
 
