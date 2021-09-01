@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle;
 
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
-import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
+import com.luxlunaris.noadpadlight.model.interfaces.TagListener;
 import com.luxlunaris.noadpadlight.model.classes.Tag;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * Abstract class extended by all Activities.
  * Handles color, themes, style...
  */
-public abstract class ColorActivity extends AppCompatActivity implements SettingsTagListener {
+public abstract class ColorActivity extends AppCompatActivity implements TagListener {
 
     /**
      * The current global theme

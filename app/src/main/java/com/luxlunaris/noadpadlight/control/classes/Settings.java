@@ -1,6 +1,6 @@
 package com.luxlunaris.noadpadlight.control.classes;
 
-import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
+import com.luxlunaris.noadpadlight.model.interfaces.TagListener;
 import com.luxlunaris.noadpadlight.model.classes.MetadataFile;
 import com.luxlunaris.noadpadlight.model.classes.Tag;
 import com.luxlunaris.noadpadlight.model.interfaces.Metadata;
@@ -35,7 +35,7 @@ public class Settings{
     /**
      * Associates to (potentially) each tag a list of listeners of that tag.
      */
-    private static HashMap<Tag, ArrayList<SettingsTagListener>> tagListeners;
+    private static HashMap<Tag, ArrayList<TagListener>> tagListeners;
 
     /**
      * Tags and default values.
@@ -51,15 +51,15 @@ public class Settings{
      * @param tag
      * @param listener
      */
-    public static void listenToTag(Tag tag, SettingsTagListener listener){
+    public static void listenToTag(Tag tag, TagListener listener){
 
         //get the list of listeners of a tag
-        ArrayList<SettingsTagListener> listeners = tagListeners.get(tag);
+        ArrayList<TagListener> listeners = tagListeners.get(tag);
 
         //if the tag doesn't have any listeners yet
         if(listeners==null){
             //create the list
-            listeners =  new ArrayList<SettingsTagListener>();
+            listeners =  new ArrayList<TagListener>();
             //add the list to the map
             tagListeners.put(tag,listeners);
         }
@@ -158,9 +158,9 @@ public class Settings{
      * @param tag
      */
     private static void notifyListenersOfTag(Tag tag){
-        ArrayList<SettingsTagListener> listenersOfTag = tagListeners.get(tag);
+        ArrayList<TagListener> listenersOfTag = tagListeners.get(tag);
         if(listenersOfTag!=null){
-            for(SettingsTagListener listener : listenersOfTag){
+            for(TagListener listener : listenersOfTag){
                 try {
                     listener.onTagUpdated(tag);
                 }catch (NullPointerException e){

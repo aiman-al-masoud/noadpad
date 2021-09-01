@@ -14,14 +14,14 @@ import androidx.fragment.app.Fragment;
 import com.luxlunaris.noadpadlight.R;
 import com.luxlunaris.noadpadlight.control.classes.Settings;
 import com.luxlunaris.noadpadlight.control.interfaces.PageListener;
-import com.luxlunaris.noadpadlight.control.interfaces.SettingsTagListener;
+import com.luxlunaris.noadpadlight.model.interfaces.TagListener;
 import com.luxlunaris.noadpadlight.model.classes.Tag;
 import com.luxlunaris.noadpadlight.model.interfaces.Page;
 
 import com.luxlunaris.noadpadlight.services.TimeServices;
 
 
-public class PageFragment extends Fragment implements SettingsTagListener, PageListener{
+public class PageFragment extends Fragment implements TagListener, PageListener{
 
     /**
      * The Page that this fragment represents
