@@ -163,7 +163,6 @@ public class SinglePage extends File implements Page {
             e.printStackTrace();
         }
 
-
         FileIO.deleteDirectory(this.getPath());
         return true;
     }
@@ -175,17 +174,10 @@ public class SinglePage extends File implements Page {
     public boolean create() {
 
         mkdir();
-
-        try {
-            ((MetadataFile) metadata).createNewFile();
-            htmlFile.create();
-            imageDir.mkdir();
-            audioDir.mkdir();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+        metadata.create();
+        htmlFile.create();
+        imageDir.mkdir();
+        audioDir.mkdir();
 
         //notify the listeners that this got created
         for (PageListener listener : listeners) {
