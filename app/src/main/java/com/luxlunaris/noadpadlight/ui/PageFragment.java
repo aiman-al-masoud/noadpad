@@ -47,7 +47,7 @@ public class PageFragment extends Fragment implements TagListener, PageListener{
         PageFragment fragment = new PageFragment();
         fragment.page = page;
         page.addListener(fragment);
-        Settings.listenToTag(Settings.TAG_THEME, fragment);
+        Settings.addTagListener(Settings.TAG_THEME, fragment);
         return fragment;
     }
 

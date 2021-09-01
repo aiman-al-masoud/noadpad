@@ -13,7 +13,6 @@ public interface Metadata {
 	String TRUE_STR = "true";
 	String FALSE_STR = "false";
 
-
 	/**
 	 * Get the string value of a tag.
 	 * @param tag
@@ -49,7 +48,6 @@ public interface Metadata {
 	 * @param tagValue
 	 */
 	void setTag(Tag tag, String tagValue);
-
 
 	/**
 	 * Delete a tag as well as its value.

@@ -46,7 +46,7 @@ public abstract class ColorActivity extends AppCompatActivity implements TagList
         //set the theme of this activity
         setTheme(currentTheme);
 
-        Settings.listenToTag(Settings.TAG_THEME, this);
+        Settings.addTagListener(Settings.TAG_THEME, this);
 
 
         super.onCreate(savedInstanceState);

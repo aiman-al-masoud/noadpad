@@ -50,7 +50,7 @@ public class Settings{
      * @param tag
      * @param listener
      */
-    public static void listenToTag(Tag tag, TagListener listener){
+    public static void addTagListener(Tag tag, TagListener listener){
 
         //get the list of listeners of a tag
         ArrayList<TagListener> listeners = tagListeners.get(tag);
