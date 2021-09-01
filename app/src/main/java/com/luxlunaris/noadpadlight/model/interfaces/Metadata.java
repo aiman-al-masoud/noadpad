@@ -11,6 +11,13 @@ public interface Metadata {
 	String TRUE_STR = "true";
 	String FALSE_STR = "false";
 
+
+
+
+
+
+
+
 	/**
 	 * Get the string value of a tag.
 	 * @param tagName
@@ -25,7 +32,6 @@ public interface Metadata {
 	 */
 	int getInt(String tagName);
 
-
 	/**
 	 * Get the value of a tag assuming it's a boolean.
 	 * @param tagName
@@ -33,13 +39,22 @@ public interface Metadata {
 	 */
 	boolean getBoolean(String tagName);
 
-
 	/**
 	 * Get the value of a tag assuming it's a float.
 	 * @param tagName
 	 * @return
 	 * */
 	double getFloat(String tagName);
+
+
+	void setTagDefault(String tag, String tagDefaultVal);
+
+
+
+
+
+
+
 
 	/**
 	 * Set the value of a tag.
@@ -50,7 +65,6 @@ public interface Metadata {
 	void setTag(String tag, String tagValue);
 
 
-	void setTagDefault(String tag, String tagDefaultVal);
 
 	/**
 	 * Delete a tag as well as its value.
@@ -58,7 +72,10 @@ public interface Metadata {
 	 */
 	void removeTag(String tagName);
 
-
+	/**
+	 * "Fily" methods:
+	 * @return
+	 */
 	boolean create();
 	boolean delete();
 

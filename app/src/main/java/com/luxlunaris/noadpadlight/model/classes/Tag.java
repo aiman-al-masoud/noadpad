@@ -1,5 +1,8 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+/**
+ *
+ */
 public class Tag {
 
     public final String tag;

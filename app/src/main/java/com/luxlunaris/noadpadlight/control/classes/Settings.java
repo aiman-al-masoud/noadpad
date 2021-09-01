@@ -38,11 +38,11 @@ public class Settings{
     private static HashMap<Tag, ArrayList<TagListener>> tagListeners;
 
     /**
-     * Tags and default values.
+     * Tags and default values:
      */
-    public static Tag TAG_TEXT_SIZE = new Tag("TEXT_SIZE", 18+"");
-    public static Tag TAG_LAUNCH_TO_BLANK_PAGE = new Tag("LAUNCH_TO_BLANK_PAGE", Metadata.FALSE_STR);
-    public static Tag TAG_THEME = new Tag("THEME", THEMES.LIGHT.toString());
+    public static final Tag TAG_TEXT_SIZE = new Tag("TEXT_SIZE", 18+"");
+    public static final Tag TAG_LAUNCH_TO_BLANK_PAGE = new Tag("LAUNCH_TO_BLANK_PAGE", Metadata.FALSE_STR);
+    public static final Tag TAG_THEME = new Tag("THEME", THEMES.LIGHT.toString());
 
 
     /**
@@ -67,7 +67,6 @@ public class Settings{
         //add the new listener to the list of listeners of a certain tag
         listeners.add(listener);
     }
-
 
     /**
      * Get the settingsFile metadata file
@@ -96,7 +95,6 @@ public class Settings{
         settingsFile.setTagDefault(TAG_THEME.tag, TAG_THEME.defaultValue);
     }
 
-
     /**
      * Get the value of a boolean tag.
      * @param tag
@@ -117,7 +115,6 @@ public class Settings{
         return settingsFile.getInt(tag.tag);
     }
 
-
     /**
      * Get the value of a string tag.
      * @param tag
@@ -127,7 +124,6 @@ public class Settings{
         makeInstance();
         return settingsFile.getString(tag.tag);
     }
-
 
     /**
      * Get the value of a float tag.
