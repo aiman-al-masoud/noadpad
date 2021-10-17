@@ -1,5 +1,7 @@
 package com.luxlunaris.noadpadlight.model.classes;
 
+import android.util.Log;
+
 import com.luxlunaris.noadpadlight.control.classes.Notebook;
 import com.luxlunaris.noadpadlight.control.classes.Paths;
 import com.luxlunaris.noadpadlight.model.classes.comparators.LastModifiedComparator;
@@ -104,14 +106,11 @@ public class BasicBooklet implements Booklet {
 
         //sort the pages by the time they where last modified
         sortList();
-
     }
 
     public void sortList(){
-        try{
-            Collections.sort(pagesList, new LastModifiedComparator());
-            Collections.sort(listOnDisplay, new LastModifiedComparator());
-        }catch (IllegalArgumentException e){ e.printStackTrace();}
+        Collections.sort(pagesList, new LastModifiedComparator());
+        Collections.sort(listOnDisplay, new LastModifiedComparator());
     }
 
 

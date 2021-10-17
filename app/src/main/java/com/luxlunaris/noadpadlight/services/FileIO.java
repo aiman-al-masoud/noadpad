@@ -266,15 +266,12 @@ public class FileIO {
 
 	public static void exportFile(Context context, File file, String mimeType){
 		Uri uri = FileProvider.getUriForFile(context, "com.luxlunaris.fileprovider", file);
-
 		//create an intent to share the backup file with another app
 		Intent intent = new Intent(Intent.ACTION_SEND);
-		//intent.setType("application/zip");
 		intent.setType(mimeType);
 		intent.putExtra(Intent.EXTRA_STREAM, uri);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		context.startActivity(Intent.createChooser(intent, context.getString(R.string.export)));
-
 	}
 
 
